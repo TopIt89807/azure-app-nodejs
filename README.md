@@ -2,7 +2,7 @@
 
 The Azure Mobile Apps Node.js SDK is an [express](http://expressjs.com/) middleware package which make it easy to get a backend for your mobile application running on Azure.
 
-```
+```js
 var app = require('express')(); // Create an instance of an Express app
 var mobileApp = require('azure-mobile-apps')(); // Create an instance of a Mobile App with default settings
 
@@ -16,7 +16,7 @@ app.listen(process.env.PORT || 3000);
 
 `npm install azure/azure-mobile-apps-node`
 
-```
+```json
 "dependencies": {
   "azure-mobile-apps":"azure/azure-mobile-apps-node"
 }
@@ -48,7 +48,7 @@ An official npm package will be published soon.
 
 0. Create a server.js file and add the following code to the file:
 
-  ```
+  ```js
   var app = require('express')(); // Create an instance of an Express app
   var mobileApp = require('azure-mobile-apps')(); // Create an instance of a Mobile App with default settings
 
