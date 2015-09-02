@@ -1,0 +1,3 @@
+﻿# azure-mobile-apps.query
+
+

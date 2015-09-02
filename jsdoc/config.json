@@ -1,0 +1,12 @@
+{
+    "source": {
+        "include": ["."],
+        "excludePattern": "node_modules",
+        "exclude": ["jsdoc/template"]
+    },
+    "opts": {
+        "destination": "jsdoc/out",
+        "recurse": true,
+        "template": "jsdoc/template"
+    }
+}
