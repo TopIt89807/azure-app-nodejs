@@ -12,14 +12,8 @@ var rewire = require('rewire'),
 
 describe('azure-mobile-apps.notifications.configuration', function () {
     beforeEach(function () {
-        nhStub = {};
-        nhStub.createOrUpdateInstallation = sinon.stub();
-        nhStub.deleteInstallation = sinon.stub();
-        nhStub.constr = sinon.stub().returns({
-            createOrUpdateInstallation: nhStub.createOrUpdateInstallation,
-            deleteInstallation: nhStub.deleteInstallation
-        });
-        notifications.__set__("NotificationHubService", nhStub.constr);
+        nhStub = sinon.stub();
+        notifications.__set__("NotificationHubService", nhStub);
     });
 
     it('passes connectionString settings to NH', function () {
@@ -28,7 +22,7 @@ describe('azure-mobile-apps.notifications.configuration', function () {
             connectionString: 'connString'
         });
 
-        expect(nhStub.constr).to.be.calledWith('name', 'connString');
+        expect(nhStub).to.be.calledWith('name', 'connString');
     });
 
     it('passes endpoint settings to NH', function () {
@@ -39,6 +33,6 @@ describe('azure-mobile-apps.notifications.configuration', function () {
             sharedAccessKeyValue: 'sakv'
         });
 
-        expect(nhStub.constr).to.be.calledWith('name', 'endpoint', 'sak', 'sakv');
+        expect(nhStub).to.be.calledWith('name', 'endpoint', 'sak', 'sakv');
     });
 });

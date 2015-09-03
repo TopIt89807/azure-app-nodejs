@@ -37,6 +37,14 @@ module.exports = function (configuration) {
                 });
                 break;
 
+            case 'ms_notificationhubname':
+                configuration.notifications.hubName = process.env[key];
+                break;
+
+            case 'ms_notificationhubconnectionstring':
+                configuration.notifications.connectionString = process.env[key];
+                break;
+
             case 'ms_debugmode':
                 configuration.debug = parseBoolean(process.env[key]);
 

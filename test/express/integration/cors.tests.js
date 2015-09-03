@@ -50,7 +50,7 @@ describe('azure-mobile-apps.express.integration.cors', function () {
             .set('origin', 'http://te.blah.net')
             .expect(200)
             .then(function (response) {
-                expect(res.headers[accessControlAllowOriginHeader]).to.be.undefined;
+                expect(response.headers[accessControlAllowOriginHeader]).to.be.undefined;
             });
     });
 

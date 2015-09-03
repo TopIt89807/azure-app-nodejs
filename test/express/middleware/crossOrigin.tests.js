@@ -8,7 +8,7 @@ var middleware = require('../../../src/express/middleware/crossOrigin'),
     accessControlAllowMethodsHeader = 'Access-Control-Allow-Methods',
     accessControlAllowHeadersHeader = 'Access-Control-Allow-Headers',
     accessControlMaxAgeHeader = 'Access-Control-Max-Age',
-    expectedAllowedMethods = 'GET, PUT, PATCH, POST, DELETE, OPTIONS';
+    expectedAllowedMethods = 'GET, PUT, PATCH, POST, DELETE, OPTIONS',
     config = {
         cors: {
             maxAge: 6000,
