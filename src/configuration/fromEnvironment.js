@@ -51,6 +51,10 @@ module.exports = function (configuration) {
             case 'ms_dynamicschema':
                 configuration.data.dynamicSchema = parseBoolean(process.env[key]);
 
+            case 'ms_disableversionheader':
+                if(parseBoolean(process.env[key]))
+                    configuration.version = undefined;
+
             // case 'customconnstr_ms_notificationhubconnectionstring':
             // case 'ms_notificationhubconnectionstring':
             //     break;
@@ -64,5 +68,5 @@ module.exports = function (configuration) {
 };
 
 function parseBoolean(value) {
-    return value === 'true' || value === '1';
+    return value && value.toLowerCase() === 'true' || value === '1';
 }

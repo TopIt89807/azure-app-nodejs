@@ -21,7 +21,6 @@
     "body-parser": "^1.13.1",
     "express": "^4.12.4",
     "node-uuid": "^1.4.3",
-    "supertest-as-promised": "^2.0.1",
     "azure-sb": "^0.10.2",
     "query.js": "git://github.com/Azure/queryjs.git"
   },
@@ -35,6 +34,8 @@
     "rewire": "^2.3.4",
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0",
-    "sinon-as-promised": "4.0.0"
+    "sinon-as-promised": "4.0.0",
+    "supertest": "^1.1.0",
+    "supertest-as-promised": "^2.0.1"
   }
 }

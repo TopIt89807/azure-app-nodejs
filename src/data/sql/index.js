@@ -8,6 +8,7 @@ var statements = require('./statements'),
     assert = require('../../utilities/assert').argument;
 
 module.exports = function (configuration) {
+    assert(configuration, 'Data configuration was not provided.');
     assert(configuration.server, 'A database server was not specified.');
     assert(configuration.user, 'A database user was not specified.');
     assert(configuration.password, 'A password for the database user was not specified');
