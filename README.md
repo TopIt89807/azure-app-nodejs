@@ -1,6 +1,8 @@
 # Azure Mobile Apps - Node SDK
 
-The Azure Mobile Apps Node.js SDK is an [express](http://expressjs.com/) middleware package which make it easy to get a backend for your mobile application running on Azure.
+**This package is still in development!** This software is still likey to change dramatically and have minimal documentation prior to official release. Use caution before using this in a production application.
+
+The Azure Mobile Apps Node.js SDK is an [express](http://expressjs.com/) middleware package which makes it easy to create a backend for your mobile application and get it running on Azure.
 
 ```js
 var app = require('express')(); // Create an instance of an Express app
@@ -26,7 +28,7 @@ An official npm package will be published soon.
 
 ## Documentation & Resources
 
- - [API Documentation](azure.github.io/azure-mobile-apps-node)
+ - [API Documentation](http://azure.github.io/azure-mobile-apps-node/)
  - [Tutorials & How-Tos](https://azure.microsoft.com/en-us/documentation/articles/app-service-mobile-value-prop-preview/)
  - [StackOverflow #azure-mobile-services](http://stackoverflow.com/questions/new/azure-mobile-services?show=all&sort=recentlyactive&pageSize=50)
  - [MSDN Forums](https://social.msdn.microsoft.com/forums/azure/en-US/home?forum=azuremobile)
