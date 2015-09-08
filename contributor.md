@@ -10,7 +10,7 @@ You can contribute to the Azure Mobile Apps Node.js SDK in a number of ways:
  - Directly contribute to the source code
  - Create a package for the community to consume
 
-Check out the central [Azure Contributor Guidlines]([http://azure.github.io/guidelines.html](http://azure.github.io/guidelines.html) page to learn more on how you can participate in our community.
+Check out the central [Azure Contributor Guidlines](http://azure.github.io/guidelines.html) page to learn more on how you can participate in our community.
 
 ## Submitting an issue
 
