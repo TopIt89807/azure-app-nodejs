@@ -9,6 +9,7 @@ The azure-mobile-apps module is the Nodejs implementation of Azure Mobile Apps
 
 ﻿var loadConfiguration = require('./configuration'),
     environment = require('./utilities/environment'),
+    table = require('./express/tables/table'),
     logger = require('./logger'),
     utilities = require('./utilities'),
     path = require('path'),
@@ -58,3 +59,5 @@ module.exports = function (configuration) {
 
     return platforms[configuration.platform](configuration);
 };
+
+module.exports.table = table;

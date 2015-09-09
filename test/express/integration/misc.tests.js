@@ -51,5 +51,34 @@ describe('azure-mobile-apps.express.integration', function () {
                 .get('/tables/todoitem')
                 .expect('x-zumo-version', 'node-' + require('../../../package.json').version);
         });
+
+        it('does not attach version header if version is set to undefined', function() {
+            app = express();
+            mobileApp = mobileApps({ version: undefined });
+            mobileApp.tables.add('todoitem');
+            mobileApp.attach(app);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(function (res) {
+                    expect(res.headers['x-zumo-version']).to.be.undefined;
+                });
+        });
+
+        it('does not attach version header if MS_DisableVersionHeader is specified', function() {
+            process.env.MS_DisableVersionHeader = 'true';
+
+            app = express();
+            mobileApp = mobileApps();
+            mobileApp.tables.add('todoitem');
+            mobileApp.attach(app);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(function (res) {
+                    expect(res.headers['x-zumo-version']).to.be.undefined;
+                    delete process.env.MS_DisableVersionHeader;
+                });
+        });
     });
 });

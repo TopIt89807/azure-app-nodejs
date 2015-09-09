@@ -1,1 +1,1 @@
-﻿module.exports = require('../../../../src/express').table();
+﻿module.exports = require('../../../..').table();
