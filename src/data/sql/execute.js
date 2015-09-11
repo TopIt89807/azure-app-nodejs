@@ -4,6 +4,7 @@
 var mssql = require('mssql'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
+    log = require('../../logger'),
     connection;
 
 module.exports = function (config, statement) {
@@ -36,6 +37,7 @@ module.exports = function (config, statement) {
         }
 
         return request.query(statement.sql).catch(function (err) {
+            log.debug('SQL statement failed: ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
             if(err.number === 2627) {
                 var error = new Error('An item with the same ID already exists');
                 error.duplicate = true;

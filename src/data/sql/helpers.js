@@ -22,8 +22,7 @@ module.exports = {
                 if (!(strings.isLetter(char) || (char == '_'))) {
                     return false;
                 }
-            }
-            else {
+            } else {
                 if (!(strings.isLetter(char) || strings.isDigit(char) || (char == '_'))) {
                     return false;
                 }
@@ -90,7 +89,8 @@ module.exports = {
         }
 
         function isInteger(value) {
-            return value.toFixed() === value.toString();
+            // integers larger than the maximum value get inserted as 1 - treat these as float parameters as a workaround
+            return value.toFixed() === value.toString() && value < 2147483648 && value > -2147483648;
         }
     },
 
