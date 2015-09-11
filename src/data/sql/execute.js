@@ -4,6 +4,7 @@
 var mssql = require('mssql'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
+    log = require('../../logger'),
     connection;
 
 module.exports = function (config, statement) {
