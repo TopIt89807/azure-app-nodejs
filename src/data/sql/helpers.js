@@ -89,6 +89,7 @@ module.exports = {
         }
 
         function isInteger(value) {
+            // integers larger than the maximum value get inserted as 1 - treat these as float parameters as a workaround
             return value.toFixed() === value.toString() && value < 2147483648 && value > -2147483648;
         }
     },
