@@ -65,6 +65,14 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             });
     });
 
+    it("handles large numeric values", function () {
+        return insert({ id: '1', number: Number.MAX_VALUE })
+            .then(read)
+            .then(function (results) {
+                expect(results[0].number).to.equal(Number.MAX_VALUE);
+            });
+    })
+
     function read() {
         return operations.read(queries.create('integration'));
     }
