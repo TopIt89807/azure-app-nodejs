@@ -6,7 +6,7 @@ var rewire = require('rewire'),
         .expect,
     request = require('supertest-as-promised'),
     express = require('express'),
-    notifStub, notifFactoryStub, app, installation;
+    nhStub, notifFactoryStub, app, installation;
 
 var notificationMiddleware = rewire('../../../src/express/middleware/notifications');
 
@@ -14,12 +14,10 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
     beforeEach(function () {
         installation = createInstallation();
 
-        notifStub = createNotificationsStub();
-        notifFactoryStub = sinon.stub().returns(notifStub);
-        notificationMiddleware.__set__('notifications', notifFactoryStub);
+        nhStub = createNHClientStub();
 
         app = express();
-        app.use(notificationMiddleware({ notifications: { hubName: 'name', connString: 'connString' }}));
+        app.use(notificationMiddleware({ notifications: { client: nhStub }}));
     });
 
     it('returns 204 on successful creation', function () {
@@ -29,7 +27,7 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
             .send(JSON.stringify(installation))
             .expect(204)
             .then(function (res) {
-                expect(notifStub.putInstallation).to.be.calledWith(installation.installationId, installation);
+                expect(nhStub.createOrUpdateInstallation).to.be.calledWith(installation);
             });
     });
 
@@ -41,7 +39,7 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
             .send(JSON.stringify(installation))
             .expect(400)
             .then(function (res) {
-                expect(notifStub.putInstallation).to.be.calledWith(installation.installationId, installation);
+                expect(nhStub.createOrUpdateInstallation).to.be.calledWith(installation);
                 expect(res.error.text).to.equal('errorMessage');
             });
     });
@@ -54,7 +52,7 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
             .send(JSON.stringify(installation))
             .expect(400)
             .then(function (res) {
-                expect(notifStub.putInstallation).to.be.calledWith(installation.installationId, installation);
+                expect(nhStub.createOrUpdateInstallation).to.be.calledWith(installation);
                 expect(res.error.text).to.equal('Bad Request');
             });
     });
@@ -70,7 +68,7 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
             .send(JSON.stringify(installation))
             .expect(204)
             .then(function (res) {
-                expect(notifStub.putInstallation).to.be.calledWith(installation.installationId, createInstallation());
+                expect(nhStub.createOrUpdateInstallation).to.be.calledWith(createInstallation());
             });
     })
 
@@ -79,22 +77,24 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
             .delete('/push/installations/' + installation.installationId)
             .expect(204)
             .then(function (res) {
-                expect(notifStub.deleteInstallation).to.be.calledWith(installation.installationId);
+                expect(nhStub.deleteInstallation).to.be.calledWith(installation.installationId);
             });
     });
 
-    function createNotificationsStub () {
+    function createNHClientStub () {
         var stub = {};
-        stub.getClient = sinon.stub().returns('client');
+        stub.createOrUpdateInstallation = sinon.stub().yields(undefined, 'ok');
+        stub.createOrUpdateInstallation.withArgs(sinon.match({ installationId: 'errorMessage'}))
+                .throws({ message: 'errorMessage' });
+        stub.createOrUpdateInstallation.withArgs(sinon.match({ installationId: 'error'}))
+                .throws({});
 
-        stub.putInstallation = sinon.stub().resolves('ok');
-        stub.putInstallation.withArgs('errorMessage', sinon.match.object)
-                .rejects({ message: 'errorMessage' })
-        stub.putInstallation.withArgs('error', sinon.match.object)
-                .rejects({});
+        stub.deleteInstallation = sinon.stub().yields(undefined, 'ok');
 
-        stub.deleteInstallation = sinon.stub().resolves('ok');
-        
+        stub.listRegistrationsByTag = sinon.stub().yields(undefined, []);
+        stub.listRegistrationsByTag.withArgs('$InstallationId:{tags}')
+                .onCall(0).yields(undefined, [{ Tag: 'tag1' }, { Tag: 'tag2'} ]);
+
         return stub;
     }
 
@@ -123,7 +123,8 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
                         }
                     }
                 }
-            }
+            },
+            tags: []
         };
     }
 });

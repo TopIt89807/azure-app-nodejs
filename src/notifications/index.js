@@ -16,7 +16,7 @@ var util = require('util'),
  * @return An object with members described below
  */
 module.exports = function (configuration) {
-    var nhClient = new NotificationHubService(configuration.hubName, configuration.connectionString 
+    var nhClient = configuration.client || new NotificationHubService(configuration.hubName, configuration.connectionString 
         || configuration.endpoint, configuration.sharedAccessKeyName, configuration.sharedAccessKeyValue);
 
     return {

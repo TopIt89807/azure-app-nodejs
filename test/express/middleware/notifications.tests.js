@@ -1,23 +1,17 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var rewire = require('rewire'),
-    expect = require('chai').expect,
+var expect = require('chai').expect,
 
-    middleware = rewire('../../../src/express/middleware/notifications'),
+    middleware = require('../../../src/express/middleware/notifications'),
     config = {
         notifications: {
             hubName: 'name',
-            connString: 'connString'
+            connString: 'connString',
+            client: 'client'
         }
     },
     req;
-
-    middleware.__set__('notifications', function (configuration) {
-        return {
-            getClient: function () { return 'client'; }
-        };
-    });
 
 describe('azure-mobile-apps.express.middleware.notifications', function () {
     beforeEach(function () {

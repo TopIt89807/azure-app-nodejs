@@ -1,23 +1,18 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var rewire = require('rewire'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
     expect = require('chai')
             .use(require('sinon-chai'))
             .expect,
-
-    notifications = rewire('../../src/notifications'),
-    nhStub = {},
+    notifications = require('../../src/notifications'),
     clientStub, notifs, installation;
 
 describe('azure-mobile-apps.notifications.installation', function () {
     beforeEach(function () {
         installation = createInstallation();
         clientStub = createNHClientStub();
-        nhStub = sinon.stub().returns(clientStub);
-        notifications.__set__("NotificationHubService", nhStub);
-        notifs = notifications({});
+        notifs = notifications({ client: clientStub });
     });
 
     it('deletes installation', function () {
