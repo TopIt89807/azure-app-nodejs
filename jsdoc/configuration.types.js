@@ -9,12 +9,14 @@ The top level configuration object.
 @property {string} configFile=azureMobile.js - Name of the file that exports configuration objects to load,
 @property {Promise} promiseConstructor Promise constructor to use,
 @property {string} tableRootPath=/tables - Directory to load table configuration from,
+@property {string} notificationsRootPath=/push/installations - Notification installations endpoint
 @property {bool} debug=false - Run the server in debug mode. Automatically turned on when node is executed with the --debug option,
 @property {string} version - Current version of the Azure Mobile Apps SDK,
 @property {loggingConfiguration} logging - Logging configuration
 @property {dataConfiguration} data - Data configuration
 @property {authConfiguration} auth - Authentication configuration
 @property {corsConfiguration} cors - Cross-origin resource sharing configuration
+@property {notificationsConfiguration} notifications - Notifications configuration
 */
 
 /**
@@ -61,4 +63,11 @@ Cross-origin resource sharing configuration
 @typedef corsConfiguration
 @property {integer} maxAge=300 - How long the results of a preflight request can be cached in a preflight result cache,
 @property {string[]} origins=localhost - Array of allowed origins
+*/
+
+/**
+Notifications configuration
+@typedef notificationsConfiguration
+@property {string} hubName - The name of the associated notification hub
+@property {string} connectionString - The connection string of the associated notification hub
 */
