@@ -70,7 +70,7 @@ module.exports = {
             case Date:
                 return "DATETIMEOFFSET(3)";
             default:
-                throw new Error("Unable to map value " + value.ToString() + " to a SQL type.");
+                throw new Error("Unable to map value " + value.toString() + " to a SQL type.");
         }
     },
 
