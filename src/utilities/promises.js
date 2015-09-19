@@ -44,7 +44,7 @@ module.exports = {
                         resolve(result);
                 });
                 functionToWrap.apply(thisArg, args);
-            })
+            });
         };
     }
 };
