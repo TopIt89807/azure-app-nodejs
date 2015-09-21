@@ -41,26 +41,23 @@ module.exports = function (configuration) {
                 configuration.notifications.hubName = process.env[key];
                 break;
 
+            case 'customconnstr_ms_notificationhubconnectionstring':
             case 'ms_notificationhubconnectionstring':
                 configuration.notifications.connectionString = process.env[key];
                 break;
 
             case 'ms_debugmode':
                 configuration.debug = parseBoolean(process.env[key]);
+                break;
 
             case 'ms_dynamicschema':
                 configuration.data.dynamicSchema = parseBoolean(process.env[key]);
+                break;
 
             case 'ms_disableversionheader':
                 if(parseBoolean(process.env[key]))
                     configuration.version = undefined;
-
-            // case 'customconnstr_ms_notificationhubconnectionstring':
-            // case 'ms_notificationhubconnectionstring':
-            //     break;
-            //
-            // case 'mS_NotificationHubName':
-            //     break;
+                break;
         }
     });
 
