@@ -1,5 +1,4 @@
-var rewire = require('rewire'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
     sinonPromised = require('sinon-as-promised'),
     expect = require('chai')
         .use(require('sinon-chai'))
@@ -8,7 +7,7 @@ var rewire = require('rewire'),
     express = require('express'),
     nhStub, notifFactoryStub, app, installation;
 
-var notificationMiddleware = rewire('../../../src/express/middleware/notifications');
+var notificationMiddleware = require('../../../src/express/middleware/notifications');
 
 describe('azure-mobile-apps.express.integration.notifications', function () {
     beforeEach(function () {

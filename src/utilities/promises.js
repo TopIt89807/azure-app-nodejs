@@ -32,5 +32,19 @@ module.exports = {
     },
     all: function (promises) {
         return constructor.all(promises);
+    },
+    wrap: function (functionToWrap, thisArg) {
+        return function () {
+            var args = Array.prototype.slice.call(arguments);
+            return module.exports.create(function (resolve, reject) {
+                args.push(function (error, result) {
+                    if(error)
+                        reject(error);
+                    else
+                        resolve(result);
+                });
+                functionToWrap.apply(thisArg, args);
+            });
+        };
     }
 };

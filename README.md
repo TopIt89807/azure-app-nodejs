@@ -76,7 +76,7 @@ For steps 4-5, you can use any of the clients found in the [Client & Server Quic
 
 ## Contributing
 
-For information on how to contribute to this project, please see the [contributor guide](./contributor.md).
+For information on how to contribute to this project, please see the [contributor guide](https://github.com/Azure/azure-mobile-apps-node/blob/master/contributor.md).
 
 ## License
 

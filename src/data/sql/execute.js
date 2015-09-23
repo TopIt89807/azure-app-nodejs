@@ -36,6 +36,7 @@ module.exports = function (config, statement) {
             });
         }
 
+        log.verbose('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
         return request.query(statement.sql).catch(function (err) {
             log.debug('SQL statement failed: ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
             if(err.number === 2627) {
