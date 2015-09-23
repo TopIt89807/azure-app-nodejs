@@ -13,4 +13,5 @@
 @property {function} tables A function that accepts a string table name and returns a table access object for the above provider
 @property {module:azure-mobile-apps/auth/user} user The authenticated user object if the authenticate middleware has been executed
 @property {object} results The results of the executeOperation middleware
+@property {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html NotificationHubService} [push] The notification hub, if configured
 */
