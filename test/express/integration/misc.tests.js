@@ -41,7 +41,7 @@ describe('azure-mobile-apps.express.integration', function () {
     });
 
     describe('version', function () {
-        it('attaches version header', function () {
+        it('attaches server version header', function () {
             app = express();
             mobileApp = mobileApps();
             mobileApp.tables.add('todoitem');
@@ -49,7 +49,7 @@ describe('azure-mobile-apps.express.integration', function () {
 
             return supertest(app)
                 .get('/tables/todoitem')
-                .expect('x-zumo-version', 'node-' + require('../../../package.json').version);
+                .expect('x-zumo-server-version', 'node-' + require('../../../package.json').version);
         });
 
         it('does not attach version header if version is set to undefined', function() {
