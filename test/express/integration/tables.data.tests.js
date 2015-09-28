@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns inserted records', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -37,7 +37,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns updated records', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -57,7 +57,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('does not return deleted records', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -78,7 +78,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns inserted item', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -91,7 +91,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns empty array when table with dynamic schema has not been created', function () {
         mobileApp.tables.add('nonexistent');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/nonexistent')
@@ -103,7 +103,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns empty array when table with dynamic schema has not been updated', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -120,7 +120,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('assigns guid id if none is provided and table does not have an autoIncrement id', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -139,7 +139,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns single object for id query', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -157,7 +157,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns empty array when collection query returns no results', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/integration?$filter=id eq 100')
@@ -169,7 +169,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns 404 when id query returns no results', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/integration/nonexistent')
@@ -178,7 +178,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns 404 when delete operation executed for non-existent record', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .delete('/tables/integration/nonexistent')
@@ -187,7 +187,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it('returns 200 when delete operation executed successfully', function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')
@@ -202,7 +202,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
 
     it("returns total count when requested", function () {
         mobileApp.tables.add('integration');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/integration')

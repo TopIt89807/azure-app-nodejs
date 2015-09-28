@@ -23,7 +23,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
 
     it('creates table and returns inserted records', function () {
         mobileApp.tables.add('dynamic');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/dynamic')
@@ -41,7 +41,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
 
     it('updates table schema', function () {
         mobileApp.tables.add('dynamic');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/dynamic')
@@ -64,7 +64,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
 
     it('creates table with numeric id and returns inserted records', function () {
         mobileApp.tables.add('dynamic');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/dynamic')
@@ -82,7 +82,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
 
     it('creates table with autoIncrement id', function () {
         mobileApp.tables.add('dynamic', { autoIncrement: true });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/dynamic')
@@ -97,7 +97,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
         var updatedAt;
 
         mobileApp.tables.add('dynamic');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/dynamic')
@@ -123,7 +123,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
             bool: 'boolean',
             date: 'datetime'
         } });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/dynamic')

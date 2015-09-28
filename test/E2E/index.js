@@ -59,7 +59,7 @@ function mapParameters(context) {
     };
 }
 
-mobileApp.attach(app);
+app.use(mobileApp);
 
 app.get('/api/jwtTokenGenerator', require('./jwtTokenGenerator')(config));
 app.get('/api/runtimeInfo', require('./runtimeInfo'));

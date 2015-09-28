@@ -17,7 +17,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
 
     it('returns 200 for table route', function () {
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -26,7 +26,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
 
     it('returns 200 for table route with id parameter', function () {
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         supertest(app)
             .get('/tables/todoitem/id')
@@ -35,7 +35,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
 
     it('returns 404 for tables that are not registered', function () {
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem2')
@@ -47,7 +47,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
         table.read.use(function (req, res, next) { throw 'test'; });
         mobileApp = mobileApps({ debug: true });
         mobileApp.tables.add('todoitem', table);
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         supertest(app)
             .get('/tables/todoitem')

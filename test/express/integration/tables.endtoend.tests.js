@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.integration.endtoend', function () {
 
     it('import, initialise, persist and query with custom middleware and operations', function () {
         mobileApp.tables.import('../files/tables/endtoend');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return insert({ id: '1', clientValue: 'show' })
             .then(function (res) {

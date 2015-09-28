@@ -8,7 +8,8 @@ This module is the entry point for adding an Azure Mobile App to an instance of
 an express web server. It is returned from the root azure-mobile-apps module
 when the configuration passed specifies the express platform.
 */
-var tables = require('./tables'),
+var express = require('express'),
+    tables = require('./tables'),
     table = require('./tables/table'),
     notifications = require('./middleware/notifications'),
     createContext = require('./middleware/createContext'),
@@ -20,9 +21,18 @@ var tables = require('./tables'),
     assert = require('../utilities/assert').argument;
 
 /**
-Creates an instance of the azure-mobile-apps server object for express 4.x
-@param {configuration} configuration
-*/
+ * An {@link http://expressjs.com/4x/api.html#router express router} extended with the following properties
+ * @typedef mobileAppRouter
+ * @property {module:azure-mobile-apps/express/tables} tables - Contains functions to register table definitions with azure-mobile-apps
+ * @property {module:azure-mobile-apps/express/tables/table} table - Factory function for creating table definition objects
+ * @property {configuration} configuration - Top level configuration that azure-mobile-apps was configured with
+ */
+
+/**
+ * Creates an instance of the azure-mobile-apps server object for express 4.x
+ * @param {configuration} configuration
+ * @returns {mobileAppRouter}
+ */
 module.exports = function (configuration) {
     configuration = configuration || {};
     configuration.data = configuration.data || { provider: 'memory' };
@@ -32,46 +42,22 @@ module.exports = function (configuration) {
         createContextMiddleware = createContext(configuration),
         handleErrorMiddleware = handleError(configuration),
         crossOriginMiddleware = crossOrigin(configuration),
-        versionMiddleware = version(configuration);
+        versionMiddleware = version(configuration),
+        mobileApp = express.Router();
 
-    return {
-        /**
-        Contains functions to register table definitions with azure-mobile-apps
-        @type {module:azure-mobile-apps/express/tables}
-        */
-        tables: tableMiddleware,
+    mobileApp.tables = tableMiddleware;
+    mobileApp.table = table;
+    mobileApp.configuration = configuration;
 
-        /**
-        Factory function for creating table definition objects
-        @function
-        @returns {module:azure-mobile-apps/express/tables/table}
-        */
-        table: table,
+    mobileApp.use(versionMiddleware)
+        .use(createContextMiddleware)
+        .use(authMiddleware)
+        .use(crossOriginMiddleware)
+        .use(notificationMiddleware)
+        .use(configuration.tableRootPath || '/tables', mobileApp.tables)
+        .use(handleErrorMiddleware);
 
-        /**
-        Top level configuration that azure-mobile-apps was configured with
-        @type {configuration}
-        */
-        configuration: configuration,
-
-        /**
-        Attach default azure-mobile-apps middleware to an express application.
-        This registers middleware for authentication, push notification and table
-        access as well as other required system middleware.
-        @param {Express} app Express application to attach to
-        */
-        attach: function (app) {
-            assert(app, 'An express app to attach to was not provided');
-            log.debug('Attaching to express app');
-            app.use(versionMiddleware);
-            app.use(createContextMiddleware);
-            app.use(authMiddleware);
-            app.use(crossOriginMiddleware);
-            app.use(notificationMiddleware);
-            app.use(configuration.tableRootPath || '/tables', tableMiddleware);
-            app.use(handleErrorMiddleware);
-        }
-    };
+    return mobileApp;
 };
 
 /**
