@@ -71,3 +71,9 @@ Notifications configuration
 @property {string} hubName - The name of the associated notification hub
 @property {string} connectionString - The connection string of the associated notification hub
 */
+
+/**
+ * Notification Hub Service
+ * @external NotificationHubService
+ * @see {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|NotificationHubService}
+ */

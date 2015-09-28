@@ -22,8 +22,7 @@ module.exports = function (configuration) {
 
     return {
         /**
-         * Returns an instance of the Notification Hubs Client for Node
-         * @return {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html NotificationHubService} - The Notification Hubs node client
+         * Returns an instance of the {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|Notification Hubs Service}
          */
         getClient: function () { return nhClient; },
 
