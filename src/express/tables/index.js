@@ -39,7 +39,7 @@ module.exports = function (configuration) {
             definition = definition.createMiddleware(name);
 
         logger.debug("Adding table definition for " + name);
-        router.use('/', definition);
+        router.use('/' + name, definition);
     };
 
     /**
