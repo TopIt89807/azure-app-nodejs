@@ -42,5 +42,8 @@ module.exports = function (req, res, next) {
         // this is very nasty, but the simplest way I can find to circumvent the default express/fresh behaviour for 304s
         req.headers['if-modified-since'] = undefined;
         req.headers['if-none-match'] = undefined;
+        res.set('cache-control', 'no-cache');
+        res.set('expires', 0);
+        res.set('pragma', 'no-cache');
     }
 }
