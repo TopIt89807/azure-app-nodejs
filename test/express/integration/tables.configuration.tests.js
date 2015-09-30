@@ -21,7 +21,7 @@ describe('azure-mobile-apps.express.integration.tables.configuration', function 
             return 'function executed';
         });
         mobileApp.tables.add('todoitem', table);
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         supertest(app)
             .get('/tables/todoitem')
@@ -41,7 +41,7 @@ describe('azure-mobile-apps.express.integration.tables.configuration', function 
         });
 
         mobileApp.tables.add('todoitem', table);
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         supertest(app)
             .get('/tables/todoitem')
@@ -54,7 +54,7 @@ describe('azure-mobile-apps.express.integration.tables.configuration', function 
     it('uses custom root path', function (done) {
         mobileApp = mobileApps({ tableRootPath: '/test' });
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         supertest(app)
             .get('/test/todoitem')

@@ -16,9 +16,9 @@ module.exports = function (configuration) {
                 req.azureMobile.auth = authUtils;
 
                 authUtils.validate(token)
-                    .then(function (claims) {
+                    .then(function (user) {
                         req.azureMobile = req.azureMobile || {};
-                        req.azureMobile.user = claims;
+                        req.azureMobile.user = user;
                         next();
                     })
                     .catch(function (error) {

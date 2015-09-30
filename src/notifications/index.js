@@ -2,9 +2,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/notifications
-@description Functions for managing notification installations and the NH client
-*/
+ * @module azure-mobile-apps/notifications
+ * @description Functions for managing notification installations and the NH client
+ */
 var util = require('util'),
     promises = require('../utilities/promises'),
     NotificationHubService = require('azure-sb').NotificationHubService,
@@ -12,6 +12,7 @@ var util = require('util'),
     UserIdTagPrefix = "_UserId:";
 
 /**
+ * Creates an instance of the notifications module specified in the configuration
  * @param  {notificationsConfiguration} configuration The notifications configuration
  * @return An object with members described below
  */
@@ -21,8 +22,7 @@ module.exports = function (configuration) {
 
     return {
         /**
-         * Returns an instance of the Notification Hubs Client for Node
-         * @return {object} notificationsClient The Notification Hubs node client
+         * Returns an instance of the {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|Notification Hubs Service}
          */
         getClient: function () { return nhClient; },
 

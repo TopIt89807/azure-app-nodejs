@@ -22,7 +22,7 @@ describe('azure-mobile-apps.express.integration.tables.softDelete', function () 
 
     it('deleted records are not returned', function () {
         mobileApp.tables.add('softDelete', { softDelete: true });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/softDelete')
@@ -45,7 +45,7 @@ describe('azure-mobile-apps.express.integration.tables.softDelete', function () 
 
     it('deleted records are returned when requested', function () {
         mobileApp.tables.add('softDelete', { softDelete: true });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/softDelete')
@@ -68,7 +68,7 @@ describe('azure-mobile-apps.express.integration.tables.softDelete', function () 
 
     it('deleted records can be undeleted', function () {
         mobileApp.tables.add('softDelete', { softDelete: true });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/softDelete')

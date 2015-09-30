@@ -20,7 +20,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('returns 200 for table requests with valid auth token', function () {
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -30,7 +30,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('returns 200 for table requests with no auth token', function () {
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -39,7 +39,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('returns 401 for table requests with invalid auth token', function () {
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -49,7 +49,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('returns 401 for table requests against authorised table with no token', function () {
         mobileApp.tables.add('todoitem', { authorise: true });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -58,7 +58,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('returns 200 for table requests against authorised table with valid token', function () {
         mobileApp.tables.add('todoitem', { authorise: true });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -73,7 +73,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             return [context.user.id];
         });
         mobileApp.tables.add('todoitem', table);
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -91,7 +91,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             return [context.user.getIdentity('provider')];
         });
         mobileApp.tables.add('todoitem', table);
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -104,7 +104,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('authorises all operations against a table when specified', function () {
         mobileApp.tables.add('todoitem', { authorise: true });
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
@@ -131,7 +131,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
         table.insert.authorise = true;
         table.update.authorise = true;
         mobileApp.tables.add('todoitem', table);
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')

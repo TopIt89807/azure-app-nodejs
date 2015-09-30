@@ -27,7 +27,7 @@ mobileApp.tables.add('OfflineReady');
 mobileApp.tables.add('OfflineReadyNoVersionAuthenticated', { authorise: true });
 mobileApp.tables.import('tables');
 
-mobileApp.attach(app);
+app.use(mobileApp);
 
 // custom APIs
 app.get('/api/jwtTokenGenerator', require('./api/jwtTokenGenerator')(config));

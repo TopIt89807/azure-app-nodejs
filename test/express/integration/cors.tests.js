@@ -25,7 +25,7 @@ describe('azure-mobile-apps.express.integration.cors', function () {
         app = express();
         mobileApp = mobileApps(config);
         mobileApp.tables.add('todoitem');
-        mobileApp.attach(app);
+        app.use(mobileApp);
     });
 
     it('sets allow origin header for basic', function () {

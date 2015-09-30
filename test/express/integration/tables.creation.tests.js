@@ -43,7 +43,7 @@ describe('azure-mobile-apps.express.integration.tables.creation', function () {
 
     function testTableCreation (tableConfig) {
         mobileApp.tables.add(tableConfig.name, tableConfig);
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         app.get('/api/createTable', function (req, res, next) {
             req.azureMobile.tables(tableConfig.name).insert({ id: '1', value: 'test1' }).then(function () {

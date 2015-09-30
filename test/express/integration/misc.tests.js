@@ -36,27 +36,27 @@ describe('azure-mobile-apps.express.integration', function () {
             var table = mobileApp.table();
             table.read.use(function (req, res, next) { throw new Error('test'); });
             mobileApp.tables.add('todoitem', table);
-            mobileApp.attach(app);
+            app.use(mobileApp);
         }
     });
 
     describe('version', function () {
-        it('attaches version header', function () {
+        it('attaches server version header', function () {
             app = express();
             mobileApp = mobileApps();
             mobileApp.tables.add('todoitem');
-            mobileApp.attach(app);
+            app.use(mobileApp);
 
             return supertest(app)
                 .get('/tables/todoitem')
-                .expect('x-zumo-version', 'node-' + require('../../../package.json').version);
+                .expect('x-zumo-server-version', 'node-' + require('../../../package.json').version);
         });
 
         it('does not attach version header if version is set to undefined', function() {
             app = express();
             mobileApp = mobileApps({ version: undefined });
             mobileApp.tables.add('todoitem');
-            mobileApp.attach(app);
+            app.use(mobileApp);
 
             return supertest(app)
                 .get('/tables/todoitem')
@@ -71,7 +71,7 @@ describe('azure-mobile-apps.express.integration', function () {
             app = express();
             mobileApp = mobileApps();
             mobileApp.tables.add('todoitem');
-            mobileApp.attach(app);
+            app.use(mobileApp);
 
             return supertest(app)
                 .get('/tables/todoitem')
