@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npm run lint & mocha",
     "lint": "jshint src",
-    "jsdoc": "jsdoc -c jsdoc/config.json -R ./README.md"
+    "jsdoc": "jsdoc -c jsdoc/config.json"
   },
   "dependencies": {
     "jsonwebtoken": "^5.0.2",
@@ -30,10 +30,11 @@
     "chai-subset": "^1.0.1",
     "jsdoc": "^3.3.2",
     "jshint": "^2.8.0",
+    "minami": "mamaso/minami",
     "mocha": "^2.2.5",
     "sinon": "^1.16.1",
-    "sinon-chai": "^2.8.0",
     "sinon-as-promised": "4.0.0",
+    "sinon-chai": "^2.8.0",
     "supertest": "^1.1.0",
     "supertest-as-promised": "^2.0.1"
   }

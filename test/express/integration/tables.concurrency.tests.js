@@ -22,7 +22,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
 
     it('returns 409 when version columns do not match', function () {
         mobileApp.tables.add('concurrency');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/concurrency')
@@ -42,7 +42,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
 
     it('returns 412 when version does not match If-Match header', function () {
         mobileApp.tables.add('concurrency');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/concurrency')
@@ -63,7 +63,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
 
     it('returns 200 when version columns match', function () {
         mobileApp.tables.add('concurrency');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/concurrency')
@@ -79,7 +79,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
 
     it('returns 412 when delete is attempted with incorrect version', function () {
         mobileApp.tables.add('concurrency');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/concurrency')
@@ -95,7 +95,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
 
     it('returns 200 when delete is attempted with correct version', function () {
         mobileApp.tables.add('concurrency');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/concurrency')
@@ -111,7 +111,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
 
     it('returns 409 when inserting duplicate record', function () {
         mobileApp.tables.add('concurrency');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         return supertest(app)
             .post('/tables/concurrency')
