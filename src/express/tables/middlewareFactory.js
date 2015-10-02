@@ -7,8 +7,8 @@
     authorise = require('../middleware/authorise');
 
 module.exports = function (configuration, router, executeOperation) {
-    var defaultRoute = '/' + configuration.name,
-        idRoute = '/' + configuration.name + '/:id';
+    var defaultRoute = '/',
+        idRoute = '/:id';
 
     // add operation specific middleware configured by the user
     configureOperation('read', 'get', [parseQuery(configuration)], [renderResults], [defaultRoute, idRoute]);
@@ -37,6 +37,6 @@ module.exports = function (configuration, router, executeOperation) {
 
         routes.forEach(function (route) {
             router[verb](route, middleware);
-        })
+        });
     }
 };
