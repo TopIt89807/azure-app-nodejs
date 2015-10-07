@@ -16,6 +16,7 @@ var express = require('express'),
     authenticate = require('./middleware/authenticate'),
     handleError = require('./middleware/handleError'),
     crossOrigin = require('./middleware/crossOrigin'),
+    renderResults = require('./middleware/renderResults'),
     version = require('./middleware/version'),
     log = require('../logger'),
     assert = require('../utilities/assert').argument;
@@ -52,7 +53,7 @@ module.exports = function (configuration) {
         .use(crossOriginMiddleware)        
         .use(customMiddlewareRouter)
         .use(notificationMiddleware)
-        .use(configuration.tableRootPath || '/tables', tableMiddleware)
+        .use(configuration.tableRootPath || '/tables', mobileApp.tables, renderResults)
         .use(handleErrorMiddleware);
 
     var api = function (req, res, next) {
