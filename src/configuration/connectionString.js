@@ -9,12 +9,12 @@ module.exports = {
 
         return {
             provider: 'sql',
-            user: properties['user id'] || properties['uid'],
+            user: properties['user id'] || properties['userid'] || properties['uid'],
             password: properties['password'] || properties['pwd'],
             server: server,
-            port: parsePort(properties['server'] || properties['data source']),
-            database: properties['database'] || properties['initial catalog'],
-            connectionTimeout: (parseInt(properties['connection timeout']) * 1000) || 15000,
+            port: parsePort(properties['server'] || properties['data source'] || properties['datasource']),
+            database: properties['database'] || properties['initial catalog'] || properties['initialcatalog'],
+            connectionTimeout: (parseInt(properties['connection timeout'] || properties['connectiontimeout']) * 1000) || 15000,
             options: {
                 // Azure requires encryption
                 encrypt: server.indexOf('database.windows.net') > -1 || parseBoolean(properties['encrypt'])
