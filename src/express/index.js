@@ -50,10 +50,10 @@ module.exports = function (configuration) {
     mobileApp.use(versionMiddleware)
         .use(createContextMiddleware)
         .use(authMiddleware)
-        .use(crossOriginMiddleware)        
+        .use(crossOriginMiddleware)
         .use(customMiddlewareRouter)
         .use(notificationMiddleware)
-        .use(configuration.tableRootPath || '/tables', mobileApp.tables, renderResults)
+        .use(configuration.tableRootPath || '/tables', tableMiddleware, renderResults)
         .use(handleErrorMiddleware);
 
     var api = function (req, res, next) {
