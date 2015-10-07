@@ -1,9 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var bodyParser = require('body-parser'),
-    xmlBodyParser = require('express-xml-bodyparser'),
-    path = require('path'),
+var path = require('path'),
     app = require('express')(),
     mobileApps = require('../..'),
     configuration = require('../../src/configuration'),
@@ -32,7 +30,7 @@ app.use(mobileApp);
 // custom APIs
 app.get('/api/jwtTokenGenerator', require('./api/jwtTokenGenerator')(config));
 app.get('/api/runtimeInfo', require('./api/runtimeInfo'));
-app.all('/api/applicationPermission', [bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), require('./api/applicationPermission')]);
+require('./api/applicationPermission').register(app);
 require('./api/movieFinder').register(app);
 require('./api/push').register(app);
 

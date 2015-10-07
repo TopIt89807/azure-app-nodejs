@@ -43,21 +43,30 @@ module.exports = function (configuration) {
         handleErrorMiddleware = handleError(configuration),
         crossOriginMiddleware = crossOrigin(configuration),
         versionMiddleware = version(configuration),
+        customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();
-
-    mobileApp.tables = tableMiddleware;
-    mobileApp.table = table;
-    mobileApp.configuration = configuration;
 
     mobileApp.use(versionMiddleware)
         .use(createContextMiddleware)
         .use(authMiddleware)
-        .use(crossOriginMiddleware)
+        .use(crossOriginMiddleware)        
+        .use(customMiddlewareRouter)
         .use(notificationMiddleware)
-        .use(configuration.tableRootPath || '/tables', mobileApp.tables)
+        .use(configuration.tableRootPath || '/tables', tableMiddleware)
         .use(handleErrorMiddleware);
 
-    return mobileApp;
+    var api = function (req, res, next) {
+        mobileApp(req, res, next);
+    };
+
+    api.tables = tableMiddleware;
+    api.table = table;
+    api.configuration = configuration;
+    api.use = function () {
+        customMiddlewareRouter.use.apply(customMiddlewareRouter, arguments);
+    }
+
+    return api;
 };
 
 /**

@@ -1,7 +1,19 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-module.exports = function (req, res, next) {
+var authorise = require('../../../src/express/middleware/authorise'),
+    bodyParser = require('body-parser'),
+    xmlBodyParser = require('express-xml-bodyparser');
+
+module.exports = {
+    register: function (app) {
+        app.use('/api/applicationPermission', [bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
+        app.use('/api/publicPermission', [bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
+        app.use('/api/userPermission', [authorise, bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
+    }
+}
+
+function handleRequest(req, res, next) {
     var format = req.query.format || 'json';
     var status = req.query.status || 200;
     var output = { method: req.method };
@@ -21,7 +33,7 @@ module.exports = function (req, res, next) {
         }
     }
 
-    if (req.body && Object.keys(req.body).length) {
+    if (req.body && (typeof req.body !== 'object' || Object.keys(req.body).length)) {
         output.body = req.body;
     }
 
