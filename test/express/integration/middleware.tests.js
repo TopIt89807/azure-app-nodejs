@@ -7,14 +7,30 @@ var expect = require('chai').expect,
     mobileApp = require('../../..')();
 
 describe('azure-mobile-apps.express.integration.middleware', function () {
-    it('middleware is mounted in the correct order', function () {
+    it('read middleware is mounted in the correct order', function () {
+        test('read');
+    });
+
+    it('insert middleware is mounted in the correct order', function () {
+        test('insert');
+    });
+
+    it('update middleware is mounted in the correct order', function () {
+        test('update');
+    });
+
+    it('delete middleware is mounted in the correct order', function () {
+        test('delete');
+    });
+
+    function test(operation) {
         var results = [];
 
         mobileApp.use(appendResult(1));
 
         var table = mobileApp.table();
         table.use(appendResult(2), table.execute, appendResult(5));
-        table.read.use(appendResult(3), table.operation, appendResult(4));
+        table[operation].use(appendResult(3), table.operation, appendResult(4));
         mobileApp.tables.add('test', table);
         app.use(mobileApp);
 
@@ -31,5 +47,5 @@ describe('azure-mobile-apps.express.integration.middleware', function () {
                 next();
             }
         }
-    });
+    }
 });
