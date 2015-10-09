@@ -56,7 +56,7 @@ An official npm package will be published soon.
 
   mobileApp.tables.add('TodoItem'); // Create a Table for 'TodoItem' with all default settings
 
-  mobileApp.attach(app); // Attach the mobileApp to
+  app.use(mobileApp);
   app.listen(process.env.PORT || 3000);
   ```
 

@@ -17,13 +17,12 @@ var util = require('util'),
  * @return An object with members described below
  */
 module.exports = function (configuration) {
-    var nhClient = configuration.client || new NotificationHubService(configuration.hubName, configuration.connectionString 
+    var nhClient = configuration.client || new NotificationHubService(configuration.hubName, configuration.connectionString
         || configuration.endpoint, configuration.sharedAccessKeyName, configuration.sharedAccessKeyValue);
 
     return {
         /**
-         * Returns an instance of the Notification Hubs Client for Node
-         * @return {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html NotificationHubService} - The Notification Hubs node client
+         * Returns an instance of the {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|Notification Hubs Service}
          */
         getClient: function () { return nhClient; },
 
@@ -31,7 +30,7 @@ module.exports = function (configuration) {
          * Creates or updates the installation id with the supplied installation
          * @param  {string} installationId The installation id, usually a guid
          * @param  {object} installation The notification hubs installation object
-         * @param  {string} [user] The user id to associate with the installation 
+         * @param  {string} [user] The user id to associate with the installation
          * @return A promise that yields the notification hubs client response
          */
         putInstallation: function (installationId, installation, user) {
@@ -47,7 +46,7 @@ module.exports = function (configuration) {
                                 result(res);
                             }
                         });
-                    });                
+                    });
                 });
         },
 
@@ -71,14 +70,14 @@ module.exports = function (configuration) {
 
     function getTagsByInstallationId(installationId) {
         var installationIdAsTag = util.format(InstallationIdTag, installationId);
-        
+
         return mapRegistrations(installationIdAsTag, function (registration) { return registration.Tag });
     }
 
     function addUserTag(tags, user) {
         if (user) {
             tags = tags.filter(function (tag) {
-                return !(tag.indexOf(UserIdTagPrefix) === 0);
+                return !(tag && tag.indexOf(UserIdTagPrefix) === 0);
             });
             tags.push(UserIdTagPrefix + user);
         }

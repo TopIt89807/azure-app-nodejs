@@ -1,5 +1,5 @@
 module.exports = function (configuration) {
-    var auth = require('../../src/auth')(configuration.auth);
+    var auth = require('../../../src/auth')(configuration.auth);
 
     return function (req, res, next) {
         var payload = {

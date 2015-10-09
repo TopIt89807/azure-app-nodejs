@@ -17,7 +17,7 @@ describe('azure-mobile-apps.express.tables.middlewareFactory', function () {
             };
         factory(configuration, router, executeOperation());
 
-        expect(router.stack[0].route.stack.length).to.equal(3);
+        expect(router.stack[0].route.stack.length).to.equal(2);
         expect(router.stack[0].route.stack[1].handle.constructor).to.equal(Function); // used to test against executeOperation, no longer possible
     });
 

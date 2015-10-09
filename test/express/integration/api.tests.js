@@ -18,7 +18,7 @@ describe('azure-mobile-apps.express.integration.api', function () {
 
     it('exposes data access object through request object', function () {
         mobileApp.tables.add('apiTest');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         app.get('/api/test', function (req, res, next) {
             expect(req.azureMobile.tables('apiTest').read).to.be.a('function');
@@ -30,7 +30,7 @@ describe('azure-mobile-apps.express.integration.api', function () {
 
     it('allows table operations', function () {
         mobileApp.tables.add('apiTest');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         app.get('/api/createTest', function (req, res, next) {
             req.azureMobile.tables('apiTest').insert({ id: '1', value: 'test1' }).then(function () {
@@ -58,7 +58,7 @@ describe('azure-mobile-apps.express.integration.api', function () {
 
     it('attaches query operators to data access objects', function () {
         mobileApp.tables.add('apiTest');
-        mobileApp.attach(app);
+        app.use(mobileApp);
 
         app.get('/api/test', function (req, res, next) {
             var table = req.azureMobile.tables('apiTest');

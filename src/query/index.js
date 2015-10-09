@@ -22,7 +22,7 @@ module.exports = {
     @param {express.Request} req The HTTP request object
     */
     fromRequest: function(req) {
-        var url = req.path;
+        var url = req.baseUrl;
         return Query.Providers.OData.fromOData(
             url.substring(url.lastIndexOf('/') + 1),
             req.query.$filter,

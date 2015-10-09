@@ -34,5 +34,9 @@ describe('azure-mobile-apps.utilities/promises.configuration.connectionString', 
             expect(parse('Server=tcp:azure-mobile-apps-test.database.windows.net').server).to.equal('azure-mobile-apps-test.database.windows.net');
             expect(parse('Server=azure-mobile-apps-test.database.windows.net').server).to.equal('azure-mobile-apps-test.database.windows.net');
         });
+
+        it('parses ADO.NET connection strings with spacing issues', function () {
+            expect(parse(adoNet.replace(' ', ''))).to.deep.equal(expected);
+        })
     });
 });

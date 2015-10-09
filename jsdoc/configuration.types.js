@@ -4,14 +4,14 @@
 /**
 The top level configuration object.
 @typedef configuration
-@property {string} platform=express - Server platform to use. Currently only express is supported,
-@property {string} basePath=. - Base path to use for the application,
-@property {string} configFile=azureMobile.js - Name of the file that exports configuration objects to load,
-@property {Promise} promiseConstructor Promise constructor to use,
-@property {string} tableRootPath=/tables - Directory to load table configuration from,
+@property {string} platform=express - Server platform to use. Currently only express is supported
+@property {string} basePath=. - Base path to use for the application
+@property {string} configFile=azureMobile.js - Name of the file that exports configuration objects to load
+@property {Promise} promiseConstructor Promise constructor to use
+@property {string} tableRootPath=/tables - Directory to load table configuration from
 @property {string} notificationsRootPath=/push/installations - Notification installations endpoint
-@property {bool} debug=false - Run the server in debug mode. Automatically turned on when node is executed with the --debug option,
-@property {string} version - Current version of the Azure Mobile Apps SDK,
+@property {bool} debug=false - Run the server in debug mode. Automatically turned on when node is executed with the --debug option
+@property {string} version - Current version of the Azure Mobile Apps SDK
 @property {loggingConfiguration} logging - Logging configuration
 @property {dataConfiguration} data - Data configuration
 @property {authConfiguration} auth - Authentication configuration
@@ -71,3 +71,9 @@ Notifications configuration
 @property {string} hubName - The name of the associated notification hub
 @property {string} connectionString - The connection string of the associated notification hub
 */
+
+/**
+ * Notification Hub Service
+ * @external NotificationHubService
+ * @see {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|NotificationHubService}
+ */
