@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 ﻿var parseQuery = require('../middleware/parseQuery'),
     parseItem = require('../middleware/parseItem'),
-    authorise = require('../middleware/authorise');
+    authorize = require('../middleware/authorize');
 
 module.exports = function (configuration, router, executeOperation) {
     var defaultRoute = '/',
@@ -28,8 +28,8 @@ module.exports = function (configuration, router, executeOperation) {
                 ? [executeOperation]
                 : operationMiddleware;
 
-        // hook up the authorise middleware if specified
-        if (configuration.authorise || (configuration[operation] && configuration[operation].authorise)) middleware.unshift(authorise);
+        // hook up the authorize middleware if specified
+        if (configuration.authorize || (configuration[operation] && configuration[operation].authorize)) middleware.unshift(authorize);
 
         if (pre) middleware.unshift.apply(middleware, pre);
 

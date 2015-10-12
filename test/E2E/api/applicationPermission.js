@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var authorise = require('../../../src/express/middleware/authorise'),
+var authorize = require('../../../src/express/middleware/authorize'),
     bodyParser = require('body-parser'),
     xmlBodyParser = require('express-xml-bodyparser');
 
@@ -9,7 +9,7 @@ module.exports = {
     register: function (app) {
         app.use('/api/applicationPermission', [bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
         app.use('/api/publicPermission', [bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
-        app.use('/api/userPermission', [authorise, bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
+        app.use('/api/userPermission', [authorize, bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
     }
 }
 
