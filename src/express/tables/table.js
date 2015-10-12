@@ -42,7 +42,7 @@ module.exports = function (definition) {
     Register a table read logic handler. The property also exposes a use function for specifying middleware for the read operation.
     Middleware must contain the middleware exposed through table.operation. You can also set the authorise property on this member.
     @function read
-    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
 var table = require('azure-mobile-apps').table();
 table.read.authorise = true;
@@ -58,27 +58,26 @@ table.read(function (context) {
     /**
     @callback tableOperationHandler
     @param {context} context The current azure-mobile-apps context object
-    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
 
     /**
     Identical syntax and semantics to the read function, but for update operations.
     @function update
-    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.update = attachOperation('patch');
 
     /**
     Identical syntax and semantics to the read function, but for insert operations.
     @function insert
-    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.insert = attachOperation('post');
 
     /**
     Identical syntax and semantics to the read function, but for delete operations.
     @function delete
-    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.delete = attachOperation('delete');
 
