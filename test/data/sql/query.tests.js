@@ -11,7 +11,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'intIdMovies',
             filters: 'ceiling((Duration div 60.0)) eq 2.0'
         },
-            statement = formatSql(query, { schemaName: 'testapp'});
+            statement = formatSql(query, { schema: 'testapp'});
         equal(statement.parameters[1].type, mssql.FLOAT);
     });
 
@@ -24,7 +24,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             skip: 500,
             take: null
         },
-            expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [Title]) AS [ROW_NUMBER], " + 
+            expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [Title]) AS [ROW_NUMBER], " +
             "* FROM [testapp].[intIdMovies] WHERE ([Duration] = [Duration])) AS [t1] WHERE [t1].[ROW_NUMBER] " +
             "BETWEEN 500 + 1 AND 500 + 9007199254740992 ORDER BY [t1].[ROW_NUMBER]";
 
@@ -727,7 +727,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'products',
                 filters: "__version eq 'AAAAAAAAUDU='"
             },
-            statement = formatSql(query, { schemaName: 'testapp' });
+            statement = formatSql(query, { schema: 'testapp' });
         equal(statement.parameters[0].value.constructor, Buffer);
         equal(statement.parameters[0].value.toString('base64'), 'AAAAAAAAUDU=');
     });
@@ -798,8 +798,8 @@ describe('azure-mobile-apps.data.sql.query', function () {
     });
 
     function verifySqlFormatting(query, expectedSql, metadata) {
-        if(metadata) metadata.schemaName = 'testapp';
-        var statement = formatSql(query, metadata || { idType: "number", binaryColumns: [], schemaName: 'testapp' });
+        if(metadata) metadata.schema = 'testapp';
+        var statement = formatSql(query, metadata || { idType: "number", binaryColumns: [], schema: 'testapp' });
         equal(statement.sql, expectedSql);
 
         return statement;

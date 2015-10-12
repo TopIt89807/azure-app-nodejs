@@ -8,19 +8,19 @@ var expect = require('chai').expect,
 
 describe('azure-mobile-apps.express.integration.middleware', function () {
     it('read middleware is mounted in the correct order', function () {
-        test('read');
+        return test('read');
     });
 
     it('insert middleware is mounted in the correct order', function () {
-        test('insert');
+        return test('insert');
     });
 
     it('update middleware is mounted in the correct order', function () {
-        test('update');
+        return test('update');
     });
 
     it('delete middleware is mounted in the correct order', function () {
-        test('delete');
+        return test('delete');
     });
 
     function test(operation) {
