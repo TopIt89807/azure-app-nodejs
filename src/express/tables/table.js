@@ -44,7 +44,7 @@ module.exports = function (definition) {
     @function read
     @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
-var table = require('azure-mobile-apps/express').table();
+var table = require('azure-mobile-apps').table();
 table.read.authorise = true;
 table.read.use(customMiddleware, table.operation);
 table.read(function (context) {
@@ -58,23 +58,27 @@ table.read(function (context) {
     /**
     @callback tableOperationHandler
     @param {context} context The current azure-mobile-apps context object
+    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
 
     /**
     Identical syntax and semantics to the read function, but for update operations.
     @function update
+    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.update = attachOperation('patch');
 
     /**
     Identical syntax and semantics to the read function, but for insert operations.
     @function insert
+    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.insert = attachOperation('post');
 
     /**
     Identical syntax and semantics to the read function, but for delete operations.
     @function delete
+    @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.delete = attachOperation('delete');
 
