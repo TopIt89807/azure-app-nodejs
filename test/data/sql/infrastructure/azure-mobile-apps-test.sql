@@ -1,19 +1,3 @@
-USE [master]
-GO
-
-DROP DATABASE [azure-mobile-apps-test]
-GO
-
-CREATE DATABASE [azure-mobile-apps-test]
-GO
-
-USE [azure-mobile-apps-test]
-GO
-
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[integration](
 	[id] [varchar](50) NOT NULL,
 	[string] [varchar](50) NULL,
@@ -27,10 +11,6 @@ CREATE TABLE [dbo].[integration](
 
 GO
 /****** Object:  Table [dbo].[query]    Script Date: 6/23/2015 3:36:30 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [dbo].[query](
 	[id] [varchar](50) NOT NULL,
 	[string] [varchar](50) NULL,
