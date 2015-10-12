@@ -9,5 +9,5 @@
 @property {boolean} dynamicSchema=true - Dynamically create table schema
 @property {string} name - Name of the table
 @property {object} columns - Object containing column definitions; property key defines the column name, the value should be one of 'number', 'string', 'boolean' or 'datetime'
-@property {string} schemaName=dbo - SQL Server schema name to use for the table
+@property {string} schema=dbo - SQL Server schema name to use for the table
 */
