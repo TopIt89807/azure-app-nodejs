@@ -22,7 +22,7 @@ module.exports = function (configuration, router, executeOperation) {
         : configuration.middleware.execute;
 
     function configureOperation(operation, verb, pre, routes) {
-        var operationMiddleware = configuration.middleware[verb] || [],
+        var operationMiddleware = configuration.middleware[operation] || [],
             // if no middleware has been configured, just use the executeOperation middleware
             middleware = operationMiddleware.length === 0
                 ? [executeOperation]

@@ -53,29 +53,26 @@ table.read(function (context) {
     return context.execute();
 });
     */
-    table.read = attachOperation('get');
+    table.read = attachOperation('read');
 
     /**
     @callback tableOperationHandler
     @param {context} context The current azure-mobile-apps context object
     */
 
-    /**
-    Identical syntax and semantics to the read function, but for update operations.
+    /** Identical syntax and semantics to the read function, but for update operations.
     @function update
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
-    table.update = attachOperation('patch');
+    table.update = attachOperation('update');
 
-    /**
-    Identical syntax and semantics to the read function, but for insert operations.
+    /** Identical syntax and semantics to the read function, but for insert operations.
     @function insert
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
-    table.insert = attachOperation('post');
+    table.insert = attachOperation('insert');
 
-    /**
-    Identical syntax and semantics to the read function, but for delete operations.
+    /** Identical syntax and semantics to the read function, but for delete operations.
     @function delete
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
@@ -83,18 +80,18 @@ table.read(function (context) {
 
     return table;
 
-    function attachMiddleware(verb) {
+    function attachMiddleware(operation) {
         return function (middleware) {
-            table.middleware[verb] = table.middleware[verb] || [];
-            Array.prototype.push.apply(table.middleware[verb], arguments);
+            table.middleware[operation] = table.middleware[operation] || [];
+            Array.prototype.push.apply(table.middleware[operation], arguments);
         };
     }
 
-    function attachOperation(verb) {
-        var operation = function (handler) {
-            table.operations[verb] = handler;
+    function attachOperation(operation) {
+        var api = function (handler) {
+            table.operations[operation] = handler;
         };
-        operation.use = attachMiddleware(verb);
-        return operation;
+        api.use = attachMiddleware(operation);
+        return api;
     }
 };
