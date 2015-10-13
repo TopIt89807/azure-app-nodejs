@@ -40,12 +40,12 @@ module.exports = function (definition) {
 
     /**
     Register a table read logic handler. The property also exposes a use function for specifying middleware for the read operation.
-    Middleware must contain the middleware exposed through table.operation. You can also set the authorise property on this member.
+    Middleware must contain the middleware exposed through table.operation. You can also set the authorize property on this member.
     @function read
     @param {tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
 var table = require('azure-mobile-apps/express').table();
-table.read.authorise = true;
+table.read.authorize = true;
 table.read.use(customMiddleware, table.operation);
 table.read(function (context) {
     // add an additional query operator

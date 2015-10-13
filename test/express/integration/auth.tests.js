@@ -47,8 +47,8 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             .expect(401);
     });
 
-    it('returns 401 for table requests against authorised table with no token', function () {
-        mobileApp.tables.add('todoitem', { authorise: true });
+    it('returns 401 for table requests against authorized table with no token', function () {
+        mobileApp.tables.add('todoitem', { authorize: true });
         app.use(mobileApp);
 
         return supertest(app)
@@ -56,8 +56,8 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             .expect(401);
     });
 
-    it('returns 200 for table requests against authorised table with valid token', function () {
-        mobileApp.tables.add('todoitem', { authorise: true });
+    it('returns 200 for table requests against authorized table with valid token', function () {
+        mobileApp.tables.add('todoitem', { authorize: true });
         app.use(mobileApp);
 
         return supertest(app)
@@ -68,7 +68,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('attaches user object to context object', function () {
         var table = mobileApp.table();
-        table.authorise = true;
+        table.authorize = true;
         table.read(function (context) {
             return [context.user.id];
         });
@@ -86,7 +86,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
 
     it('attaches getIdentity function to user object', function () {
         var table = mobileApp.table();
-        table.authorise = true;
+        table.authorize = true;
         table.read(function (context) {
             return [context.user.getIdentity('provider')];
         });
@@ -102,8 +102,8 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             });
     });
 
-    it('authorises all operations against a table when specified', function () {
-        mobileApp.tables.add('todoitem', { authorise: true });
+    it('authorizes all operations against a table when specified', function () {
+        mobileApp.tables.add('todoitem', { authorize: true });
         app.use(mobileApp);
 
         return supertest(app)
@@ -126,10 +126,10 @@ describe('azure-mobile-apps.express.integration.auth', function () {
             });
     });
 
-    it('authorises specific operations against a table when specified', function () {
+    it('authorizes specific operations against a table when specified', function () {
         var table = mobileApp.table();
-        table.insert.authorise = true;
-        table.update.authorise = true;
+        table.insert.authorize = true;
+        table.update.authorize = true;
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
