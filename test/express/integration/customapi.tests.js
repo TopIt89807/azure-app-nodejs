@@ -46,6 +46,12 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
             .expect(200);
     });
 
+    it('returns correct options on preflight', function () {
+        return request(app).options('/api/customapi')
+            .expect('allow', 'GET,HEAD,PUT,DELETE')
+            .expect(200);
+    });
+
     it('returns 401 on all verbs of authorized api', function () {
         return request(app).get('/api/authapi').expect(401)
             .then(function () {

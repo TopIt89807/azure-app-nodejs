@@ -9,7 +9,7 @@ an express web server. It is returned from the root azure-mobile-apps module
 when the configuration passed specifies the express platform.
 */
 var express = require('express'),
-    api = require('./api'),
+    customApi = require('./api'),
     tables = require('./tables'),
     table = require('./tables/table'),
     notifications = require('./middleware/notifications'),
@@ -40,7 +40,7 @@ module.exports = function (configuration) {
     configuration = configuration || {};
     configuration.data = configuration.data || { provider: 'memory' };
     var tableMiddleware = tables(configuration),
-        apiMiddleware = api(configuration),
+        apiMiddleware = customApi(configuration),
         notificationMiddleware = notifications(configuration),
         authMiddleware = authenticate(configuration),
         createContextMiddleware = createContext(configuration),

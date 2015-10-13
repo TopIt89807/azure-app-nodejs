@@ -29,7 +29,7 @@ module.exports = function (configuration) {
     @param {apiDefinition} definition - The definition for the api
     */
     router.add = function (name, definition) {
-        assert(name, 'A api name was not specified');
+        assert(name, 'An api name was not specified');
         var apiRouter = express.Router();
 
         Object.getOwnPropertyNames(definition).forEach(function (property) {
