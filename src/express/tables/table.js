@@ -6,10 +6,10 @@
 @description
 This module provides functionality for configuring features of individual tables with an Azure Mobile App.
 The returned table object exposes functions for attaching middleware and operation functions, i.e. use, read, read.use, insert, insert.use, etc.
-These functions populate the middleware and operations properties of the table object, which are then consumed by the middlewareFactory.
-The table object exposes a createMiddleware function that calls the middlewareFactory - this function is consumed by mobileApp.tables.add.
+These functions populate the middleware and operations properties of the table object, which are then consumed by the attachRoutes module.
+The router function calls the attachRoutes module and returns a configured router - this is consumed by mobileApp.tables.add.
 */
-var middlewareFactory = require('./middlewareFactory'),
+var attachRoutes = require('./attachRoutes'),
     executeOperation = require('../middleware/executeOperation'),
     utilities = require('../../utilities'),
     express = require('express');
@@ -20,13 +20,13 @@ Creates an instance of a table configuration helper.
 @returns An object with the members described below.
 */
 module.exports = function (definition) {
-    // create a router here that we will attach routes to using middlewareFactory
+    // create a router here that we will attach routes to using attachRoutes
     // exposing table.execute allows users to mount custom middleware before or after execution
     var router = express.Router(),
         table = utilities.assign({
-            createMiddleware: function (name) {
+            router: function (name) {
                 table.name = name;
-                return middlewareFactory(table, router, table.operation);
+                return attachRoutes(table, router, table.operation);
             }
         }, definition);
 

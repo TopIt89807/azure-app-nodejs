@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿var factory = require('../../../src/express/tables/middlewareFactory'),
+﻿var factory = require('../../../src/express/tables/attachRoutes'),
     executeOperation = require('../../../src/express/middleware/executeOperation'),
     express = require('express'),
     expect = require('chai').expect;
 
-describe('azure-mobile-apps.express.tables.middlewareFactory', function () {
+describe('azure-mobile-apps.express.tables.attachRoutes', function () {
     it('uses executeOperation for operation middleware if none was specified', function () {
         var router = express.Router(),
             configuration = {
