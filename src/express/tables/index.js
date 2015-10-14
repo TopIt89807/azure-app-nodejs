@@ -32,12 +32,12 @@ module.exports = function (configuration) {
     router.add = function (name, definition) {
         assert(name, 'A table name was not specified');
 
-        if(!definition || !definition.createMiddleware)
+        if(!definition || typeof definition.router !== 'function')
             definition = table(definition);
         configuration.tables[name] = definition;
 
         logger.debug("Adding table definition for " + name);
-        router.use('/' + name, definition.createMiddleware(name));
+        router.use('/' + name, definition.router(name));
     };
 
     /**
