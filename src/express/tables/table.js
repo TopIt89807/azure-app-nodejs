@@ -20,15 +20,15 @@ Creates an instance of a table configuration helper.
 @returns An object with the members described below.
 */
 module.exports = function (definition) {
-    var router = express.Router();
-
-    var table = utilities.assign({
-        // calling this creates required middleware as configured
-        createMiddleware: function (name) {
-            table.name = name;
-            return middlewareFactory(table, router, table.operation);
-        }
-    }, definition);
+    // create a router here that we will attach routes to using middlewareFactory
+    // exposing table.execute allows users to mount custom middleware before or after execution
+    var router = express.Router(),
+        table = utilities.assign({
+            createMiddleware: function (name) {
+                table.name = name;
+                return middlewareFactory(table, router, table.operation);
+            }
+        }, definition);
 
     table.middleware = { };
     table.operations = { };
