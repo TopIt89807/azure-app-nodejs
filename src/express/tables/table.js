@@ -3,7 +3,11 @@
 // ----------------------------------------------------------------------------
 /**
 @module azure-mobile-apps/express/tables/table
-@description This module provides functionality for configuring features of individual tables with an Azure Mobile App.
+@description
+This module provides functionality for configuring features of individual tables with an Azure Mobile App.
+The returned table object exposes functions for attaching middleware and operation functions, i.e. use, read, read.use, insert, insert.use, etc.
+These functions populate the middleware and operations properties of the table object, which are then consumed by the middlewareFactory.
+The table object exposes a createMiddleware function that calls the middlewareFactory - this function is consumed by mobileApp.tables.add.
 */
 var middlewareFactory = require('./middlewareFactory'),
     executeOperation = require('../middleware/executeOperation'),
@@ -16,15 +20,15 @@ Creates an instance of a table configuration helper.
 @returns An object with the members described below.
 */
 module.exports = function (definition) {
-    var router = express.Router();
-
-    var table = utilities.assign({
-        // calling this creates required middleware as configured
-        createMiddleware: function (name) {
-            table.name = name;
-            return middlewareFactory(table, router, table.operation);
-        }
-    }, definition);
+    // create a router here that we will attach routes to using middlewareFactory
+    // exposing table.execute allows users to mount custom middleware before or after execution
+    var router = express.Router(),
+        table = utilities.assign({
+            createMiddleware: function (name) {
+                table.name = name;
+                return middlewareFactory(table, router, table.operation);
+            }
+        }, definition);
 
     table.middleware = { };
     table.operations = { };
@@ -53,48 +57,53 @@ table.read(function (context) {
     return context.execute();
 });
     */
-    table.read = attachOperation('get');
+    table.read = attachOperation('read');
 
     /**
     @callback tableOperationHandler
     @param {context} context The current azure-mobile-apps context object
     */
 
-    /**
-    Identical syntax and semantics to the read function, but for update operations.
+    /** Identical syntax and semantics to the read function, but for update operations.
     @function update
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
-    table.update = attachOperation('patch');
+    table.update = attachOperation('update');
 
-    /**
-    Identical syntax and semantics to the read function, but for insert operations.
+    /** Identical syntax and semantics to the read function, but for insert operations.
     @function insert
-    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table insert is performed.
     */
-    table.insert = attachOperation('post');
+    table.insert = attachOperation('insert');
 
-    /**
-    Identical syntax and semantics to the read function, but for delete operations.
+    /** Identical syntax and semantics to the read function, but for delete operations.
     @function delete
-    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table delete is performed.
     */
     table.delete = attachOperation('delete');
 
+    /** Identical syntax and semantics to the read function, but for undelete operations.
+    @function delete
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
+    */
+    table.undelete = attachOperation('undelete');
+
     return table;
 
-    function attachMiddleware(verb) {
+    // returns a function that populates the table definition object with middleware provided for the operation
+    function attachMiddleware(operation) {
         return function (middleware) {
-            table.middleware[verb] = table.middleware[verb] || [];
-            Array.prototype.push.apply(table.middleware[verb], arguments);
+            table.middleware[operation] = table.middleware[operation] || [];
+            Array.prototype.push.apply(table.middleware[operation], arguments);
         };
     }
 
-    function attachOperation(verb) {
-        var operation = function (handler) {
-            table.operations[verb] = handler;
+    // returns a function that populates the table definition object with the user operation function. includes a .use function as provided by attachMiddleware
+    function attachOperation(operation) {
+        var api = function (handler) {
+            table.operations[operation] = handler;
         };
-        operation.use = attachMiddleware(verb);
-        return operation;
+        api.use = attachMiddleware(operation);
+        return api;
     }
 };

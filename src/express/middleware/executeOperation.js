@@ -8,13 +8,14 @@
 module.exports = function (operations) {
     return function (req, res, next) {
         var verb = req.method.toLowerCase(),
-            context = req.azureMobile || {};
+            context = req.azureMobile || {},
+            operation = determineOperation();
 
         context.execute = execute;
 
         // if a custom operation has been defined, execute it
-        if (operations && operations[verb]) {
-            var results = operations[verb](context);
+        if (operations && operations[operation]) {
+            var results = operations[operation](context);
 
             if (promises.isPromise(results))
                 results.then(setResults, next);
@@ -31,6 +32,15 @@ module.exports = function (operations) {
         function setResults(results) {
             res.results = results;
             next();
+        }
+
+        function determineOperation() {
+            switch(verb) {
+                case 'get': return 'read';
+                case 'patch': return 'update';
+                case 'delete': return 'delete';
+                case 'post': return req.params.id ? 'undelete' : 'insert';
+            };
         }
     };
 }

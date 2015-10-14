@@ -13,14 +13,14 @@ describe('azure-mobile-apps.express.integration.endtoend', function () {
     beforeEach(dropTable);
     afterEach(dropTable);
 
-    function dropTable(done) {
-        data(config).execute({ sql: 'drop table endtoend' }).then(done, function () { done() });
+    mobileApp.tables.import('../files/tables/endtoend');
+    app.use(mobileApp);
+
+    function dropTable() {
+        return data(config).execute({ sql: 'drop table endtoend' }).catch(function () { });
     }
 
     it('import, initialise, persist and query with custom middleware and operations', function () {
-        mobileApp.tables.import('../files/tables/endtoend');
-        app.use(mobileApp);
-
         return insert({ id: '1', clientValue: 'show' })
             .then(function (res) {
                 // insert middleware and operation have executed
@@ -46,6 +46,32 @@ describe('azure-mobile-apps.express.integration.endtoend', function () {
             })
             .catch(convertError);
     });
+
+    it('delete and undelete with custom middleware and operations', function () {
+        return insert({ id: '1', clientValue: 'show' })
+            .then(read)
+            .then(function (res) {
+                expect(res.body.length).to.equal(1);
+                return del(1);
+            })
+            .then(function (res) {
+                expect(res.body.deleteOperation).to.equal('delete');
+                expect(res.body.deleteMiddleware).to.equal('delete');
+                return read();
+            })
+            .then(function (res) {
+                expect(res.body.length).to.equal(0);
+                return undelete(1);
+            })
+            .then(function (res) {
+                expect(res.body.undeleteOperation).to.equal('undelete');
+                expect(res.body.undeleteMiddleware).to.equal('undelete');
+                return read();
+            })
+            .then(function (res) {
+                expect(res.body.length).to.equal(1);
+            });
+    });
 });
 
 function insert(item) {
@@ -54,6 +80,18 @@ function insert(item) {
 
 function update(item) {
     return request(app).patch('/tables/endtoend').send(item).expect(200);
+}
+
+function del(id) {
+    return request(app).delete('/tables/endtoend/' + id).expect(200);
+}
+
+function undelete(id) {
+    return request(app).post('/tables/endtoend/' + id).expect(200);
+}
+
+function read() {
+     return request(app).get('/tables/endtoend').expect(200);
 }
 
 function convertError(err) {
