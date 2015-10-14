@@ -39,7 +39,7 @@ module.exports = function (operations) {
                 case 'get': return 'read';
                 case 'patch': return 'update';
                 case 'delete': return 'delete';
-                case 'post': return req.params.id ? 'undelete' : 'read';
+                case 'post': return req.params.id ? 'undelete' : 'insert';
             };
         }
     };

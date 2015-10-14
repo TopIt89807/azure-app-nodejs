@@ -23,7 +23,11 @@ describe('azure-mobile-apps.express.integration.middleware', function () {
         return test('delete', 'delete');
     });
 
-    function test(operation, verb) {
+    it('undelete middleware is mounted in the correct order', function () {
+        return test('undelete', 'post', '/1');
+    });
+
+    function test(operation, verb, urlSuffix) {
         var results = [];
 
         mobileApp.use(appendResult(1));
@@ -35,7 +39,7 @@ describe('azure-mobile-apps.express.integration.middleware', function () {
         app.use(mobileApp);
 
         return supertest(app)
-            [verb]('/tables/test')
+            [verb]('/tables/test' + (urlSuffix || ''))
             .expect(200)
             .then(function (res) {
                 expect(results).to.deep.equal([1, 2, 3, 4, 5]);
