@@ -12,6 +12,12 @@ var parseQuery = require('../middleware/parseQuery'),
     parseItem = require('../middleware/parseItem'),
     authorise = require('../middleware/authorise');
 
+/** Creates an express router with appropriate routes configures for each HTTP verb.
+@param {module:azure-mobile-apps/express/tables/table} configuration Table configuration object.
+@param {express.Router} router Router to attach routes to.
+@param {module:azure-mobile-apps/express/middleware/executeOperation} executeOperation An instance of the executeOperation middleware for this table.
+@returns An express router with routes configured.
+*/
 module.exports = function (configuration, router, executeOperation) {
     var defaultRoute = '/',
         idRoute = '/:id';
