@@ -42,6 +42,8 @@ To contibute to this project you will need to be familar with Node.js and JavaSc
 
 Before you start work on any feature or large contribution, please follow our guidelines for [submitting an issue](#submitting-an-issue) and the Azure Mobile Engineering team and other community members will engage you in a discussion of the scope and strategy for your contibution. If your feature doesn't make sense for our utilities/promises SDK, it may make sense as a separate piece of middleware that the community can add. We will do our best to guide you to success. Please be aware that agreeing that your feature sounds like a good idea before you start does not assure that it will be accepted when you make a PR. We have high standards for utilities/promises SDK and will be defensive both in terms of keeping quality high and the functional scope managable.
 
+Please send Pull Requests that are matched against the 'dev' branch in the azure/azure-mobile-apps-node repository.  Do not send pull requests against the 'master' branch - they will be rejected.
+
 Once you have made a pull request, the Azure team and the community will engage with you in a review of your code, tests, design decisions, and more. Your code is expected to pass JS Hint with our JS Hint rules as well as generally meet our guidelines and coding conventions. It is also expected that any changes you make include new and updated tests to validate that your code works and that others who change the code will not break your features. We may make numerous change requests of you to meet our standards, but we will try to be transparent about our requirements. If anything seems unclear, please reach out to us and we will attempt to provide clarifying information.
 
 Overall, please try to make your contributions in as focused a means as possible. If you want to contribute two feature adds, please create two pull requests.
@@ -56,7 +58,7 @@ Azure has a common set of contributor guidelines found here: [http://azure.githu
 
 0. Fork the Azure Mobile Apps repository
 0. Clone the repository - `git clone https://github.com/<USERNAME>/azure-mobile-apps-node.git`
-0. We're currently developing off the master branch (prior to release). When we go to production, we will likely be using a developer branch and you'll want to check out that branch with `git checkout <branch_name>`
+0. We're currently developing off the 'dev' branch.  Use `git checkout dev` to check out the developer branch.
 0. Run `install.bat` to add the required dependencies to the project.
 0. Provision a database either in Azure SQL DB (x-plat) or a local SQL Express instance (windows only)
 0. Execute the [azure-mobile-apps-test.sql](./node_modules/azure-mobile-apps.data.sql/test/infrastructure/azure-mobile-apps-test.sql) script against your target database.
