@@ -12,7 +12,8 @@ var api = module.exports = {
 };
 
 api.delete.authorise = true;
-api.put.authorise = true;
+// added via json
+// api.put.authorise = true;
 
 function addHeader(req, res, next) {
     res.set('customapi', 'true');

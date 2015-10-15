@@ -36,6 +36,28 @@ describe('azure-mobile-apps.configuration.loader', function () {
             table1: { authenticate: true }
         });
     });
+
+    it('loads with .json extension', function () {
+        var configuration = loader.loadPath('./files/jsontables/table1.json');
+        expect(configuration).to.have.property('table1');
+    });
+
+    it('merges json properties', function () {
+        var configuration = loader.loadPath('./files/jsontables/table1');
+        expect(configuration).to.have.property('table1');
+        var table = configuration.table1;
+        expect(table).to.have.property('json', true);
+        expect(table).to.have.property('authenticate', true);
+        expect(table.func).to.have.property('json', true);
+        expect(table.func.toString()).to.equal('function () { }');
+    });
+
+    it('defaults to json property value', function () {
+        var configuration = loader.loadPath('./files/jsontables/conflict');
+        expect(configuration).to.deep.equal({
+            conflict: { source: '.json' }
+        });
+    })
 });
 
 function requireWithRefresh(path) {
