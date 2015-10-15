@@ -5,6 +5,6 @@ var app = require('express')(),
   mobileApp = require('azure-mobile-apps')();
 
 mobileApp.tables.import('./tables');
-mobileApp.attach(app);
+app.use(mobileApp);
 
 app.listen(process.env.PORT || 3000);

@@ -8,22 +8,26 @@ var expect = require('chai').expect,
 
 describe('azure-mobile-apps.express.integration.middleware', function () {
     it('read middleware is mounted in the correct order', function () {
-        test('read');
+        return test('read', 'get');
     });
 
     it('insert middleware is mounted in the correct order', function () {
-        test('insert');
+        return test('insert', 'post');
     });
 
     it('update middleware is mounted in the correct order', function () {
-        test('update');
+        return test('update', 'patch');
     });
 
     it('delete middleware is mounted in the correct order', function () {
-        test('delete');
+        return test('delete', 'delete');
     });
 
-    function test(operation) {
+    it('undelete middleware is mounted in the correct order', function () {
+        return test('undelete', 'post', '/1');
+    });
+
+    function test(operation, verb, urlSuffix) {
         var results = [];
 
         mobileApp.use(appendResult(1));
@@ -35,7 +39,7 @@ describe('azure-mobile-apps.express.integration.middleware', function () {
         app.use(mobileApp);
 
         return supertest(app)
-            .get('/tables/test')
+            [verb]('/tables/test' + (urlSuffix || ''))
             .expect(200)
             .then(function (res) {
                 expect(results).to.deep.equal([1, 2, 3, 4, 5]);

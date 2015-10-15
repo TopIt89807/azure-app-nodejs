@@ -48,8 +48,13 @@ module.exports = function (definition) {
     @function read
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
-var table = require('azure-mobile-apps').table();
+<<<<<<< HEAD
+var table = require('azure-mobile-apps/express').table();
 table.read.authorize = true;
+=======
+var table = require('azure-mobile-apps').table();
+table.read.authorise = true;
+>>>>>>> dev
 table.read.use(customMiddleware, table.operation);
 table.read(function (context) {
     // add an additional query operator

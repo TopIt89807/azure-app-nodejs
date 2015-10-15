@@ -25,7 +25,7 @@ module.exports = function (query, tableConfig) {
 
 function ctor(tableConfig) {
     this.tableConfig = tableConfig || {};
-    this.schemaName = this.tableConfig.schemaName || 'dbo';
+    this.schemaName = this.tableConfig.schema || 'dbo';
 }
 
 var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
