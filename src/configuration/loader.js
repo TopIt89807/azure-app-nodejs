@@ -2,7 +2,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 ﻿var path = require('path')
-    fs = require('fs');
+    fs = require('fs'),
+    utilities = require('../utilities'),
+    supportedExtensions = ['.js', '.json'];
 
 module.exports = {
     loadPath: function (targetPath, basePath) {
@@ -11,24 +13,31 @@ module.exports = {
 
         // this won't work with other extensions (e.g. .ts, .coffee)
         // perhaps we should use require.resolve here instead - also enables loading modules in other packages
-        if (!fs.existsSync(fullPath)) {
-            if (fs.existsSync(fullPath + '.js'))
-                fullPath += '.js';
+        if (!fs.existsSync(fullPath) || !fs.statSync(fullPath).isDirectory()) {
+            // remove path extension
+            var filesPath = fullPath;
+            if(path.extname(fullPath))
+                filesPath = fullPath.slice(0, -path.extname(fullPath).length)
+            
+            // get all files with supported extensions
+            var filePaths = getFilePaths(filesPath);
+
+            if (filePaths.length) {
+                return loadFiles({}, filePaths);
+            }
             else
                 throw new Error('Requested configuration path (' + fullPath + ') does not exist');
         }
-
-        if (fs.statSync(fullPath).isDirectory())
-            return loadDirectory({}, fullPath);
         else
-            return loadModule({}, fullPath);
+            return loadDirectory({}, fullPath);
     }
 }
 
 function loadModule(target, targetPath) {
     var moduleName = path.basename(targetPath, path.extname(targetPath)),
         loadedModule = require(targetPath);
-    target[moduleName] = loadedModule;
+    // due to lexicographic ordering, .js is loaded before .json
+    target[moduleName] = utilities.merge(target[moduleName] || {}, loadedModule);
     return target;
 }
 
@@ -39,6 +48,22 @@ function loadDirectory(target, targetPath) {
             loadDirectory(target, fullPath);
         else
             loadModule(target, fullPath);
+    });
+    return target;
+}
+
+function getFilePaths(targetPath) {
+    return supportedExtensions.map(function (extension) {
+            return targetPath + extension;
+        })
+        .filter(function (path) {
+            return fs.existsSync(path);
+        });
+}
+
+function loadFiles(target, targetPaths) {
+    targetPaths.forEach(function (path) {
+        loadModule(target, path);
     });
     return target;
 }

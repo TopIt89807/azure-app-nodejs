@@ -35,12 +35,11 @@ module.exports = function (configuration) {
         Object.getOwnPropertyNames(definition).forEach(function (property) {
             if (supportedVerbs.some(function (verb) { return verb === property; })) {
                 if (definition.authorise || definition[property].authorise) {
-                    delete definition[property].authorise;
-                    definition[property] = [authorise].concat(definition[property]);
+                    definition[property].authorise = true;
                     logger.debug("Adding authorisation to " + property + " for api " + name);
                 }
                 logger.debug("Adding method " + property + " to api " + name);
-                apiRouter[property]('/', definition[property]);
+                apiRouter[property]('/', buildMiddlewareArray(definition[property]));
             } else if (property !== 'authorise') {
                 logger.warn("Unrecognized property '" + property + "' in api " + name);
             }
@@ -48,6 +47,27 @@ module.exports = function (configuration) {
 
         router.use('/' + name, apiRouter);
     };
+
+    // definition is either a function, an array of functions, or an array-like object
+    // returns a middleware function or an array of middleware function
+    function buildMiddlewareArray(definition) {
+        var middlewareArray = definition;
+
+        // if array-like object convert to array
+        // {'0': addHeader, '1': return200, authorise: true} should convert to [addHeader,return200]
+        var length = 0;
+        while(definition.hasOwnProperty(length))
+            length++;
+        if (length) {
+            middlewareArray.length = length;
+            middlewareArray = Array.prototype.slice.call(middlewareArray);
+        }
+
+        if (definition.authorise)
+            middlewareArray = [authorise].concat(middlewareArray);
+
+        return middlewareArray;
+    }
 
     /**
     Import a file or folder of modules containing api definitions
