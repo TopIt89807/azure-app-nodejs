@@ -8,7 +8,7 @@ The Azure Mobile Apps Node.js SDK is an [express](http://expressjs.com/) middlew
 var app = require('express')(); // Create an instance of an Express app
 var mobileApp = require('azure-mobile-apps')(); // Create an instance of a Mobile App with default settings
 
-mobileApp.tables.add('TodoItem'); // Create a Table for 'TodoItem' with all default settings
+mobileApp.tables.add('TodoItem'); // Create a table for 'TodoItem' with default settings
 
 app.use(mobileApp);
 app.listen(process.env.PORT || 3000);
@@ -20,7 +20,7 @@ app.listen(process.env.PORT || 3000);
 
 ```json
 "dependencies": {
-  "azure-mobile-apps":"azure/azure-mobile-apps-node"
+  "azure-mobile-apps":"azure-mobile-apps-node"
 }
 ```
 
@@ -54,7 +54,7 @@ An official npm package will be published soon.
   var app = require('express')(); // Create an instance of an Express app
   var mobileApp = require('azure-mobile-apps')(); // Create an instance of a Mobile App with default settings
 
-  mobileApp.tables.add('TodoItem'); // Create a Table for 'TodoItem' with all default settings
+  mobileApp.tables.add('TodoItem'); // Create a table for 'TodoItem' with default settings
 
   app.use(mobileApp);
   app.listen(process.env.PORT || 3000);
