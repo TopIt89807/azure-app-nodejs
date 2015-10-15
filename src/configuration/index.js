@@ -4,5 +4,6 @@
 module.exports = {
     fromEnvironment: require('./fromEnvironment'),
     fromFile: require('./fromFile'),
+    fromSettingsJson: require('./fromSettingsJson'),
     loader: require('./loader')
 }
