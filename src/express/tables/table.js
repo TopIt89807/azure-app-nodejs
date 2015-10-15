@@ -83,7 +83,7 @@ table.read(function (context) {
     table.delete = attachOperation('delete');
 
     /** Identical syntax and semantics to the read function, but for undelete operations.
-    @function delete
+    @function undelete
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
     */
     table.undelete = attachOperation('undelete');
