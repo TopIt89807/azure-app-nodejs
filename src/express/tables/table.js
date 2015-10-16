@@ -11,7 +11,7 @@ The router function calls the attachRoutes module and returns a configured route
 */
 var attachRoutes = require('./attachRoutes'),
     executeOperation = require('../middleware/executeOperation'),
-    utilities = require('../../utilities'),
+    assign = require('deep-assign'),
     express = require('express');
 
 /**
@@ -23,7 +23,7 @@ module.exports = function (definition) {
     // create a router here that we will attach routes to using attachRoutes
     // exposing table.execute allows users to mount custom middleware before or after execution
     var router = express.Router(),
-        table = utilities.assign({
+        table = assign({
             router: function (name) {
                 table.name = name;
                 return attachRoutes(table, router, table.operation);

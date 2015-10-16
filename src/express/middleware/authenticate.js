@@ -29,7 +29,7 @@ module.exports = function (configuration) {
             }
         };
     } else {
-        log.warn('Authentication configuration was not specified. Requests will not be authenticated.');
+        //log.info('Authentication configuration was not specified. Requests will not be authenticated.');
         return function (req, res, next) {
             next();
         };

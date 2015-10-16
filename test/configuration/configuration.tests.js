@@ -2,7 +2,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var mobileApps = require('../..'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    log = require('../../src/logger');
 
 describe('azure-mobile-apps.configuration', function () {
     it("does not override configuration with defaults", function () {
@@ -28,5 +29,8 @@ describe('azure-mobile-apps.configuration', function () {
         var mobileApp = mobileApps();
 
         expect(mobileApp.configuration.logging).to.have.property('level', process.env.MS_MobileLogLevel);
+
+        delete process.env.MS_MobileLogLevel;
+        log.configure();
     });
 });

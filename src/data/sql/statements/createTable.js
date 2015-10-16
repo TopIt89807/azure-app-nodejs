@@ -2,7 +2,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
-    utilities = require('../../../utilities');
+    utilities = require('../../../utilities'),
+    assign = require('deep-assign');
 
 module.exports = function (tableConfig, item) {
     var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),
@@ -17,7 +18,7 @@ module.exports = function (tableConfig, item) {
             '__updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0)',
             '__deleted bit NOT NULL DEFAULT 0'
         ],
-        columns = utilities.assign(itemColumnsSql(), predefinedColumnsSql()),
+        columns = assign(itemColumnsSql(), predefinedColumnsSql()),
         columnSql = systemProperties.concat(utilities.object.values(columns)).join(',');
 
     return {

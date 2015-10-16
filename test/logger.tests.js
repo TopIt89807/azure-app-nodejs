@@ -8,6 +8,10 @@ var log = require('../src/logger'),
                 .expect;
 
 describe('azure-mobile-apps.logger', function () {
+    after(function () {
+        log.configure();
+    });
+
     it("initializes with proper configuration", function () {
         var config = {
             transports: {

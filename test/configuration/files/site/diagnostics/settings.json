@@ -1,6 +1,6 @@
 {
   "AzureDriveEnabled": true,
-  "AzureDriveTraceLevel": "Verbose",
+  "AzureDriveTraceLevel": "Error",
   "AzureTableEnabled": false,
   "AzureTableTraceLevel": "Information",
   "AzureBlobEnabled": false,
