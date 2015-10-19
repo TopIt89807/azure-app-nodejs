@@ -11,7 +11,7 @@ var express = require('express'),
     loader = require('../../configuration/loader'),
     logger = require('../../logger'),
     assert = require('../../utilities/assert').argument,
-    authorise = require('../middleware/authorize');
+    authorize = require('../middleware/authorize');
     supportedVerbs = ['get', 'post', 'put', 'patch', 'delete'];
 
 /**
@@ -34,13 +34,13 @@ module.exports = function (configuration) {
 
         Object.getOwnPropertyNames(definition).forEach(function (property) {
             if (supportedVerbs.some(function (verb) { return verb === property; })) {
-                if (definition.authorise || definition[property].authorise) {
-                    definition[property].authorise = true;
-                    logger.debug("Adding authorisation to " + property + " for api " + name);
+                if (definition.authorize || definition[property].authorize) {
+                    definition[property].authorize = true;
+                    logger.debug("Adding authorization to " + property + " for api " + name);
                 }
                 logger.debug("Adding method " + property + " to api " + name);
                 apiRouter[property]('/', buildMiddlewareArray(definition[property]));
-            } else if (property !== 'authorise') {
+            } else if (property !== 'authorize') {
                 logger.warn("Unrecognized property '" + property + "' in api " + name);
             }
         });
@@ -54,7 +54,7 @@ module.exports = function (configuration) {
         var middlewareArray = definition;
 
         // if array-like object convert to array
-        // {'0': addHeader, '1': return200, authorise: true} should convert to [addHeader,return200]
+        // {'0': addHeader, '1': return200, authorize: true} should convert to [addHeader,return200]
         var length = 0;
         while(definition.hasOwnProperty(length))
             length++;
@@ -63,8 +63,8 @@ module.exports = function (configuration) {
             middlewareArray = Array.prototype.slice.call(middlewareArray);
         }
 
-        if (definition.authorise)
-            middlewareArray = [authorise].concat(middlewareArray);
+        if (definition.authorize)
+            middlewareArray = [authorize].concat(middlewareArray);
 
         return middlewareArray;
     }

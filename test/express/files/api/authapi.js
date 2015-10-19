@@ -7,4 +7,4 @@ var api = module.exports = {
     }
 };
 
-api.authorise = true;
+api.authorize = true;
