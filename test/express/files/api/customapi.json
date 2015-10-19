@@ -1,5 +1,5 @@
 {
     "put": {
-        "authorise": true
+        "authorize": true
     }
 }
