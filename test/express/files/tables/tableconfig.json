@@ -6,6 +6,7 @@
     "read": {
         "authorize": true
     },
+    "schema": "dbo",
     "columns": { "name": "string", "date1": "date" },
     "indexes": [ "name" ]
 }

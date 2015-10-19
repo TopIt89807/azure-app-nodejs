@@ -41,7 +41,10 @@ var loadConfiguration = require('./configuration'),
             maxAge: 300,
             origins: ['localhost']
         },
-        data: { },
+        data: { 
+            schema: 'dbo',
+            dynamicSchema: true
+        },
         notifications: { },
         auth: { }
     };

@@ -26,9 +26,24 @@ describe('azure-mobile-apps.express.tables', function() {
 
         expect(tableConfig).to.have.property('name', 'jsontable');
         expect(tableConfig).to.have.property('softDelete', true);
+        expect(tableConfig).to.have.property('schema', 'dbo');
         expect(tableConfig).to.have.property('dynamicSchema', false);
         expect(tableConfig).to.have.property('authorize', false);
         expect(tableConfig.columns).to.eql({ name: 'string', date1: 'date' });
         expect(tableConfig.indexes).to.eql([ 'name' ]);
+    });
+
+    it('adds global data settings', function () {
+        var config = tables({ basePath: __dirname, data: { schema: 'schema', dynamicSchema: 'dynamicSchema' } });
+        config.import('../files/tables/empty');
+        expect(config.configuration.empty).to.have.property('schema', 'schema');
+        expect(config.configuration.empty).to.have.property('dynamicSchema', 'dynamicSchema');
+    });
+
+    it('prioritizes table specific settings over global', function () {
+        var config = tables({ basePath: __dirname, data: { schema: 'schema', dynamicSchema: 'dynamicSchema' } });
+        config.import('../files/tables/tableconfig');
+        expect(config.configuration.jsontable).to.have.property('schema', 'dbo');
+        expect(config.configuration.jsontable).to.have.property('dynamicSchema', false);
     });
 });
