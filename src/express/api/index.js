@@ -82,6 +82,9 @@ module.exports = function (configuration) {
         Object.keys(apis).forEach(function (name) {
             var definition = apis[name];
 
+            if (definition && definition.name)
+                name = definition.name;
+
             router.add(name, definition);
         });
     };

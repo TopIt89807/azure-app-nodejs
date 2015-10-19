@@ -20,7 +20,7 @@ module.exports = function (configuration) {
         assert(table, 'A table was not specified');
 
         // default is on...
-        if ((table.dynamicSchema === undefined || table.dynamicSchema) && configuration.dynamicSchema !== false)
+        if (table.dynamicSchema !== false)
             return {
                 read: function (query) {
                     assert(query, 'A query was not provided');

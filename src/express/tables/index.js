@@ -35,6 +35,12 @@ module.exports = function (configuration) {
         // if the definition doesn't have a router function, wrap it in a table definition object
         if(!definition || typeof definition.router !== 'function')
             definition = table(definition);
+
+        if (configuration.data && !definition.hasOwnProperty('dynamicSchema'))
+            definition.dynamicSchema = configuration.data.dynamicSchema;
+        if (configuration.data && !definition.hasOwnProperty('schema'))
+            definition.schema = configuration.data.schema;
+
         configuration.tables[name] = definition;
 
         logger.debug("Adding table definition for " + name);
@@ -59,6 +65,9 @@ module.exports = function (configuration) {
             // we need to convert this back to undefined for router.add
             if(definition && Object.keys(definition).length === 0)
                 definition = undefined;
+
+            if (definition && definition.name)
+                tableName = definition.name;
 
             router.add(tableName, definition);
         });
