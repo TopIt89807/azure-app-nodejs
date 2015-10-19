@@ -11,7 +11,7 @@ var express = require('express'),
     loader = require('../../configuration/loader'),
     logger = require('../../logger'),
     assert = require('../../utilities/assert').argument,
-    authorize = require('../middleware/authorize');
+    authorize = require('../middleware/authorize'),
     supportedVerbs = ['get', 'post', 'put', 'patch', 'delete'];
 
 /**
