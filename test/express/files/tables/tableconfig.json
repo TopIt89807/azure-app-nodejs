@@ -1,0 +1,11 @@
+{
+    "name": "jsontable",
+    "softDelete": true,
+    "dynamicSchema": false,
+    "authorize": false,
+    "read": {
+        "authorize": true
+    },
+    "columns": { "name": "string", "date1": "date" },
+    "indexes": [ "name" ]
+}

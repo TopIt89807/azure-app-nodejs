@@ -60,6 +60,9 @@ module.exports = function (configuration) {
             if(definition && Object.keys(definition).length === 0)
                 definition = undefined;
 
+            if (definition && definition.name)
+                tableName = definition.name;
+
             router.add(tableName, definition);
         });
     };
