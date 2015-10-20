@@ -19,7 +19,9 @@ module.exports = function (table, item) {
         }
     });
 
-    var sql = _.sprintf("INSERT INTO %s (%s) VALUES (%s); ", tableName, columnNames.join(','), valueParams.join(','));
+    var sql = columnNames.length > 0
+        ? _.sprintf("INSERT INTO %s (%s) VALUES (%s); ", tableName, columnNames.join(','), valueParams.join(','))
+        : _.sprintf("INSERT INTO %s DEFAULT VALUES; ", tableName)
 
     if(table.autoIncrement)
         sql += _.sprintf('SELECT * FROM %s WHERE [id] = SCOPE_IDENTITY()', tableName);

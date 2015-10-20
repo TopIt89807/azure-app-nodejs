@@ -75,7 +75,7 @@ module.exports = {
     },
 
     getMssqlType: function (value, primaryKey) {
-        switch (value && value.constructor) {
+        switch (value !== undefined && value !== null && value.constructor) {
             case String:
                 return primaryKey ? mssql.NVarChar(255) : mssql.NVarChar();
             case Number:

@@ -28,7 +28,19 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             var statement = insert({ name: 'table', autoIncrement: true }, { id: 'id', p1: null });
             expect(statement.sql).to.equal('INSERT INTO [dbo].[table] ([p1]) VALUES (@p1); SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
             expect(statement.parameters).to.deep.equal([{ name: 'p1', type: undefined, value: null }]);
-        })
+        });
+
+        it('inserts zero values correctly', function () {
+            var statement = insert({ name: 'table', autoIncrement: true }, { id: 'id', p1: 0 });
+            expect(statement.sql).to.equal('INSERT INTO [dbo].[table] ([p1]) VALUES (@p1); SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
+            expect(statement.parameters).to.deep.equal([{ name: 'p1', type: mssql.Int, value: 0 }]);
+        });
+
+        it('inserts default values if none specified', function () {
+            var statement = insert({ name: 'table', autoIncrement: true }, { id: 'id' });
+            expect(statement.sql).to.equal('INSERT INTO [dbo].[table] DEFAULT VALUES; SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
+            expect(statement.parameters).to.deep.equal([]);
+        });
     });
 
     describe('update', function () {
@@ -44,6 +56,12 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             var statement = update({ name: 'table' }, { id: 'id', p1: null });
             expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [p1] = @p1 WHERE [id] = @id ; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
             expect(statement.parameters).to.deep.equal([{ name: 'p1', type: undefined, value: null }, { name: 'id', type: mssql.NVarChar(255), value: 'id' }]);
+        })
+
+        it('updates zero values correctly', function () {
+            var statement = update({ name: 'table' }, { id: 'id', p1: 0 });
+            expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [p1] = @p1 WHERE [id] = @id ; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
+            expect(statement.parameters).to.deep.equal([{ name: 'p1', type: mssql.Int, value: 0 }, { name: 'id', type: mssql.NVarChar(255), value: 'id' }]);
         })
     });
 

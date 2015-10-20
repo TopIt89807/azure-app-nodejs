@@ -78,7 +78,7 @@ describe('azure-mobile-apps.data.sql.integration', function () {
                 expect(results[0].number).to.equal(1);
                 expect(results[0].string).to.equal(null);
             });
-    })
+    });
 
     it("handles null values", function () {
         return insert({ id: '1', number: Number.MAX_VALUE })
@@ -86,7 +86,15 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             .then(function (results) {
                 expect(results[0].number).to.equal(Number.MAX_VALUE);
             });
-    })
+    });
+
+    it("handles zero values", function () {
+        return insert({ id: '1', number: 0 })
+            .then(read)
+            .then(function (results) {
+                expect(results[0].number).to.equal(0);
+            });
+    });
 
     function read() {
         return operations.read(queries.create('integration'));
