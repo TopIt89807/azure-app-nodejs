@@ -4,7 +4,7 @@ roundTrip.update(function (context) {
     return context.execute()
         .catch(function (error) {
             if(context.req.query.conflictPolicy === 'clientWins') {
-                context.item.__version = error.item.__version;
+                context.item.version = error.item.version;
                 return context.execute();
             } else if (context.req.query.conflictPolicy === 'serverWins') {
                 return error.item;

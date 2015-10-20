@@ -35,7 +35,7 @@ module.exports = function (req, res, next) {
         res.status(404).end();
 
     function addETag(item) {
-        res.set('ETag', '"' + item.__version + '"');
+        res.set('ETag', '"' + item.version + '"');
     }
 
     function preventCaching() {

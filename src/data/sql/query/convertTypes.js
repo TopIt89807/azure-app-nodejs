@@ -43,6 +43,6 @@ var TypeConverter = types.deriveClass(ExpressionVisitor, ctor, {
         return expr &&
                expr.expressionType === 'MemberAccess' &&
                types.isString(expr.member) && // tableConfig.binaryColumns is not currently used - hard coded __version column
-               (_.contains(this.tableMetadata.binaryColumns, expr.member.toLowerCase()) || expr.member.toLowerCase() === '__version');
+               (_.contains(this.tableMetadata.binaryColumns, expr.member.toLowerCase()) || expr.member.toLowerCase() === 'version');
     }
 });

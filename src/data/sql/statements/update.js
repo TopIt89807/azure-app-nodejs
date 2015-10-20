@@ -15,7 +15,7 @@ module.exports = function (table, item) {
         if(item.hasOwnProperty(prop)) {
             var value = item[prop];
 
-            if (prop.toLowerCase() === '__version') {
+            if (prop.toLowerCase() === 'version') {
                 versionValue = value;
             } else if (prop.toLowerCase() !== 'id') {
                 setStatements.push(helpers.formatMember(prop) + ' = @' + prop);
@@ -28,8 +28,8 @@ module.exports = function (table, item) {
     parameters.push({ name: 'id', type: helpers.getMssqlType(item.id, true), value: item.id });
 
     if (versionValue) {
-        sql += "AND [__version] = @__version ";
-        parameters.push({ name: '__version', type: mssql.VarBinary, value: new Buffer(versionValue, 'base64') })
+        sql += "AND [version] = @version ";
+        parameters.push({ name: 'version', type: mssql.VarBinary, value: new Buffer(versionValue, 'base64') })
     }
 
     sql += _.sprintf("; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM %s WHERE [id] = @id", tableName);

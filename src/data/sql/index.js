@@ -113,8 +113,8 @@ module.exports = function (configuration) {
             if(items.constructor === Array)
                 return items.map(translateVersion);
 
-            if(items.__version)
-                items.__version = items.__version.toString('base64');
+            if(items.version)
+                items.version = items.version.toString('base64');
 
             return items;
         }

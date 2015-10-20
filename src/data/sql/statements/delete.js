@@ -9,12 +9,12 @@ module.exports = function (table, id, version) {
         parameters = [{ name: 'id', value: id }];
 
     if (table.softDelete) {
-        deleteStmt = "UPDATE TOP (1) " + tableName + " SET [__deleted] = 1 WHERE [id] = @id AND [__deleted] = 0";
+        deleteStmt = "UPDATE TOP (1) " + tableName + " SET [deleted] = 1 WHERE [id] = @id AND [deleted] = 0";
     }
 
     if (version) {
-        deleteStmt += " AND [__version] = @__version ";
-        parameters.push({ name: '__version', value: new Buffer(version, 'base64') });
+        deleteStmt += " AND [version] = @version ";
+        parameters.push({ name: 'version', value: new Buffer(version, 'base64') });
     }
 
     deleteStmt += "; SELECT @@rowcount AS recordsAffected; SELECT * FROM " + tableName + " WHERE [id] = @id";

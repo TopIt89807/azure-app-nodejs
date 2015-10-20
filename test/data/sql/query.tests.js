@@ -105,7 +105,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
         var query = {
                 table: 'checkins'
             },
-            expectedSql = "SELECT * FROM [testapp].[checkins] WHERE ([__deleted] = @p1)";
+            expectedSql = "SELECT * FROM [testapp].[checkins] WHERE ([deleted] = @p1)";
 
         verifySqlFormatting(query, expectedSql, { hasStringId: true, softDelete: true });
     });
@@ -116,30 +116,9 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 skip: 4,
                 take: 4
             },
-            expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], * FROM [testapp].[checkins] WHERE ([__deleted] = @p1)) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 4 ORDER BY [t1].[ROW_NUMBER]";
+            expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], * FROM [testapp].[checkins] WHERE ([deleted] = @p1)) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 4 ORDER BY [t1].[ROW_NUMBER]";
 
         verifySqlFormatting(query, expectedSql, { hasStringId: true, softDelete: true });
-    });
-
-    it("query with no select but system properties", function () {
-        var query = {
-                table: 'checkins',
-                systemProperties: ['__version']
-            },
-            expectedSql = "SELECT * FROM [testapp].[checkins]";
-
-            verifySqlFormatting(query, expectedSql, { hasStringId: true });
-    });
-
-    it("query with select and system properties", function () {
-        var query = {
-                table: 'checkins',
-                selections: 'id',
-                systemProperties: ['version', 'createdAt']
-            },
-            expectedSql = "SELECT [id], [__version], [__createdAt] FROM [testapp].[checkins]";
-
-        verifySqlFormatting(query, expectedSql, { hasStringId: true });
     });
 
     it("inline count with paging and filter", function () {
@@ -725,7 +704,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
     it("converts base64 version columns to binary buffers", function () {
         var query = {
                 table: 'products',
-                filters: "__version eq 'AAAAAAAAUDU='"
+                filters: "version eq 'AAAAAAAAUDU='"
             },
             statement = formatSql(query, { schema: 'testapp' });
         equal(statement.parameters[0].value.constructor, Buffer);

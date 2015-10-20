@@ -93,7 +93,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
             });
     });
 
-    it('updates __updatedAt column', function () {
+    it('updates updatedAt column', function () {
         var updatedAt;
 
         mobileApp.tables.add('dynamic');
@@ -103,7 +103,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
             .post('/tables/dynamic')
             .send({ id: '1', string: 'one' })
             .then(function (inserted) {
-                updatedAt = inserted.body.__updatedAt;
+                updatedAt = inserted.body.updatedAt;
                 return promises.sleep(20);
             })
             .then(function () {
@@ -112,7 +112,7 @@ describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function 
                     .send({ id: '1', string: 'two' });
             })
             .then(function (updated) {
-                expect(updated.body.__updatedAt).to.be.greaterThan(updatedAt);
+                expect(updated.body.updatedAt).to.be.greaterThan(updatedAt);
             });
     });
 

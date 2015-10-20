@@ -22,7 +22,7 @@ module.exports = function (table) {
                 var etag = req.get('if-match');
                 if(etag) {
                     req.azureMobile.version = etag;
-                    item.__version = etag;
+                    item.version = etag;
                 }
 
                 req.azureMobile.item = item;
