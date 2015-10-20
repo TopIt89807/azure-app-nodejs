@@ -3,13 +3,14 @@
 // ----------------------------------------------------------------------------
 var authorize = require('../../../src/express/middleware/authorize'),
     bodyParser = require('body-parser'),
-    xmlBodyParser = require('express-xml-bodyparser');
+    customBodyParser = require('../bodyParser'),
+    xmlBodyParser = require('express-xml-bodyparser')({ strict: false, explicitArray: false });
 
 module.exports = {
     register: function (app) {
-        app.use('/api/applicationPermission', [bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
-        app.use('/api/publicPermission', [bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
-        app.use('/api/userPermission', [authorize, bodyParser.json(), bodyParser.text(), xmlBodyParser({ strict: false }), handleRequest]);
+        app.use('/api/applicationPermission', [bodyParser.json(), customBodyParser(), handleRequest]);
+        app.use('/api/publicPermission', [bodyParser.json(), customBodyParser(), handleRequest]);
+        app.use('/api/userPermission', [authorize, bodyParser.json(), customBodyParser(), handleRequest]);
     }
 }
 
@@ -33,9 +34,8 @@ function handleRequest(req, res, next) {
         }
     }
 
-    if (req.body && (typeof req.body !== 'object' || Object.keys(req.body).length)) {
+    if(req.body)
         output.body = req.body;
-    }
 
     //output.user = JSON.parse(JSON.stringify(req.user)); // remove functions
     output.user = { level: 'anonymous' };
@@ -96,7 +96,7 @@ function jsToXml(value) {
                 keys.sort();
                 for (i = 0; i < keys.length; i++) {
                     k = keys[i];
-                    result = result + '<' + k + '>' + jsToXml(value[k]) + '</' + k + '>';
+                    result = result + '<' + k.toLowerCase() + '>' + jsToXml(value[k]) + '</' + k.toLowerCase() + '>';
                 }
             }
     }

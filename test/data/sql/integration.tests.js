@@ -66,6 +66,21 @@ describe('azure-mobile-apps.data.sql.integration', function () {
     });
 
     it("handles large numeric values", function () {
+        return insert({ id: '1', string: 'test', number: null })
+            .then(read)
+            .then(function (results) {
+                expect(results[0].number).to.equal(null);
+                expect(results[0].string).to.equal('test');
+                return update({ id: '1', string: null, number: 1 })
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results[0].number).to.equal(1);
+                expect(results[0].string).to.equal(null);
+            });
+    })
+
+    it("handles null values", function () {
         return insert({ id: '1', number: Number.MAX_VALUE })
             .then(read)
             .then(function (results) {

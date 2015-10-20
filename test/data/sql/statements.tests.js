@@ -23,6 +23,12 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             expect(statement.sql).to.equal('INSERT INTO [dbo].[table] ([p1]) VALUES (@p1); SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
             expect(statement.parameters).to.deep.equal([{ name: 'p1', type: mssql.NVarChar(), value: 'value' }]);
         });
+
+        it('inserts null values correctly', function () {
+            var statement = insert({ name: 'table', autoIncrement: true }, { id: 'id', p1: null });
+            expect(statement.sql).to.equal('INSERT INTO [dbo].[table] ([p1]) VALUES (@p1); SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
+            expect(statement.parameters).to.deep.equal([{ name: 'p1', type: undefined, value: null }]);
+        })
     });
 
     describe('update', function () {
@@ -33,6 +39,12 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [p1] = @p1,[p2] = @p2 WHERE [id] = @id ; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
             expect(statement.parameters).to.deep.equal([{ name: 'p1', type: mssql.NVarChar(), value: 'value' }, { name: 'p2', type: mssql.Float, value: 2.2 }, { name: 'id', type: mssql.NVarChar(255), value: 'id' }]);
         });
+
+        it('updates null values correctly', function () {
+            var statement = update({ name: 'table' }, { id: 'id', p1: null });
+            expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [p1] = @p1 WHERE [id] = @id ; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
+            expect(statement.parameters).to.deep.equal([{ name: 'p1', type: undefined, value: null }, { name: 'id', type: mssql.NVarChar(255), value: 'id' }]);
+        })
     });
 
     describe('delete', function () {
