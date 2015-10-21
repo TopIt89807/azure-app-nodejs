@@ -16,25 +16,20 @@ var types = require('../../../utilities/types'),
 module.exports = function (query, tableConfig) {
     query.table = tableConfig && tableConfig.name? tableConfig.name: query.table;
     var formatter = new SqlFormatter(tableConfig);
-    formatter.format(query);
-    return {
-        sql: formatter.sql,
-        parameters: formatter.parameters,
-        multiple: true
-    };
+    return formatter.format(query);
 };
 
 function ctor(tableConfig) {
     this.tableConfig = tableConfig || {};
-    this.schemaName = this.tableConfig.schema || 'dbo';
+    this.flavor = this.tableConfig.flavor || 'mssql';
+    
+    if (this.flavor !== 'sqlite') {
+        this.schemaName = this.tableConfig.schema || 'dbo';
+    }
 }
 
 var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
     format: function (query) {
-        this.sql = '';
-        this.paramNumber = 0;
-        this.parameters = [];
-
         // if a skip is requested but no top is defined, we need
         // to still generate the paging query, so default top to
         // max. Really when doing paging, the user should also be
@@ -43,51 +38,74 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             query.take = 9007199254740992; // Number.MAX_SAFE_INTEGER + 1; // ES6
         }
 
-        if (query.skip >= 0 && query.take >= 0 && query.skip !== null && query.take !== null) {
-            this.sql = this._formatPagedQuery(query);
-        } else {
-            this.sql = this._formatQuery(query);
+        var statements = [];
+        this.paramNumber = 0;
+        
+        this.statement = {sql: '', parameters: [], multiple: true};
+        this.statement.sql = this._formatQuery(query).trim();
+        statements.push(this.statement);
+
+        if (query.inlineCount === 'allpages' || query.includeTotalCount) {
+            this.statement = {sql: '', parameters: [], multiple: true};
+            this.statement.sql = this._formatCountQuery(helpers.formatTableName(this.schemaName, query.table), query).trim();
+            statements.push(this.statement);
         }
-
-        this.sql = this.sql.trim();
+        
+        return statements;
     },
-
+    
     _formatQuery: function (query) {
-        var formattedSql;
 
-        var selection = query.selections ? this._formatSelection(query.selections) : '*';
-
+        if (this.flavor !== 'sqlite' && query.skip >= 0 && query.take >= 0 && query.skip !== null && query.take !== null) {
+            return this._formatPagedQuery(query);
+        }
+        
+        var takeClause = '',
+            skipClause = '',
+            whereClause = '',
+            orderbyClause = '',
+            limit = -1,
+            formattedSql,
+            selection = query.selections ? this._formatSelection(query.selections) : '*';
+        
         // set the top clause to be the minimumn of the top
         // and result limit values if either has been set.
-        var take = '';
-        var limit = -1;
         var resultLimit = query.resultLimit || Number.MAX_VALUE;
         if (query.take >= 0 && query.take !== null) {
             limit = Math.min(resultLimit, query.take);
-        }
-        else if (resultLimit != Number.MAX_VALUE) {
+        } else if (resultLimit != Number.MAX_VALUE) {
             limit = query.resultLimit;
         }
-        if (limit != -1) {
-            take = 'TOP ' + limit.toString() + ' ';
+        
+        if (this.flavor !== 'sqlite') {
+            if (limit != -1) {
+                takeClause = 'TOP ' + limit.toString() + ' ';
+            }
+        } else {
+            takeClause = ' LIMIT ' + limit.toString();
+            if (query.skip > 0) {
+                skipClause = ' OFFSET ' + query.skip.toString();
+            }
         }
-
-        var filter = this._formatFilter(query);
+        
+        var filter = this._formatFilter(query)
+        if (filter.length > 0) {
+            whereClause = ' WHERE ' + filter;
+        }
+        
         var ordering = this._formatOrderBy(query);
+        if (ordering.length > 0) {
+            orderbyClause = ' ORDER BY ' + ordering;
+        }
 
         var tableName = helpers.formatTableName(this.schemaName, query.table);
-        formattedSql = _.sprintf("SELECT %s%s FROM %s", take, selection, tableName);
-        if (filter.length > 0) {
-            formattedSql += ' WHERE ' + filter;
+        
+        if (this.flavor !== 'sqlite') {
+            formattedSql = _.sprintf("SELECT %s%s FROM %s%s%s", takeClause, selection, tableName, whereClause, orderbyClause);
+        } else {
+            formattedSql = _.sprintf("SELECT %s FROM %s%s%s%s%s", selection, tableName, whereClause, orderbyClause, takeClause, skipClause);
         }
-        if (ordering.length > 0) {
-            formattedSql += ' ORDER BY ' + ordering;
-        }
-
-        if (query.inlineCount === 'allpages' || query.includeTotalCount) {
-            formattedSql += '; ' + this._formatCountQuery(tableName, query);
-        }
-
+        
         return formattedSql;
     },
 
@@ -98,8 +116,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
         if (query.selections) {
             selection = this._formatSelection(query.selections);
             aliasedSelection = '[t1].[ROW_NUMBER], ' + this._formatSelection(query.selections, '[t1].');
-        }
-        else {
+        } else {
             selection = aliasedSelection = "*";
         }
 
@@ -115,10 +132,6 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             "ORDER BY [t1].[ROW_NUMBER]",
             aliasedSelection, ordering, selection, tableName, filter, query.skip, query.skip, query.take);
 
-        if (query.inlineCount === 'allpages' || query.includeTotalCount) {
-            formattedSql += '; ' + this._formatCountQuery(tableName, query);
-        }
-
         return formattedSql;
     },
 
@@ -126,7 +139,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
         var filter;
 
         if (query.filters || query.id !== undefined || this.tableConfig.supportsSoftDelete) {
-            this.sql = '';
+            this.statement.sql = '';
             filter = this._formatFilter(query);
         }
 
@@ -150,12 +163,12 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             if (order.length > 0) {
                 order += ', ';
             }
-            self.sql = '';
+            self.statement.sql = '';
             self.visit(ordering.selector);
             if (!ordering.ascending) {
-                self.sql += ' DESC';
+                self.statement.sql += ' DESC';
             }
-            order += self.sql;
+            order += self.statement.sql;
         });
 
         return order;
@@ -212,11 +225,11 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             return defaultFilter || '';
         }
 
-        this.sql = '';
+        this.statement.sql = '';
         filterExpr = this._finalizeExpression(filterExpr);
         this.visit(filterExpr);
 
-        return this.sql;
+        return this.statement.sql;
     },
 
     // run the final query translation pipeline on the specified
@@ -228,7 +241,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
     },
 
     visitBinary: function (expr) {
-        this.sql += '(';
+        this.statement.sql += '(';
 
         var left = null;
         var right = null;
@@ -249,52 +262,52 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             // inequality expressions against a null literal have a special
             // translation in SQL
             if (expr.expressionType == 'Equal') {
-                this.sql += ' IS NULL';
+                this.statement.sql += ' IS NULL';
             }
             else if (expr.expressionType == 'NotEqual') {
-                this.sql += ' IS NOT NULL';
+                this.statement.sql += ' IS NOT NULL';
             }
         }
         else {
             switch (expr.expressionType) {
                 case 'Equal':
-                    this.sql += ' = ';
+                    this.statement.sql += ' = ';
                     break;
                 case 'NotEqual':
-                    this.sql += ' != ';
+                    this.statement.sql += ' != ';
                     break;
                 case 'LessThan':
-                    this.sql += ' < ';
+                    this.statement.sql += ' < ';
                     break;
                 case 'LessThanOrEqual':
-                    this.sql += ' <= ';
+                    this.statement.sql += ' <= ';
                     break;
                 case 'GreaterThan':
-                    this.sql += ' > ';
+                    this.statement.sql += ' > ';
                     break;
                 case 'GreaterThanOrEqual':
-                    this.sql += ' >= ';
+                    this.statement.sql += ' >= ';
                     break;
                 case 'And':
-                    this.sql += ' AND ';
+                    this.statement.sql += ' AND ';
                     break;
                 case 'Or':
-                    this.sql += ' OR ';
+                    this.statement.sql += ' OR ';
                     break;
                 case 'Add':
-                    this.sql += ' + ';
+                    this.statement.sql += ' + ';
                     break;
                 case 'Subtract':
-                    this.sql += ' - ';
+                    this.statement.sql += ' - ';
                     break;
                 case 'Multiply':
-                    this.sql += ' * ';
+                    this.statement.sql += ' * ';
                     break;
                 case 'Divide':
-                    this.sql += ' / ';
+                    this.statement.sql += ' / ';
                     break;
                 case 'Modulo':
-                    this.sql += ' % ';
+                    this.statement.sql += ' % ';
                     break;
             }
 
@@ -303,7 +316,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             }
         }
 
-        this.sql += ')';
+        this.statement.sql += ')';
 
         if ((left !== expr.left) || (right !== expr.right)) {
             return new expressions.Binary(left, right);
@@ -314,22 +327,22 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
 
     visitConstant: function (expr) {
         if (expr.value === null) {
-            this.sql += 'NULL';
+            this.statement.sql += 'NULL';
             return expr;
         }
 
-        this.sql += this._createParameter(expr.value);
+        this.statement.sql += this._createParameter(expr.value);
 
         return expr;
     },
 
     visitFloatConstant: function (expr) {
         if (expr.value === null) {
-            this.sql += 'NULL';
+            this.statement.sql += 'NULL';
             return expr;
         }
 
-        this.sql += this._createParameter(expr.value, mssql.FLOAT);
+        this.statement.sql += this._createParameter(expr.value, mssql.FLOAT);
 
         return expr;
     },
@@ -342,14 +355,14 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             type: type
         };
 
-        this.parameters.push(parameter);
+        this.statement.parameters.push(parameter);
 
         return '@p' + this.paramNumber.toString();
     },
 
     visitMember: function (expr) {
         if (typeof expr.member === 'string') {
-            this.sql += helpers.formatMember(expr.member);
+            this.statement.sql += helpers.formatMember(expr.member);
         }
         else {
             this._formatMappedMember(expr);
@@ -360,13 +373,13 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
 
     visitUnary: function (expr) {
         if (expr.expressionType == 'Not') {
-            this.sql += 'NOT ';
+            this.statement.sql += 'NOT ';
             this.visit(expr.operand);
         }
         else if (expr.expressionType == 'Convert') {
-            this.sql += _.sprintf("CONVERT(%s, ", expr.desiredType);
+            this.statement.sql += _.sprintf("CONVERT(%s, ", expr.desiredType);
             this.visit(expr.operand);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
 
         return expr;
@@ -401,34 +414,34 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
         var functionName = mappedMemberInfo.memberName;
 
         if (functionName == 'day') {
-            this.sql += 'DAY(';
+            this.statement.sql += 'DAY(';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (mappedMemberInfo.memberName == 'month') {
-            this.sql += 'MONTH(';
+            this.statement.sql += 'MONTH(';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (mappedMemberInfo.memberName == 'year') {
-            this.sql += 'YEAR(';
+            this.statement.sql += 'YEAR(';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (mappedMemberInfo.memberName == 'hour') {
-            this.sql += 'DATEPART(HOUR, ';
+            this.statement.sql += 'DATEPART(HOUR, ';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (mappedMemberInfo.memberName == 'minute') {
-            this.sql += 'DATEPART(MINUTE, ';
+            this.statement.sql += 'DATEPART(MINUTE, ';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (mappedMemberInfo.memberName == 'second') {
-            this.sql += 'DATEPART(SECOND, ';
+            this.statement.sql += 'DATEPART(SECOND, ';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
     },
 
@@ -436,22 +449,22 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
         var functionName = mappedMemberInfo.memberName;
 
         if (functionName == 'floor') {
-            this.sql += 'FLOOR(';
+            this.statement.sql += 'FLOOR(';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'ceiling') {
-            this.sql += 'CEILING(';
+            this.statement.sql += 'CEILING(';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'round') {
             // Use the 'away from zero' midpoint rounding strategy - when
             // a number is halfway between two others, it is rounded toward
             // the nearest number that is away from zero.
-            this.sql += 'ROUND(';
+            this.statement.sql += 'ROUND(';
             this.visit(instance);
-            this.sql += ', 0)';
+            this.statement.sql += ', 0)';
         }
     },
 
@@ -459,43 +472,43 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
         var functionName = mappedMemberInfo.memberName;
 
         if (functionName == 'substringof') {
-            this.sql += '(';
+            this.statement.sql += '(';
             this.visit(instance);
 
-            this.sql += ' LIKE ';
+            this.statement.sql += ' LIKE ';
 
             // form '%' + <arg> + '%'
-            this.sql += "('%' + ";
+            this.statement.sql += "('%' + ";
             this.visit(args[0]);
-            this.sql += " + '%')";
+            this.statement.sql += " + '%')";
 
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'startswith') {
-            this.sql += '(';
+            this.statement.sql += '(';
             this.visit(instance);
 
-            this.sql += ' LIKE ';
+            this.statement.sql += ' LIKE ';
 
             // form '<arg> + '%'
-            this.sql += '(';
+            this.statement.sql += '(';
             this.visit(args[0]);
-            this.sql += " + '%')";
+            this.statement.sql += " + '%')";
 
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'endswith') {
-            this.sql += '(';
+            this.statement.sql += '(';
             this.visit(instance);
 
-            this.sql += ' LIKE ';
+            this.statement.sql += ' LIKE ';
 
             // form '%' + '<arg>
-            this.sql += "('%' + ";
+            this.statement.sql += "('%' + ";
             this.visit(args[0]);
-            this.sql += ')';
+            this.statement.sql += ')';
 
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'concat') {
             // Rewrite as an string addition with appropriate conversions.
@@ -510,66 +523,66 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             this.visit(concat);
         }
         else if (functionName == 'tolower') {
-            this.sql += 'LOWER(';
+            this.statement.sql += 'LOWER(';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'toupper') {
-            this.sql += 'UPPER(';
+            this.statement.sql += 'UPPER(';
             this.visit(instance);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'length') {
             // special translation since SQL LEN function doesn't
             // preserve trailing spaces
-            this.sql += '(LEN(';
+            this.statement.sql += '(LEN(';
             this.visit(instance);
-            this.sql += " + 'X') - 1)";
+            this.statement.sql += " + 'X') - 1)";
         }
         else if (functionName == 'trim') {
-            this.sql += 'LTRIM(RTRIM(';
+            this.statement.sql += 'LTRIM(RTRIM(';
             this.visit(instance);
-            this.sql += '))';
+            this.statement.sql += '))';
         }
         else if (functionName == 'indexof') {
-            this.sql += "(PATINDEX('%' + ";
+            this.statement.sql += "(PATINDEX('%' + ";
             this.visit(args[0]);
-            this.sql += " + '%', ";
+            this.statement.sql += " + '%', ";
             this.visit(instance);
-            this.sql += ') - 1)';
+            this.statement.sql += ') - 1)';
         }
         else if (functionName == 'replace') {
-            this.sql += "REPLACE(";
+            this.statement.sql += "REPLACE(";
             this.visit(instance);
-            this.sql += ", ";
+            this.statement.sql += ", ";
             this.visit(args[0]);
-            this.sql += ", ";
+            this.statement.sql += ", ";
             this.visit(args[1]);
-            this.sql += ')';
+            this.statement.sql += ')';
         }
         else if (functionName == 'substring') {
-            this.sql += 'SUBSTRING(';
+            this.statement.sql += 'SUBSTRING(';
             this.visit(instance);
 
-            this.sql += ", ";
+            this.statement.sql += ", ";
             this.visit(args[0]);
-            this.sql += " + 1, ";  // need to add 1 since SQL is 1 based, but OData is zero based
+            this.statement.sql += " + 1, ";  // need to add 1 since SQL is 1 based, but OData is zero based
 
             if (args.length == 1) {
                 // Overload not taking an explicit length. The
                 // LEN of the entire expression is used in this case
                 // which means everything after the start index will
                 // be taken.
-                this.sql += 'LEN(';
+                this.statement.sql += 'LEN(';
                 this.visit(instance);
-                this.sql += ')';
+                this.statement.sql += ')';
             }
             else if (args.length == 2) {
                 // overload taking a length
                 this.visit(args[1]);
             }
 
-            this.sql += ')';
+            this.statement.sql += ')';
         }
     }
 });

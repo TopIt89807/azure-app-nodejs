@@ -39,10 +39,16 @@ var helpers = module.exports = {
     },
 
     formatTableName: function (schemaName, tableName) {
-        schemaName = module.exports.formatSchemaName(schemaName);
-        this.validateIdentifier(schemaName);
+        
         this.validateIdentifier(tableName);
-        return '[' + schemaName + '].[' + tableName + ']';
+
+        if (schemaName !== undefined) {
+            schemaName = module.exports.formatSchemaName(schemaName);
+            this.validateIdentifier(schemaName);
+            return '[' + schemaName + '].[' + tableName + ']';
+        }
+        
+        return tableName;
     },
 
     formatSchemaName: function (appName) {
