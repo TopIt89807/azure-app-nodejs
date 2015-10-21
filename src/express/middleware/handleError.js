@@ -9,7 +9,7 @@ module.exports = function (configuration) {
             if(err.item) {
                 res.status(req.get('if-match') ? 412 : 409).json(err.item);
             } else {
-                res.status(404).end();
+                res.status(404).json({ error: 'The item does not exist' });
             }
         else if (err.duplicate)
             res.status(409).json(req.azureMobile.item);
@@ -25,18 +25,18 @@ module.exports = function (configuration) {
 
         if(!err)
             return {
-                message: 'Unknown error'
+                error: 'Unknown error'
             };
 
         if(err instanceof Error)
             return {
-                message: err.message,
+                error: err.message,
                 stack: err.stack
             };
 
         if(err.constructor === String)
             return {
-                message: err
+                error: err
             };
 
         return err;
