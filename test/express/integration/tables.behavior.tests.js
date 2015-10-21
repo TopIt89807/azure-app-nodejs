@@ -53,7 +53,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .get('/tables/todoitem')
             .expect(500)
             .end(function (err, res) {
-                expect(res.body).to.deep.equal({"message":"test"});
+                expect(res.body).to.deep.equal({"error":"test"});
                 done();
             });
     });
