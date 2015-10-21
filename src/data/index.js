@@ -15,7 +15,7 @@ object with the members described below.
 */
 module.exports = function (configuration) {
     var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
-    return require('./' + provider)(configuration.data);
+    return ((typeof(provider) === 'function') ? provider : require('./' + provider))(configuration.data);
 }
 
 /**
