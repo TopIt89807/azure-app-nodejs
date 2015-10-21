@@ -11,13 +11,7 @@ module.exports = function (tableConfig, item) {
         pkType = tableConfig.autoIncrement ? 'INT' : helpers.getSqlType((item.id === undefined || item.id === null) ? '' : item.id, true),
         pkColumnSql = '[id] ' + pkType + ' NOT NULL' + (tableConfig.autoIncrement ? ' IDENTITY (1, 1)' : '') + ' PRIMARY KEY',
 
-        systemProperties = [
-            pkColumnSql,
-            'version ROWVERSION NOT NULL',
-            'createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0)',
-            'updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0)',
-            'deleted bit NOT NULL DEFAULT 0'
-        ],
+        systemProperties = [pkColumnSql].concat(utilities.object.values(helpers.getSystemPropertiesDDL())),
         columns = assign(itemColumnsSql(), predefinedColumnsSql()),
         columnSql = systemProperties.concat(utilities.object.values(columns)).join(',');
 
@@ -30,15 +24,11 @@ module.exports = function (tableConfig, item) {
             // if(item[property] === null || item[property] === undefined)
             //     throw new Error('Unable to determine column type for table ' + tableConfig.name + ', property ' + property);
 
-            if(item[property] !== null && item[property] !== undefined && property !== 'id' && !isSystemProperty(property))
+            if(item[property] !== null && item[property] !== undefined && property !== 'id' && !helpers.isSystemProperty(property))
                 sql[property.toLowerCase()] = '[' + property + '] ' + helpers.getSqlType(item[property]) + ' NULL';
 
             return sql;
         }, {});
-    }
-
-    function isSystemProperty(property) {
-        return ['version', 'createdAt', 'updatedAt', 'deleted'].some(function (systemProperty) { return property === systemProperty; });
     }
 
     function predefinedColumnsSql() {
