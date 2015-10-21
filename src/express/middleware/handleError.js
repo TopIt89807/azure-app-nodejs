@@ -13,9 +13,8 @@ module.exports = function (configuration) {
             }
         else if (err.duplicate)
             res.status(409).json(req.azureMobile.item);
-        else if (err.badRequest) {
+        else if (err.badRequest)
             res.status(400).json(normaliseError(err));
-        }
         else {
             log.error(err);
             res.status(500).json(normaliseError(err));
