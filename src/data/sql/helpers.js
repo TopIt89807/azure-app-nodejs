@@ -6,7 +6,7 @@ var types = require('../../utilities/types'),
     strings = require('../../utilities/strings'),
     mssql = require('mssql');
 
-module.exports = {
+var helpers = module.exports = {
     // Performs the following validations on the specified identifier:
     // - first char is alphabetic or an underscore
     // - all other characters are alphanumeric or underscore
@@ -124,5 +124,22 @@ module.exports = {
             default:
                 return value;
         }
+    },
+
+    getSystemPropertiesDDL: function () {
+        return {
+            version: 'version ROWVERSION NOT NULL',
+            createdAt: 'createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0)',
+            updatedAt: 'updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0)',
+            deleted: 'deleted bit NOT NULL DEFAULT 0'
+        }
+    },
+
+    getSystemProperties: function () {
+        return Object.keys(helpers.getSystemPropertiesDDL());
+    },
+
+    isSystemProperty: function (property) {
+        return helpers.getSystemProperties().some(function (systemProperty) { return property === systemProperty; });
     },
 };

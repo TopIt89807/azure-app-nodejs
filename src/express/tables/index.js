@@ -40,11 +40,12 @@ module.exports = function (configuration) {
             definition.dynamicSchema = configuration.data.dynamicSchema;
         if (configuration.data && !definition.hasOwnProperty('schema'))
             definition.schema = configuration.data.schema;
+        definition.name = definition.databaseTableName || definition.name || name;
 
         configuration.tables[name] = definition;
 
         logger.debug("Adding table definition for " + name);
-        router.use('/' + name, definition.router(name));
+        router.use('/' + name, definition.router(definition.name));
     };
 
     /**

@@ -16,14 +16,14 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
     it('assigns value to version column', function () {
         return insert({ id: '1', value: 'test' })
             .then(function (inserted) {
-                expect(inserted.__version).to.not.be.undefined;
+                expect(inserted.version).to.not.be.undefined;
             });
     });
 
     it('does not update items with incorrect version', function () {
         return insert({ id: '1', value: 'test' })
             .then(function (inserted) {
-                return update({ id: '1', value: 'test2', __version: 'no match' });
+                return update({ id: '1', value: 'test2', version: 'no match' });
             })
             .then(function () {
                 throw new Error('Record with mismatching version was updated');
@@ -33,7 +33,7 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
     it('updates items with correct version', function () {
         return insert({ id: '1', value: 'test' })
             .then(function (inserted) {
-                return update({ id: '1', value: 'test2', __version: inserted.__version });
+                return update({ id: '1', value: 'test2', version: inserted.version });
             })
             .then(function () { }, function () {
                 throw new Error('Record with matching version was not updated');
@@ -53,7 +53,7 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
     it('updates items with correct version', function () {
         return insert({ id: '1', value: 'test' })
             .then(function (inserted) {
-                return del('1', inserted.__version);
+                return del('1', inserted.version);
             })
             .then(function () { }, function () {
                 throw new Error('Record with matching version was not deleted');

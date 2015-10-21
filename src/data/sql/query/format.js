@@ -54,7 +54,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
     _formatQuery: function (query) {
         var formattedSql;
 
-        var selection = query.selections ? this._formatSelection(query.selections, query.systemProperties) : '*';
+        var selection = query.selections ? this._formatSelection(query.selections) : '*';
 
         // set the top clause to be the minimumn of the top
         // and result limit values if either has been set.
@@ -95,8 +95,8 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
             aliasedSelection = '';
 
         if (query.selections) {
-            selection = this._formatSelection(query.selections, query.systemProperties);
-            aliasedSelection = '[t1].[ROW_NUMBER], ' + this._formatSelection(query.selections, query.systemProperties, '[t1].');
+            selection = this._formatSelection(query.selections);
+            aliasedSelection = '[t1].[ROW_NUMBER], ' + this._formatSelection(query.selections, '[t1].');
         }
         else {
             selection = aliasedSelection = "*";
@@ -160,11 +160,9 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
         return order;
     },
 
-    _formatSelection: function (selection, systemProperties, prefix) {
-        systemProperties = (systemProperties || []).map(systemPropertyToColumnName);
-
+    _formatSelection: function (selection, prefix) {
         var formattedSelection = '',
-            columns = selection.split(',').concat(systemProperties);
+            columns = selection.split(',');
 
         columns.forEach(function (column) {
             var member = column.trim();
@@ -200,7 +198,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
 
         // if soft delete is enabled filter out deleted records
         if (this.tableConfig.softDelete && !query.includeDeleted) {
-            var deletedFilter = parseOData(_.sprintf('(__deleted eq false)'));
+            var deletedFilter = parseOData(_.sprintf('(deleted eq false)'));
             if (filterExpr) {
                 filterExpr = new expressions.Binary(filterExpr, deletedFilter, 'And');
             }
@@ -577,8 +575,4 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
 
 function isConstantOfType(expr, type) {
     return (expr.expressionType == 'Constant') && (typeof expr.value === type);
-}
-
-function systemPropertyToColumnName(propertyName) {
-    return '__' + propertyName;
 }

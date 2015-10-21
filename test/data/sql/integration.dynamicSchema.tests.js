@@ -28,10 +28,10 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             .then(function (columns) {
                 expect(columns).to.deep.equal([
                     { name: 'id', type: 'nvarchar' },
-                    { name: '__version', type: 'timestamp' },
-                    { name: '__createdAt', type: 'datetimeoffset' },
-                    { name: '__updatedAt', type: 'datetimeoffset' },
-                    { name: '__deleted', type: 'bit' }
+                    { name: 'version', type: 'timestamp' },
+                    { name: 'createdAt', type: 'datetimeoffset' },
+                    { name: 'updatedAt', type: 'datetimeoffset' },
+                    { name: 'deleted', type: 'bit' }
                 ]);
             });
     });
@@ -45,10 +45,10 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             .then(function (columns) {
                 expect(columns).to.deep.equal([
                     { name: 'id', type: 'nvarchar' },
-                    { name: '__version', type: 'timestamp' },
-                    { name: '__createdAt', type: 'datetimeoffset' },
-                    { name: '__updatedAt', type: 'datetimeoffset' },
-                    { name: '__deleted', type: 'bit' },
+                    { name: 'version', type: 'timestamp' },
+                    { name: 'createdAt', type: 'datetimeoffset' },
+                    { name: 'updatedAt', type: 'datetimeoffset' },
+                    { name: 'deleted', type: 'bit' },
                     { name: 'string', type: 'nvarchar' },
                     { name: 'number', type: 'float' },
                     { name: 'boolean', type: 'bit' }
@@ -68,10 +68,10 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             .then(function (columns) {
                 expect(columns).to.deep.equal([
                     { name: 'id', type: 'nvarchar' },
-                    { name: '__version', type: 'timestamp' },
-                    { name: '__createdAt', type: 'datetimeoffset' },
-                    { name: '__updatedAt', type: 'datetimeoffset' },
-                    { name: '__deleted', type: 'bit' },
+                    { name: 'version', type: 'timestamp' },
+                    { name: 'createdAt', type: 'datetimeoffset' },
+                    { name: 'updatedAt', type: 'datetimeoffset' },
+                    { name: 'deleted', type: 'bit' },
                     { name: 'string', type: 'nvarchar' },
                     { name: 'number', type: 'float' },
                     { name: 'boolean', type: 'bit' }
@@ -100,10 +100,10 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             .then(function (columns) {
                 expect(columns).to.deep.equal([
                     { name: 'id', type: 'int' },
-                    { name: '__version', type: 'timestamp' },
-                    { name: '__createdAt', type: 'datetimeoffset' },
-                    { name: '__updatedAt', type: 'datetimeoffset' },
-                    { name: '__deleted', type: 'bit' },
+                    { name: 'version', type: 'timestamp' },
+                    { name: 'createdAt', type: 'datetimeoffset' },
+                    { name: 'updatedAt', type: 'datetimeoffset' },
+                    { name: 'deleted', type: 'bit' },
                     { name: 'string', type: 'nvarchar' },
                     { name: 'number', type: 'float' },
                     { name: 'boolean', type: 'bit' }
@@ -134,13 +134,13 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             });
     });
 
-    it("updates __updatedAt column", function () {
+    it("updates updatedAt column", function () {
         var item = { id: '1', string: 'test', number: 1, boolean: true },
             updatedAt;
 
         return dynamicSchema.execute(table, statements.insert(table, item), item)
             .then(function (inserted) {
-                updatedAt = inserted[0].__updatedAt;
+                updatedAt = inserted[0].updatedAt;
                 // I don't quite understand why the test is occasionally flaky. Suspect datetimeoffset resolution in SQL Server.
                 return promises.sleep();
             })
@@ -148,7 +148,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
                 return dynamicSchema.execute(table, statements.update(table, item), item);
             })
             .then(function (updated) {
-                expect(updated[1][0].__updatedAt).to.be.greaterThan(updatedAt);
+                expect(updated[1][0].updatedAt).to.be.greaterThan(updatedAt);
             });
     });
 
@@ -168,10 +168,10 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             .then(function (columns) {
                 expect(columns).to.deep.equal([
                     { name: 'id', type: 'nvarchar' },
-                    { name: '__version', type: 'timestamp' },
-                    { name: '__createdAt', type: 'datetimeoffset' },
-                    { name: '__updatedAt', type: 'datetimeoffset' },
-                    { name: '__deleted', type: 'bit' },
+                    { name: 'version', type: 'timestamp' },
+                    { name: 'createdAt', type: 'datetimeoffset' },
+                    { name: 'updatedAt', type: 'datetimeoffset' },
+                    { name: 'deleted', type: 'bit' },
                     { name: 'string', type: 'nvarchar' },
                     { name: 'number', type: 'float' },
                     { name: 'bool', type: 'bit' },
@@ -191,10 +191,10 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             .then(function (columns) {
                 expect(columns).to.deep.equal([
                     { name: 'id', type: 'nvarchar' },
-                    { name: '__version', type: 'timestamp' },
-                    { name: '__createdAt', type: 'datetimeoffset' },
-                    { name: '__updatedAt', type: 'datetimeoffset' },
-                    { name: '__deleted', type: 'bit' },
+                    { name: 'version', type: 'timestamp' },
+                    { name: 'createdAt', type: 'datetimeoffset' },
+                    { name: 'updatedAt', type: 'datetimeoffset' },
+                    { name: 'deleted', type: 'bit' },
                     { name: 'string', type: 'nvarchar' }
                 ]);
             });

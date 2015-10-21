@@ -31,12 +31,12 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
             .then(function (res) {
                 return supertest(app)
                     .patch('/tables/concurrency')
-                    .send({ id: '1', value: 'test', __version: 'incorrect version' })
+                    .send({ id: '1', value: 'test', version: 'incorrect version' })
                     .expect(409);
             })
             .then(function (res) {
                 expect(res.body).to.containSubset({ id: '1', value: 'test' });
-                expect(res.body.__version).to.not.equal('incorrect version');
+                expect(res.body.version).to.not.equal('incorrect version');
             });
     });
 
@@ -52,12 +52,12 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
                 return supertest(app)
                     .patch('/tables/concurrency')
                     .set('if-match', 'incorrect version')
-                    .send({ id: '1', value: 'test', __version: 'incorrect version' })
+                    .send({ id: '1', value: 'test', version: 'incorrect version' })
                     .expect(412);
             })
             .then(function (res) {
                 expect(res.body).to.containSubset({ id: '1', value: 'test' });
-                expect(res.body.__version).to.not.equal('incorrect version');
+                expect(res.body.version).to.not.equal('incorrect version');
             });
     });
 
@@ -72,7 +72,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
             .then(function (res) {
                 return supertest(app)
                     .patch('/tables/concurrency')
-                    .send({ id: '1', value: 'test', __version: res.body.__version })
+                    .send({ id: '1', value: 'test', version: res.body.version })
                     .expect(200);
             });
     });
@@ -104,7 +104,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
             .then(function (res) {
                 return supertest(app)
                     .delete('/tables/concurrency/1')
-                    .set('If-Match', res.body.__version)
+                    .set('If-Match', res.body.version)
                     .expect(200);
             });
     });

@@ -15,7 +15,7 @@ describe('azure-mobile-apps.express.integration', function () {
                 .get('/tables/todoitem')
                 .expect(500)
                 .then(function (res) {
-                    expect(res.body.message).to.equal('test');
+                    expect(res.body.error).to.equal('test');
                     expect(res.body.stack).to.not.be.undefined;
                 });
         });

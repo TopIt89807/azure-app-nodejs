@@ -41,6 +41,12 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             expect(statement.sql).to.equal('INSERT INTO [dbo].[table] DEFAULT VALUES; SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
             expect(statement.parameters).to.deep.equal([]);
         });
+
+        it('throws if inserting a system property column', function () {
+            expect(function () {
+                var statement = insert({ name: 'table' }, { id: 'id', deleted: false });
+            }).to.throw('Cannot insert item with property deleted as it is reserved');
+        });
     });
 
     describe('update', function () {
@@ -56,13 +62,24 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             var statement = update({ name: 'table' }, { id: 'id', p1: null });
             expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [p1] = @p1 WHERE [id] = @id ; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
             expect(statement.parameters).to.deep.equal([{ name: 'p1', type: undefined, value: null }, { name: 'id', type: mssql.NVarChar(255), value: 'id' }]);
-        })
+        });
 
         it('updates zero values correctly', function () {
             var statement = update({ name: 'table' }, { id: 'id', p1: 0 });
             expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [p1] = @p1 WHERE [id] = @id ; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
             expect(statement.parameters).to.deep.equal([{ name: 'p1', type: mssql.Int, value: 0 }, { name: 'id', type: mssql.NVarChar(255), value: 'id' }]);
-        })
+        });
+
+        it('throws if updated a system property column', function () {
+            expect(function () {
+                var statement = update({ name: 'table' }, { id: 'id', createdAt: 'val' });
+            }).to.throw('Cannot update item with property createdAt as it is reserved');
+        });
+
+        it('does not throw if item contains version', function () {
+            var statement = update({ name: 'table' }, { id: 'id', p1: 'value', p2: 2.2, version: 1 });
+            expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [p1] = @p1,[p2] = @p2 WHERE [id] = @id AND [version] = @version ; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
+        });
     });
 
     describe('delete', function () {
@@ -79,8 +96,18 @@ describe('azure-mobile-apps.data.sql.statements', function () {
         var updateSchema = statements.updateSchema;
 
         it('generates simple statement', function () {
-            var statement = updateSchema({ name: 'table' }, [{ name: 'id' }], { id: 1, text: 'test' });
+            var statement = updateSchema({ name: 'table' }, [{ name: 'id' }, { name: 'version' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }], { id: 1, text: 'test' });
             expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL');
+        });
+
+        it('generates system properties if missing', function () {
+            var statement = updateSchema({ name: 'table' }, [{ name: 'id' }], { id: 1, text: 'test' });
+            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0');
+        });
+
+        it('correctly handles missing system properties that exist in item', function () {
+            var statement = updateSchema({ name: 'table' }, [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }], { id: 1, text: 'test', version: 'someVersion' });
+            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL');
         });
     });
 
@@ -89,27 +116,27 @@ describe('azure-mobile-apps.data.sql.statements', function () {
 
         it('generates create statement with string id', function () {
             var statement = createTable({ name: 'table' }, { id: '1', text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,__version ROWVERSION NOT NULL,__createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
+            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
         });
 
         it('generates create statement with numeric id', function () {
             var statement = createTable({ name: 'table' }, { id: 1, text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] INT NOT NULL PRIMARY KEY,__version ROWVERSION NOT NULL,__createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
+            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] INT NOT NULL PRIMARY KEY,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
         });
 
         it('generates create statement with string id if none is provided', function () {
             var statement = createTable({ name: 'table' }, { text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,__version ROWVERSION NOT NULL,__createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
+            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
         });
 
         it('generates integer identity column when autoIncrement is specified', function () {
             var statement = createTable({ name: 'table', autoIncrement: true }, { text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] INT NOT NULL IDENTITY (1, 1) PRIMARY KEY,__version ROWVERSION NOT NULL,__createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
+            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] INT NOT NULL IDENTITY (1, 1) PRIMARY KEY,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL) ON [PRIMARY]')
         });
 
         it('generates create statement with predefined columns', function () {
             var statement = createTable({ name: 'table', columns: { number: 'number' } }, { text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,__version ROWVERSION NOT NULL,__createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),__deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL,[number] FLOAT(53)) ON [PRIMARY]')
+            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL,[number] FLOAT(53)) ON [PRIMARY]')
         });
     });
 

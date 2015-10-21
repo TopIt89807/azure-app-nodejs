@@ -185,6 +185,31 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
             .expect(404);
     });
 
+    it('returns 400 for inserted system properties', function () {
+        mobileApp.tables.add('integration');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/integration')
+            .send({ id: '1', string: "test", createdAt: 'val' })
+            .expect(400);
+    });
+
+    it('returns 400 for updated system properties', function () {
+        mobileApp.tables.add('integration');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/integration')
+            .send({ id: '1', string: "test" })
+            .then(function (res) {
+                return supertest(app)
+                    .patch('/tables/integration')
+                    .send({ id: 1, string: "test2", bool: true, createdAt: 'val'})
+                    .expect(400);
+            });
+    });
+
     it('returns 200 when delete operation executed successfully', function () {
         mobileApp.tables.add('integration');
         app.use(mobileApp);
