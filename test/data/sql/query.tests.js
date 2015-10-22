@@ -630,6 +630,14 @@ describe('azure-mobile-apps.data.sql.query', function () {
         verifySqlFormatting(query, expectedSql);
     });
 
+    it("uses table specified in table config", function () {
+        var query = {
+            table: 'query'
+        };
+        var expectedSql = "SELECT * FROM [testapp].[tableName]";
+        verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [], schema: 'testapp', name: 'tableName' });
+    })
+
     it("paging query with filter and select", function () {
         var query = {
             table: 'books',
