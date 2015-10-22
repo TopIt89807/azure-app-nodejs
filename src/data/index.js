@@ -6,6 +6,8 @@
 @description Exposes data access operations for tables
 */
 
+var types = require('../utilities/types');
+
 /**
 Create an instance of the data provider specified in the configuration.
 @param {dataConfiguration} configuration - The data provider configuration
@@ -15,7 +17,7 @@ object with the members described below.
 */
 module.exports = function (configuration) {
     var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
-    return ((typeof(provider) === 'function') ? provider : require('./' + provider))(configuration.data);
+    return (types.isFunction(provider) ? provider : require('./' + provider))(configuration.data);
 }
 
 /**
