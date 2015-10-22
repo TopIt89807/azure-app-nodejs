@@ -48,6 +48,9 @@ An official npm package will be published soon.
 
   `npm install express azure-mobile-apps --save`
 
+0. Create a suitable .gitignore file.  You can generate a suitable .gitignore
+file using the generator at [gitignore.io](https://www.gitignore.io)
+
 0. Create a server.js file and add the following code to the file:
 
   ```js
