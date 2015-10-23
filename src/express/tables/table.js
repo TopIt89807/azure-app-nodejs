@@ -44,7 +44,7 @@ module.exports = function (definition) {
 
     /**
     Register a table read logic handler. The property also exposes a use function for specifying middleware for the read operation.
-    Middleware must contain the middleware exposed through table.operation. You can also set the authorize property on this member.
+    Middleware must contain the middleware exposed through table.operation. You can also set authorize/disabled properties on this member.
     @function read
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
@@ -87,7 +87,6 @@ table.read(function (context) {
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
     */
     table.undelete = attachOperation('undelete');
-
     return table;
 
     // returns a function that populates the table definition object with middleware provided for the operation
@@ -103,6 +102,14 @@ table.read(function (context) {
         var api = function (handler) {
             table.operations[operation] = handler;
         };
+
+        // copy existing operation properties to attached operation
+        if (table[operation]) {
+            Object.keys(table[operation]).forEach(function (property) {
+                api[property] = table[operation][property];
+            });
+        }
+
         api.use = attachMiddleware(operation);
         return api;
     }

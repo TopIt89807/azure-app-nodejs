@@ -58,6 +58,10 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
                 return request(app).delete('/api/authapi').expect(401);
             });
     });
+
+    it('returns 404 on disabled method', function () {
+        return request(app).post('/api/customapiname').expect(404);
+    });
 });
 
 function getIdentity(authConfiguration, token, provider) {

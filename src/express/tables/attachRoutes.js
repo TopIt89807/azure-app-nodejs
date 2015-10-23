@@ -36,6 +36,10 @@ module.exports = function (configuration, router, executeOperation) {
 
     // attach middleware for the specified operation to the appropriate routes
     function configureOperation(operation, verb, pre, routes) {
+        // do not configure disabled operations
+        if (configuration[operation] && configuration[operation].disabled) 
+            return;
+
         var operationMiddleware = configuration.middleware[operation] || [],
             // if no middleware has been configured for the specific operation, just use the executeOperation middleware
             middleware = operationMiddleware.length === 0

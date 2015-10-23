@@ -33,7 +33,7 @@ module.exports = function (configuration) {
         var apiRouter = express.Router();
 
         Object.getOwnPropertyNames(definition).forEach(function (property) {
-            if (supportedVerbs.some(function (verb) { return verb === property; })) {
+            if (supportedVerbs.some(function (verb) { return verb === property; }) && !definition[property].disabled) {
                 if (definition.authorize || definition[property].authorize) {
                     definition[property].authorize = true;
                     logger.debug("Adding authorization to " + property + " for api " + name);

@@ -43,5 +43,10 @@ describe('azure-mobile-apps.express.tables.table', function () {
         expect(stack[0].stack[0].route.stack[1].handle.constructor).to.equal(Function); // used to test against executeOperation, no longer possible
     });
 
+    it('preserves pre-configured operation settings', function () {
+        var table = tableFactory({ read: { property: true }});
+        expect(table.read).to.have.property('property', true);
+    });
+
     function testMiddleware(req, res, next) { }
 });
