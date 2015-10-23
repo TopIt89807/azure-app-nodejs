@@ -15,6 +15,7 @@ module.exports = function (table) {
             context.query = queries.create(table.name).where({ id: context.id });
             context.query.single = true;
         } else {
+            enforceMaxTop();
             context.query = queries.fromRequest(req);
         }
 
@@ -26,5 +27,18 @@ module.exports = function (table) {
             context.version = etag;
 
         next();
+
+        function enforceMaxTop() {
+            if(table.maxTop) {
+                var top = req.query.$top;
+                if(top > table.maxTop) {
+                    var error = new Error("You cannot request more than " + table.maxTop + " records");
+                    error.badRequest = true;
+                    next(error);
+                }
+                if(!top)
+                    req.query.$top = table.maxTop
+            }
+        }
     };
 };

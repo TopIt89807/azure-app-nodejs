@@ -27,6 +27,7 @@ var loadConfiguration = require('./configuration'),
         tableRootPath: '/tables',
         debug: environment.debug,
         version: 'node-' + require('../package.json').version,
+        maxTop: 1000,
         logging: {
             level: environment.debug ? 'debug' : 'info',
             transports: {
@@ -41,7 +42,7 @@ var loadConfiguration = require('./configuration'),
             maxAge: 300,
             origins: ['localhost']
         },
-        data: { 
+        data: {
             schema: 'dbo',
             dynamicSchema: true
         },
