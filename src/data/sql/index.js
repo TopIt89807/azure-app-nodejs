@@ -6,7 +6,8 @@ var statements = require('./statements'),
     dynamicSchema = require('./dynamicSchema'),
     schema = require('./schema'),
     log = require('../../logger'),
-    assert = require('../../utilities/assert').argument;
+    assert = require('../../utilities/assert').argument,
+    promises = require('../../utilities/promises');
 
 module.exports = function (configuration) {
     assert(configuration, 'Data configuration was not provided.');
@@ -45,6 +46,10 @@ module.exports = function (configuration) {
                 },
                 truncate: function () {
                     return execute(configuration, statements.truncate(table));
+                },
+                initialize: function () {
+                    // if dynamic schema is on, let the table be created / updated on insert / update
+                    return promises.resolved();
                 }
             };
         else
