@@ -4,6 +4,7 @@
 var statements = require('./statements'),
     execute = require('./execute'),
     dynamicSchema = require('./dynamicSchema'),
+    schema = require('./schema'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument;
 
@@ -70,6 +71,9 @@ module.exports = function (configuration) {
                 },
                 truncate: function () {
                     return execute(configuration, statements.truncate(table));
+                },
+                initialize: function () {
+                    return schema.initialize(table);
                 }
             };
     };
