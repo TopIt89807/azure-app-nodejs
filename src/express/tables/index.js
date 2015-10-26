@@ -40,6 +40,8 @@ module.exports = function (configuration) {
             definition.dynamicSchema = configuration.data.dynamicSchema;
         if (configuration.data && !definition.hasOwnProperty('schema'))
             definition.schema = configuration.data.schema;
+        if (!definition.hasOwnProperty('maxTop'))
+            definition.maxTop = configuration.maxTop;
         definition.name = definition.databaseTableName || definition.name || name;
 
         configuration.tables[name] = definition;

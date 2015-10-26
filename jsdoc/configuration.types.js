@@ -12,6 +12,7 @@ The top level configuration object.
 @property {string} notificationsRootPath=/push/installations - Notification installations endpoint
 @property {bool} debug=false - Run the server in debug mode. Automatically turned on when node is executed with the --debug option
 @property {string} version - Current version of the Azure Mobile Apps SDK
+@property {integer} maxTop=1000 - Limit the maximum number of rows a client can request
 @property {loggingConfiguration} logging - Logging configuration
 @property {dataConfiguration} data - Data configuration
 @property {authConfiguration} auth - Authentication configuration

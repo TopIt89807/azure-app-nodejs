@@ -11,4 +11,5 @@
 @property {object} columns - Object containing column definitions; property key defines the column name, the value should be one of 'number', 'string', 'boolean' or 'datetime'
 @property {string} schema=dbo - SQL Server schema name to use for the table
 @property {string} [databaseTableName] - The name of the database table to use. If unspecified, the name property is used
+@property {integer} maxTop - Limit the maximum number of rows a client can request
 */

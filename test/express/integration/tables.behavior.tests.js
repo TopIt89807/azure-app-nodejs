@@ -57,4 +57,43 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 done();
             });
     });
+    
+    it('returns 400 when request size limit is exceeded', function () {
+        mobileApp = mobileApps({ maxTop: 1000 });
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem?$top=1001')
+            .expect(400);
+    });
+
+    it('returns 200 when request size limit is set to 0', function () {
+        mobileApp = mobileApps({ maxTop: 0 });
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem?$top=1000000')
+            .expect(200);
+    });
+
+    it('sets request size limit implicitly', function () {
+        var table = mobileApps.table(),
+            query;
+
+        table.read(function (context) {
+            query = context.query.toOData();
+        });
+
+        mobileApp = mobileApps({ maxTop: 1000 });
+        mobileApp.tables.add('todoitem', table);
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .expect(function (err, res) {
+                expect(query).to.contain('$top=1000');
+            });
+    });
 });
