@@ -59,7 +59,7 @@ Express 4.x is currently the only supported platform.
 module.exports = function (configuration) {
     configuration = configuration || {};
     var configFile = path.resolve(configuration.basePath || defaults.basePath, configuration.configFile || defaults.configFile);
-    configuration = assign(loadConfiguration.fromFile(configFile), defaults, configuration);
+    configuration = assign({ logging: {}, data: {}, auth: {} }, loadConfiguration.fromFile(configFile), defaults, configuration);
     loadConfiguration.fromEnvironment(configuration);
     loadConfiguration.fromSettingsJson(configuration);
     logger.configure(configuration.logging);
