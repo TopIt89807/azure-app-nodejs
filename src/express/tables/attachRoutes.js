@@ -10,7 +10,8 @@ and adds appropriate routes for each HTTP verb to a provided express router.
 
 var parseQuery = require('../middleware/parseQuery'),
     parseItem = require('../middleware/parseItem'),
-    authorize = require('../middleware/authorize');
+    authorize = require('../middleware/authorize'),
+    notAllowed = require('../middleware/notAllowed');
 
 /* Creates an express router with appropriate routes configures for each HTTP verb.
 @param {module:azure-mobile-apps/express/tables/table} configuration Table configuration object.
@@ -36,9 +37,18 @@ module.exports = function (configuration, router, executeOperation) {
 
     // attach middleware for the specified operation to the appropriate routes
     function configureOperation(operation, verb, pre, routes) {
-        // do not configure disabled operations
-        if (configuration[operation] && configuration[operation].disabled) 
-            return;
+        var middleware = buildOperationMiddleware(operation, pre);
+
+        routes.forEach(function (route) {
+            router[verb](route, middleware);
+        });
+    }
+
+    function buildOperationMiddleware(operation, pre) {
+        // return 405 not allowed for disabled operations
+        if (configuration[operation] && configuration[operation].disabled) {
+            return notAllowed(operation);
+        }
 
         var operationMiddleware = configuration.middleware[operation] || [],
             // if no middleware has been configured for the specific operation, just use the executeOperation middleware
@@ -52,8 +62,6 @@ module.exports = function (configuration, router, executeOperation) {
         // add required internal middleware, e.g. parseItem, parseQuery
         if (pre) middleware.unshift.apply(middleware, pre);
 
-        routes.forEach(function (route) {
-            router[verb](route, middleware);
-        });
+        return middleware;
     }
 };

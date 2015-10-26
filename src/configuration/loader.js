@@ -4,9 +4,25 @@
 ﻿var path = require('path')
     fs = require('fs'),
     utilities = require('../utilities'),
+    assert = require('../utilities/assert').argument;
     supportedExtensions = ['.js', '.json'];
 
-module.exports = {
+var loader = module.exports = {
+    importDefinitions: function (basePath, importDefinition) {
+        return function (path) {
+            assert(path, 'A path to a configuration file(s) was not specified');
+            var definitions = loader.loadPath(path, basePath);
+            Object.keys(definitions).forEach(function (name) {
+                var definition = definitions[name];
+
+                if (definition && definition.name)
+                    name = definition.name;
+
+                importDefinition(name, definition);
+            });
+        }
+    },
+
     loadPath: function (targetPath, basePath) {
         basePath = basePath || path.dirname(module.parent.filename);
         var fullPath = path.resolve(basePath, targetPath);

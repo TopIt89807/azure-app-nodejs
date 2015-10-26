@@ -97,12 +97,12 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             });
     });
 
-    it('returns 404 for disabled operations', function () {
+    it('returns 405 for disabled operations', function () {
         mobileApp.tables.add('todoitem', { read: { disabled: true }});
         app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
-            .expect(404);
+            .expect(405);
     });
 });

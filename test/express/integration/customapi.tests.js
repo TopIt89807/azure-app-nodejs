@@ -59,8 +59,8 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
             });
     });
 
-    it('returns 404 on disabled method', function () {
-        return request(app).post('/api/customapiname').expect(404);
+    it('returns 405 on disabled method', function () {
+        return request(app).post('/api/authapi').expect(405);
     });
 });
 
