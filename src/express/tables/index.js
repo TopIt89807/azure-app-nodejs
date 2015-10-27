@@ -11,6 +11,7 @@ var express = require('express'),
     loader = require('../../configuration/loader'),
     table = require('./table'),
     logger = require('../../logger'),
+    tableRouter = require('./tableRouter'),
     assert = require('../../utilities/assert').argument;
 
 /**
@@ -34,7 +35,7 @@ module.exports = function (configuration) {
         logger.debug("Adding table definition for " + name);
         definition = buildTableDefinition(name, definition);
         configuration.tables[name] = definition;
-        router.use('/' + name, buildTableRouter(definition));
+        router.use('/' + name, tableRouter(definition));
     };
 
     /**
@@ -52,13 +53,9 @@ module.exports = function (configuration) {
 
     return router;
 
-    function buildTableRouter(definition) {
-        return definition.router(definition.name);
-    }
-
     function buildTableDefinition(name, definition) {
         // if the definition doesn't have a router function, wrap it in a table definition object
-        if(!definition || typeof definition.router !== 'function')
+        if(!definition || typeof definition.execute !== 'function')
             definition = table(definition);
 
         definition.name = definition.databaseTableName || definition.name || name;

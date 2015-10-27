@@ -1,50 +1,36 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿var factory = require('../../../src/express/tables/attachRoutes'),
-    executeOperation = require('../../../src/express/middleware/executeOperation'),
-    express = require('express'),
+﻿var factory = require('../../../src/express/tables/tableRouter'),
+    tableFactory = require('../../../src/express/tables/table'),
     expect = require('chai').expect;
 
 describe('azure-mobile-apps.express.tables.attachRoutes', function () {
     it('uses executeOperation for operation middleware if none was specified', function () {
-        var router = express.Router(),
-            configuration = {
-                middleware: {
-                    execute: [],
-                    get: []
-                }
-            };
-        factory(configuration, router, executeOperation());
+        var table = tableFactory();
+        factory(table);
 
+        var router = table.execute;
         expect(router.stack[0].route.stack.length).to.equal(2);
         expect(router.stack[0].route.stack[1].handle.constructor).to.equal(Function); // used to test against executeOperation, no longer possible
     });
 
     it('returns router if no execution middleware was specified', function () {
-        var router = express.Router(),
-            configuration = {
-                middleware: {
-                    execute: [],
-                    get: []
-                }
-            };
-        var results = factory(configuration, router, executeOperation());
+        var table = tableFactory();
+        var results = factory(table);
 
         expect(results.length).to.equal(1);
         expect(results[0]).to.equal(router);
     })
 
     it('arranges middleware onto router', function () {
-        var router = express.Router(),
-            configuration = {
-                middleware: {
-                    execute: [testMiddleware],
-                    get: [testMiddleware],
-                    post: [testMiddleware, testMiddleware]
-                }
-            };
-        factory(configuration, router, executeOperation());
+        var table = tableFactory();
+            table.use(testMiddleware);
+            table.read(testMiddleware);
+            table.insert([testMiddleware, testMiddleware]);
+        var results = factory(table);
+
+        var router = table.execute;
 
         expect(router.stack.length).to.equal(8);
 

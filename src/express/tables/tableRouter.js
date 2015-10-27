@@ -14,26 +14,25 @@ var parseQuery = require('../middleware/parseQuery'),
     notAllowed = require('../middleware/notAllowed');
 
 /* Creates an express router with appropriate routes configures for each HTTP verb.
-@param {module:azure-mobile-apps/express/tables/table} configuration Table configuration object.
-@param {express.Router} router Router to attach routes to.
-@param {module:azure-mobile-apps/express/middleware/executeOperation} executeOperation An instance of the executeOperation middleware for this table.
+@param {module:azure-mobile-apps/express/tables/table} table Table configuration object.
 @returns An express router with routes configured.
 */
-module.exports = function (configuration, router, executeOperation) {
+module.exports = function (table) {
     var defaultRoute = '/',
-        idRoute = '/:id';
+        idRoute = '/:id'
+        router = table.execute;
 
-    configureOperation('read', 'get', [parseQuery(configuration)], [defaultRoute, idRoute]);
-    configureOperation('insert', 'post', [parseItem(configuration)], [defaultRoute]);
-    configureOperation('undelete', 'post', [parseQuery(configuration)], [idRoute]);
-    configureOperation('update', 'patch', [parseItem(configuration)], [defaultRoute, idRoute]);
-    configureOperation('delete', 'delete', [parseQuery(configuration)], [defaultRoute, idRoute]);
+    configureOperation('read', 'get', [parseQuery(table)], [defaultRoute, idRoute]);
+    configureOperation('insert', 'post', [parseItem(table)], [defaultRoute]);
+    configureOperation('undelete', 'post', [parseQuery(table)], [idRoute]);
+    configureOperation('update', 'patch', [parseItem(table)], [defaultRoute, idRoute]);
+    configureOperation('delete', 'delete', [parseQuery(table)], [defaultRoute, idRoute]);
 
     // Return table middleware configured by the user (set on the middleware.execute property by the table module).
     // If none has been provided, just return the router we configured
-    return !configuration.middleware.execute || configuration.middleware.execute.length === 0
+    return !table.middleware.execute || table.middleware.execute.length === 0
         ? [router]
-        : configuration.middleware.execute;
+        : table.middleware.execute;
 
     // attach middleware for the specified operation to the appropriate routes
     function configureOperation(operation, verb, pre, routes) {
@@ -46,18 +45,15 @@ module.exports = function (configuration, router, executeOperation) {
 
     function buildOperationMiddleware(operation, pre) {
         // return 405 not allowed for disabled operations
-        if (configuration[operation] && configuration[operation].disabled) {
+        if (table[operation] && table[operation].disabled) {
             return notAllowed(operation);
         }
 
-        var operationMiddleware = configuration.middleware[operation] || [],
-            // if no middleware has been configured for the specific operation, just use the executeOperation middleware
-            middleware = operationMiddleware.length === 0
-                ? [executeOperation]
-                : operationMiddleware;
+        // if no middleware has been configured for the specific operation, just use the executeOperation middleware
+        var middleware = table.middleware[operation] || [table.operation];
 
         // hook up the authorize middleware if specified
-        if (configuration.authorize || (configuration[operation] && configuration[operation].authorize)) middleware.unshift(authorize);
+        if (table.authorize || (table[operation] && table[operation].authorize)) middleware.unshift(authorize);
 
         // add required internal middleware, e.g. parseItem, parseQuery
         if (pre) middleware.unshift.apply(middleware, pre);
