@@ -8,12 +8,13 @@ Mobile App. It returns a router that can be attached to an express app with
 some additional functions for registering apis.
 */
 var express = require('express'),
-    loader = require('../../configuration/loader'),
+    importScript = require('../script/import'),
     logger = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     authorize = require('../middleware/authorize'),
     notAllowed = require('../middleware/notAllowed'),
     utilities = require('../../utilities'),
+    setAccess = require('../script/setAccess'),
     supportedVerbs = ['get', 'post', 'put', 'patch', 'delete'];
 
 /**
@@ -43,7 +44,7 @@ module.exports = function (configuration) {
     The path is relative to configuration.basePath that defaults to the location of your startup module.
     The api name will be derived from the physical file name.
     */
-    router.import = loader.importDefinitions(configuration.basePath, router.add);
+    router.import = importScript(configuration.basePath, router.add);
 
     return router;
 
@@ -63,7 +64,9 @@ module.exports = function (configuration) {
     // definition is an api definition object
     // returns a middleware function or an array of middleware function
     function buildMethodMiddleware(definition, method) {
-        if (definition[method].disabled)
+        setAccess(definition, method);
+
+        if (definition[method].disable)
             return notAllowed(method);
 
         // method definitions are either a function, an array of functions, or an array-like object
@@ -71,7 +74,7 @@ module.exports = function (configuration) {
         // {'0': addHeader, '1': return200, authorize: true} should convert to [addHeader,return200]
         var middleware = utilities.object.convertArrayLike(definition[method]);
 
-        if (definition.authorize || definition[method].authorize) {
+        if (definition[method].authorize) {
             logger.debug("Adding authorization to " + method + " for api " + definition.name);
             middleware = [authorize].concat(middleware);
         }

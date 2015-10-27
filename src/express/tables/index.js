@@ -8,7 +8,7 @@ Mobile App. It returns a router that can be attached to an express app with
 some additional functions for registering tables.
 */
 var express = require('express'),
-    loader = require('../../configuration/loader'),
+    importScript = require('../script/import'),
     table = require('./table'),
     logger = require('../../logger'),
     tableRouter = require('./tableRouter'),
@@ -46,7 +46,7 @@ module.exports = function (configuration) {
     The path is relative to configuration.basePath that defaults to the location of your startup module.
     The table name will be derived from the physical file name.
     */
-    router.import = loader.importDefinitions(configuration.basePath, router.add);
+    router.import = importScript(configuration.basePath, router.add);
 
     // expose configuration through zumoInstance.tables.configuration
     router.configuration = configuration.tables;

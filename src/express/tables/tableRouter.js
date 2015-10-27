@@ -11,7 +11,8 @@ and adds appropriate routes for each HTTP verb to a provided express router.
 var parseQuery = require('../middleware/parseQuery'),
     parseItem = require('../middleware/parseItem'),
     authorize = require('../middleware/authorize'),
-    notAllowed = require('../middleware/notAllowed');
+    notAllowed = require('../middleware/notAllowed'),
+    setAccess = require('../script/setAccess');
 
 /* Creates an express router with appropriate routes configures for each HTTP verb.
 @param {module:azure-mobile-apps/express/tables/table} table Table configuration object.
@@ -44,8 +45,10 @@ module.exports = function (table) {
     }
 
     function buildOperationMiddleware(operation, pre) {
+        setAccess(table, operation);
+
         // return 405 not allowed for disabled operations
-        if (table[operation] && table[operation].disabled) {
+        if (table[operation].disable) {
             return notAllowed(operation);
         }
 
@@ -53,7 +56,7 @@ module.exports = function (table) {
         var middleware = table.middleware[operation] || [table.operation];
 
         // hook up the authorize middleware if specified
-        if (table.authorize || (table[operation] && table[operation].authorize)) middleware.unshift(authorize);
+        if (table[operation].authorize) middleware.unshift(authorize);
 
         // add required internal middleware, e.g. parseItem, parseQuery
         if (pre) middleware.unshift.apply(middleware, pre);

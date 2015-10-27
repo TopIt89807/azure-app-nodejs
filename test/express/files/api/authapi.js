@@ -11,4 +11,4 @@ var api = module.exports = {
 };
 
 api.authorize = true;
-api.post.disabled = true;
+api.post.disable = true;

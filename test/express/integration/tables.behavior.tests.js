@@ -98,7 +98,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 405 for disabled operations', function () {
-        mobileApp.tables.add('todoitem', { read: { disabled: true }});
+        mobileApp.tables.add('todoitem', { read: { disable: true }});
         app.use(mobileApp);
 
         return supertest(app)
