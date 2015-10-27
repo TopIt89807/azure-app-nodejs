@@ -33,4 +33,13 @@ describe('azure-mobile-apps.configuration', function () {
         delete process.env.MS_MobileLogLevel;
         log.configure();
     });
+
+    it("database schema name is set on each table from ms_databaseschemaname", function () {
+        process.env.MS_DatabaseSchemaName = 'schemaName';
+        var mobileApp = mobileApps();
+        mobileApp.tables.add('test');
+        expect(mobileApp.configuration.data.schema).to.equal('schemaName');
+        expect(mobileApp.configuration.tables.test.schema).to.equal('schemaName');
+        delete process.env.MS_DatabaseSchemaName;
+    });
 });

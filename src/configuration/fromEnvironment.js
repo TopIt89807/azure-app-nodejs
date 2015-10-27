@@ -18,6 +18,9 @@ module.exports = function (configuration) {
                 configuration.data = connectionString.parse(process.env[key]);
                 break;
 
+            case 'ms_databaseschemaname':
+                configuration.data.schema = process.env[key];
+
             case 'ema_runtimeurl':
                 configuration.auth.gatewayUrl = process.env[key];
                 break;
