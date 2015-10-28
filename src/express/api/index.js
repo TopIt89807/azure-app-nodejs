@@ -8,10 +8,12 @@ Mobile App. It returns a router that can be attached to an express app with
 some additional functions for registering apis.
 */
 var express = require('express'),
-    loader = require('../../configuration/loader'),
     logger = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     authorize = require('../middleware/authorize'),
+    notAllowed = require('../middleware/notAllowed'),
+    utilities = require('../../utilities'),
+    importDefinition = require('../../configuration/importDefinition'),
     supportedVerbs = ['get', 'post', 'put', 'patch', 'delete'];
 
 /**
@@ -30,44 +32,9 @@ module.exports = function (configuration) {
     */
     router.add = function (name, definition) {
         assert(name, 'An api name was not specified');
-        var apiRouter = express.Router();
-
-        Object.getOwnPropertyNames(definition).forEach(function (property) {
-            if (supportedVerbs.some(function (verb) { return verb === property; })) {
-                if (definition.authorize || definition[property].authorize) {
-                    definition[property].authorize = true;
-                    logger.debug("Adding authorization to " + property + " for api " + name);
-                }
-                logger.debug("Adding method " + property + " to api " + name);
-                apiRouter[property]('/', buildMiddlewareArray(definition[property]));
-            } else if (property !== 'authorize') {
-                logger.warn("Unrecognized property '" + property + "' in api " + name);
-            }
-        });
-
-        router.use('/' + name, apiRouter);
+        definition.name = name;
+        router.use('/' + name, buildApiRouter(definition));
     };
-
-    // definition is either a function, an array of functions, or an array-like object
-    // returns a middleware function or an array of middleware function
-    function buildMiddlewareArray(definition) {
-        var middlewareArray = definition;
-
-        // if array-like object convert to array
-        // {'0': addHeader, '1': return200, authorize: true} should convert to [addHeader,return200]
-        var length = 0;
-        while(definition.hasOwnProperty(length))
-            length++;
-        if (length) {
-            middlewareArray.length = length;
-            middlewareArray = Array.prototype.slice.call(middlewareArray);
-        }
-
-        if (definition.authorize)
-            middlewareArray = [authorize].concat(middlewareArray);
-
-        return middlewareArray;
-    }
 
     /**
     Import a file or folder of modules containing api definitions
@@ -76,18 +43,41 @@ module.exports = function (configuration) {
     The path is relative to configuration.basePath that defaults to the location of your startup module.
     The api name will be derived from the physical file name.
     */
-    router.import = function (path) {
-        assert(path, 'A path to api configuration file(s) was not specified');
-        var apis = loader.loadPath(path, configuration.basePath);
-        Object.keys(apis).forEach(function (name) {
-            var definition = apis[name];
-
-            if (definition && definition.name)
-                name = definition.name;
-
-            router.add(name, definition);
-        });
-    };
+    router.import = importDefinition.import(configuration.basePath, router.add);
 
     return router;
+
+    function buildApiRouter(definition) {
+        var apiRouter = express.Router();
+        Object.getOwnPropertyNames(definition).forEach(function (method) {
+            if (supportedVerbs.some(function (verb) { return verb === method; })) {
+                logger.debug("Adding method " + method + " to api " + definition.name);
+                apiRouter[method]('/', buildMethodMiddleware(definition, method));
+            } else if (method !== 'authorize') {
+                logger.warn("Unrecognized property '" + method + "' in api " + definition.name);
+            }
+        });
+        return apiRouter;
+    }
+
+    // definition is an api definition object
+    // returns a middleware function or an array of middleware function
+    function buildMethodMiddleware(definition, method) {
+        importDefinition.setAccess(definition, method);
+
+        if (definition[method].disable)
+            return notAllowed(method);
+
+        // method definitions are either a function, an array of functions, or an array-like object
+        // if array-like object convert to array
+        // {'0': addHeader, '1': return200, authorize: true} should convert to [addHeader,return200]
+        var middleware = utilities.object.convertArrayLike(definition[method]);
+
+        if (definition[method].authorize) {
+            logger.debug("Adding authorization to " + method + " for api " + definition.name);
+            middleware = [authorize].concat(middleware);
+        }
+
+        return middleware; 
+    }
 }

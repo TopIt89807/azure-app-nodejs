@@ -9,9 +9,7 @@ The returned table object exposes functions for attaching middleware and operati
 These functions populate the middleware and operations properties of the table object, which are then consumed by the attachRoutes module.
 The router function calls the attachRoutes module and returns a configured router - this is consumed by mobileApp.tables.add.
 */
-var attachRoutes = require('./attachRoutes'),
-    executeOperation = require('../middleware/executeOperation'),
-    assign = require('deep-assign'),
+var executeOperation = require('../middleware/executeOperation')
     express = require('express');
 
 /**
@@ -20,19 +18,12 @@ Creates an instance of a table configuration helper.
 @returns An object with the members described below.
 */
 module.exports = function (definition) {
-    // create a router here that we will attach routes to using attachRoutes
     // exposing table.execute allows users to mount custom middleware before or after execution
-    var router = express.Router(),
-        table = assign({
-            router: function (name) {
-                table.name = name;
-                return attachRoutes(table, router, table.operation);
-            }
-        }, definition);
+    var table = definition || {};
 
     table.middleware = { };
     table.operations = { };
-    table.execute = router;
+    table.execute = express.Router();
     table.operation = executeOperation(table.operations);
 
     /**
@@ -44,7 +35,7 @@ module.exports = function (definition) {
 
     /**
     Register a table read logic handler. The property also exposes a use function for specifying middleware for the read operation.
-    Middleware must contain the middleware exposed through table.operation. You can also set the authorize property on this member.
+    Middleware must contain the middleware exposed through table.operation. You can also set authorize/disable properties on this member.
     @function read
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
@@ -87,7 +78,6 @@ table.read(function (context) {
     @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
     */
     table.undelete = attachOperation('undelete');
-
     return table;
 
     // returns a function that populates the table definition object with middleware provided for the operation
@@ -103,6 +93,14 @@ table.read(function (context) {
         var api = function (handler) {
             table.operations[operation] = handler;
         };
+
+        // copy existing operation properties to attached operation
+        if (table[operation]) {
+            Object.keys(table[operation]).forEach(function (property) {
+                api[property] = table[operation][property];
+            });
+        }
+
         api.use = attachMiddleware(operation);
         return api;
     }

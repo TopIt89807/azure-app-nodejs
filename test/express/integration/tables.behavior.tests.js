@@ -57,7 +57,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 done();
             });
     });
-    
+
     it('returns 400 when request size limit is exceeded', function () {
         mobileApp = mobileApps({ maxTop: 1000 });
         mobileApp.tables.add('todoitem');
@@ -95,5 +95,14 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .expect(function (err, res) {
                 expect(query).to.contain('$top=1000');
             });
+    });
+
+    it('returns 405 for disabled operations', function () {
+        mobileApp.tables.add('todoitem', { read: { disable: true }});
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .expect(405);
     });
 });
