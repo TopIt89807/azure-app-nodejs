@@ -29,7 +29,7 @@ When you're ready to submit an issue, we ask that you please attempt to document
  - If your project is Open Sourced, feel free to include a link
  - A discrete list of steps that leads to a reproduction
 
-We will try and respond to issues in a timely fashion. It is our goal to triage and priotize defects in a transparent way based on their technical merit and impact. If a defect that is blocking your product isn't being prioritized appropriately, feel free to get a hold of the team via the [Contact Us](./README.md#contact-us) section of our readme and we can have a more in depth discussion about the priority.
+We will try and respond to issues in a timely fashion. It is our goal to triage and priotize defects in a transparent way based on their technical merit and impact. If a defect that is blocking your product isn't being prioritized appropriately, feel free to get a hold of the team via the [Contact Us](./README.md#contact-us) section of our README and we can have a more in depth discussion about the priority.
 
 ## Contributing to the SDK git repository
 
@@ -58,7 +58,6 @@ Azure has a common set of contributor guidelines found here: [http://azure.githu
 
 0. Fork the Azure Mobile Apps repository
 0. Clone the repository - `git clone https://github.com/<USERNAME>/azure-mobile-apps-node.git`
-0. We're currently developing off the 'dev' branch.  Use `git checkout dev` to check out the developer branch.
 0. Run `install.bat` to add the required dependencies to the project.
 0. Provision a database either in Azure SQL DB (x-plat) or a local SQL Express instance (windows only)
 0. Execute the [azure-mobile-apps-test.sql](./node_modules/azure-mobile-apps.data.sql/test/infrastructure/azure-mobile-apps-test.sql) script against your target database.
