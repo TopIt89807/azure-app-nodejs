@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var bodyParser = require('body-parser'),
+    strings = require('../../utilities/strings'),
     uuid = require('node-uuid');
 
 module.exports = function (table) {
@@ -21,8 +22,7 @@ module.exports = function (table) {
                 // set version property from if-match header, if specified
                 var etag = req.get('if-match');
                 if(etag) {
-                    req.azureMobile.version = etag;
-                    item.version = etag;
+                    item.version = strings.extractEtag(etag);;
                 }
 
                 req.azureMobile.item = item;

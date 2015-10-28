@@ -25,6 +25,11 @@ var strings = module.exports = {
         return !stringIdValidatorRegex.test(id);
     },
 
+    // remove starting and finishing quotes and remove quote escaping from the middle of a string
+    extractEtag: function (value) {
+        return value.replace(/^"|\\(?=")|"$/g, '');
+    },
+
     convertDate: function (value) {
         var date = strings.parseISODate(value);
         if (date) {
