@@ -19,6 +19,7 @@ var express = require('express'),
     crossOrigin = require('./middleware/crossOrigin'),
     renderResults = require('./middleware/renderResults'),
     version = require('./middleware/version'),
+    apiVersionCheck = require('./middleware/apiVersionCheck'),
     log = require('../logger'),
     assert = require('../utilities/assert').argument;
 
@@ -38,27 +39,20 @@ var express = require('express'),
  */
 module.exports = function (configuration) {
     configuration = configuration || {};
-    configuration.data = configuration.data || { provider: 'memory' };
     var tableMiddleware = tables(configuration),
         apiMiddleware = customApi(configuration),
-        notificationMiddleware = notifications(configuration),
-        authMiddleware = authenticate(configuration),
-        createContextMiddleware = createContext(configuration),
-        handleErrorMiddleware = handleError(configuration),
-        crossOriginMiddleware = crossOrigin(configuration),
-        versionMiddleware = version(configuration),
         customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();
 
-    mobileApp.use(versionMiddleware)
-        .use(createContextMiddleware)
-        .use(authMiddleware)
-        .use(crossOriginMiddleware)
+    mobileApp.use(version(configuration))
+        .use(createContext(configuration))
+        .use(authenticate(configuration))
+        .use(crossOrigin(configuration))
         .use(customMiddlewareRouter)
-        .use(notificationMiddleware)
+        .use(configuration.notificationRootPath || '/push/installations', notifications(configuration))
         .use(configuration.apiRootPath || '/api', apiMiddleware)
-        .use(configuration.tableRootPath || '/tables', tableMiddleware, renderResults)
-        .use(handleErrorMiddleware);
+        .use(configuration.tableRootPath || '/tables', apiVersionCheck(configuration), tableMiddleware, renderResults)
+        .use(handleError(configuration));
 
     var api = function (req, res, next) {
         mobileApp(req, res, next);

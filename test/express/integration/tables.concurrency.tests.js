@@ -13,7 +13,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
 describe('azure-mobile-apps.express.integration.tables.concurrency', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ data: config });
+        mobileApp = mobileApps({ data: config, skipVersionCheck: true });
     });
 
     afterEach(function (done) {

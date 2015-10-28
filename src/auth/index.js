@@ -48,7 +48,7 @@ module.exports = function (configuration) {
             var options = {
                 audience: configuration.audience || 'urn:microsoft:windows-azure:zumo',
                 issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo',
-                expiresInMinutes: configuration.expires || 1440
+                expiresIn: (configuration.expires || 1440) * 60
             };
             return jwt.sign(payload, key, options);
         }

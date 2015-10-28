@@ -11,11 +11,12 @@ describe('azure-mobile-apps.express.integration.middleware', function () {
     before(function () {
         // environment settings override configured settings - hack to force use of the memory provider
         delete process.env.MS_TableConnectionString;
-        mobileApp = require('../../..')({ data: { provider: 'memory' } })
+        mobileApp = require('../../..')({ skipVersionCheck: true })
     });
 
     after(function () {
-        process.env.MS_TableConnectionString = oldConnectionString;
+        if(oldConnectionString)
+            process.env.MS_TableConnectionString = oldConnectionString;
     })
 
     it('read middleware is mounted in the correct order', function () {

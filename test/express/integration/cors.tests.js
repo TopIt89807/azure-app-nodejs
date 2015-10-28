@@ -20,7 +20,8 @@ describe('azure-mobile-apps.express.integration.cors', function () {
             cors: {
                 maxAge: 6000,
                 origins: ['localhost', { host: '*.v1.com' }, 'test.*.net']
-            }
+            },
+            skipVersionCheck: true
         };
         app = express();
         mobileApp = mobileApps(config);

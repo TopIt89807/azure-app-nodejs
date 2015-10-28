@@ -15,7 +15,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.auth', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ auth: { secret: secret, getIdentity: getIdentity } });
+        mobileApp = mobileApps({ auth: { secret: secret, getIdentity: getIdentity }, skipVersionCheck: true });
     });
 
     it('returns 200 for table requests with valid auth token', function () {

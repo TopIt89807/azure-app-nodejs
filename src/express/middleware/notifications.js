@@ -8,13 +8,11 @@ var express = require('express'),
 
 module.exports = function (configuration) {
     var router = express.Router(),
-        notificationPath,
         installationClient;
-    
+
     if (configuration && configuration.notifications && Object.keys(configuration.notifications).length > 0) {
-        notificationPath = configuration.notificationRootPath || '/push/installations';
         router.use(addPushContext);
-        router.route(notificationPath + '/:installationId')
+        router.route('/:installationId')
             .put(bodyParser.json({ reviver: stripTags }), put, errorHandler)
             .delete(del, errorHandler);
 

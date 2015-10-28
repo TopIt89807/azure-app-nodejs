@@ -1,3 +1,6 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
 var sinon = require('sinon'),
     sinonPromised = require('sinon-as-promised'),
     expect = require('chai')
@@ -16,7 +19,7 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
         nhStub = createNHClientStub();
 
         app = express();
-        app.use(notificationMiddleware({ notifications: { client: nhStub }}));
+        app.use('/push/installations', notificationMiddleware({ notifications: { client: nhStub }}));
     });
 
     it('returns 204 on successful creation', function () {

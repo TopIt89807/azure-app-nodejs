@@ -43,6 +43,7 @@ var loadConfiguration = require('./configuration'),
             origins: ['localhost']
         },
         data: {
+            provider: 'memory',
             schema: 'dbo',
             dynamicSchema: true
         },
