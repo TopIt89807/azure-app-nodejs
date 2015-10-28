@@ -62,7 +62,7 @@ describe('azure-mobile-apps.express.tables', function() {
         table.read.disable = true;
 
         // access level
-        table.delete.access = 'authorized'; // TF
+        table.delete.access = 'authenticated'; // TF
         table.undelete.access = 'disabled'; // FT
         table.update.access = 'anonymous';  // FF
 
@@ -77,7 +77,7 @@ describe('azure-mobile-apps.express.tables', function() {
         expect(table.read).to.have.property('authorize', false);
         expect(table.read).to.have.property('disable', true);
 
-        // authorized override
+        // authenticated override
         expect(table.delete).to.have.property('authorize', true);
         expect(table.delete).to.have.property('disable', false);
 

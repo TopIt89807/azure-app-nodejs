@@ -4,8 +4,8 @@
 /**
  * @typedef apiDefinition
  * @description Specifies an api
- * @property {boolean} authorise=false - Execute the {@link module:azure-mobile-apps/express/middleware/authorise authorise middleware} for each api operation.
- * @property {(function|function[])} get - Middleware to execute on get requests to this api.  You can also set the authorise/disabled properties on this member.
+ * @property {boolean} authorize=false - Execute the {@link module:azure-mobile-apps/express/middleware/authorize authorize middleware} for each api operation.
+ * @property {(function|function[])} get - Middleware to execute on get requests to this api.  You can also set the authorize/disable properties on this member.
  * @property {(function|function[])} post - Same as get, but for post requests.
  * @property {(function|function[])} put - Same as get, but for put requests.
  * @property {(function|function[])} patch - Same as get, but for patch requests.
@@ -24,11 +24,11 @@
  *      post: [addHeader, return204]
  *
  *      // Require authorisation for all operations
- *      // authorise = true;
+ *      // authorize = true;
  * };
  *
  * // Require authorisation for patch
- * api.patch.authorise = true;
+ * api.patch.authorize = true;
  * 
  * // Disable the post method
  * api.post.disable = true;

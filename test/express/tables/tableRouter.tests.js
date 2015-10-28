@@ -5,7 +5,7 @@
     tableFactory = require('../../../src/express/tables/table'),
     expect = require('chai').expect;
 
-describe('azure-mobile-apps.express.tables.attachRoutes', function () {
+describe('azure-mobile-apps.express.tables.tableRouter', function () {
     it('uses executeOperation for operation middleware if none was specified', function () {
         var table = tableFactory();
         factory(table);

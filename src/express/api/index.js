@@ -8,13 +8,12 @@ Mobile App. It returns a router that can be attached to an express app with
 some additional functions for registering apis.
 */
 var express = require('express'),
-    importScript = require('../script/import'),
     logger = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     authorize = require('../middleware/authorize'),
     notAllowed = require('../middleware/notAllowed'),
     utilities = require('../../utilities'),
-    setAccess = require('../script/setAccess'),
+    importDefinition = require('../../configuration/importDefinition'),
     supportedVerbs = ['get', 'post', 'put', 'patch', 'delete'];
 
 /**
@@ -44,7 +43,7 @@ module.exports = function (configuration) {
     The path is relative to configuration.basePath that defaults to the location of your startup module.
     The api name will be derived from the physical file name.
     */
-    router.import = importScript(configuration.basePath, router.add);
+    router.import = importDefinition.import(configuration.basePath, router.add);
 
     return router;
 
@@ -64,7 +63,7 @@ module.exports = function (configuration) {
     // definition is an api definition object
     // returns a middleware function or an array of middleware function
     function buildMethodMiddleware(definition, method) {
-        setAccess(definition, method);
+        importDefinition.setAccess(definition, method);
 
         if (definition[method].disable)
             return notAllowed(method);

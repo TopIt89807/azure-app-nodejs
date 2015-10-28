@@ -12,7 +12,7 @@ var parseQuery = require('../middleware/parseQuery'),
     parseItem = require('../middleware/parseItem'),
     authorize = require('../middleware/authorize'),
     notAllowed = require('../middleware/notAllowed'),
-    setAccess = require('../script/setAccess');
+    importDefinition = require('../../configuration/importDefinition');
 
 /* Creates an express router with appropriate routes configures for each HTTP verb.
 @param {module:azure-mobile-apps/express/tables/table} table Table configuration object.
@@ -45,7 +45,7 @@ module.exports = function (table) {
     }
 
     function buildOperationMiddleware(operation, pre) {
-        setAccess(table, operation);
+        importDefinition.setAccess(table, operation);
 
         // return 405 not allowed for disabled operations
         if (table[operation].disable) {
