@@ -12,7 +12,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.tables.configuration', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps();
+        mobileApp = mobileApps({ skipVersionCheck: true });
     });
 
     it('executes user code when provided', function (done) {
@@ -52,7 +52,7 @@ describe('azure-mobile-apps.express.integration.tables.configuration', function 
     });
 
     it('uses custom root path', function (done) {
-        mobileApp = mobileApps({ tableRootPath: '/test' });
+        mobileApp = mobileApps({ tableRootPath: '/test', skipVersionCheck: true });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 

@@ -12,7 +12,7 @@
 describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps();
+        mobileApp = mobileApps({ skipVersionCheck: true });
     });
 
     it('returns 200 for table route', function () {
@@ -45,7 +45,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     it('returns 500 with error details when exception is thrown', function (done) {
         var table = mobileApp.table();
         table.read.use(function (req, res, next) { throw 'test'; });
-        mobileApp = mobileApps({ debug: true });
+        mobileApp = mobileApps({ debug: true, skipVersionCheck: true });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
@@ -57,7 +57,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 done();
             });
     });
-    
+
     it('returns 400 when request size limit is exceeded', function () {
         mobileApp = mobileApps({ maxTop: 1000 });
         mobileApp.tables.add('todoitem');
@@ -69,7 +69,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 200 when request size limit is set to 0', function () {
-        mobileApp = mobileApps({ maxTop: 0 });
+        mobileApp = mobileApps({ maxTop: 0, skipVersionCheck: true });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -86,7 +86,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             query = context.query.toOData();
         });
 
-        mobileApp = mobileApps({ maxTop: 1000 });
+        mobileApp = mobileApps({ maxTop: 1000, skipVersionCheck: true });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 

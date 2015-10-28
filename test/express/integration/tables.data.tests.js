@@ -13,7 +13,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.tables.data', function () {
     beforeEach(function (done) {
         app = express();
-        mobileApp = mobileApps({ data: config });
+        mobileApp = mobileApps({ data: config, skipVersionCheck: true });
         data(config)({ name: 'integration' }).truncate().then(done);
     });
 
