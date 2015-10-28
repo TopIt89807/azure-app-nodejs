@@ -57,14 +57,12 @@ Azure has a common set of contributor guidelines found here: [http://azure.githu
 #### Set up development environment
 
 0. Fork the Azure Mobile Apps repository
-0. Clone the repository - `git clone https://github.com/<USERNAME>/azure-mobile-apps-node.git`
-0. Run `install.bat` to add the required dependencies to the project.
+0. Clone the repository - `git clone https://github.com/Azure/azure-mobile-apps-node.git`
 0. Provision a database either in Azure SQL DB (x-plat) or a local SQL Express instance (windows only)
-0. Execute the [azure-mobile-apps-test.sql](./node_modules/azure-mobile-apps.data.sql/test/infrastructure/azure-mobile-apps-test.sql) script against your target database.
+0. Execute the [azure-mobile-apps-test.sql](./node_modules/azure-mobile-apps.data.sql/test/azure-mobile-apps-test.sql) script against your target database.
 0. Install mocha globally - `npm install -g mocha`
 0. Set your environment settings
  - `ms_tableconnectionstring` should be your Azure SQL DB connection string (omit this if using a local SQL Express instance instead)
- - `ema_runtimeurl` should be your Azure Gateway URL (only necessary for Auth)
  - `ms_signingkey` comes from your Azure Gateway (auth only)
  - `ms_mobileappname` is a name given to your test Apps (optional)
 
