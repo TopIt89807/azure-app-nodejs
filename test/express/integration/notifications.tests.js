@@ -1,3 +1,6 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
 var sinon = require('sinon'),
     sinonPromised = require('sinon-as-promised'),
     expect = require('chai')
