@@ -22,7 +22,7 @@ module.exports = function (table) {
                 // set version property from if-match header, if specified
                 var etag = req.get('if-match');
                 if(etag) {
-                    item.version = strings.getVersionFromIfMatch(etag);;
+                    item.version = strings.extractEtag(etag);;
                 }
 
                 req.azureMobile.item = item;

@@ -26,7 +26,7 @@ var strings = module.exports = {
     },
 
     // remove starting and finishing quotes and remove quote escaping from the middle of a string
-    getVersionFromIfMatch: function (value) {
+    extractEtag: function (value) {
         return value.replace(/^"|\\(?=")|"$/g, '');
     },
 
