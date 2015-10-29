@@ -97,10 +97,11 @@ module.exports = function (configuration) {
                 nhClient.listRegistrationsByTag(tag, { top: top, skip: skip }, function (err, res) {
                     if (err) {
                         reject(err);
-                    } else if (res.length === 0) {
+                    } 
+                    results = results.concat(res.map(mapFunction));
+                    if (res.length < top) {
                         result(results);
                     } else {
-                        results = results.concat(res.map(mapFunction));
                         listRegistrations(top, skip + top);
                     }
                 });
