@@ -5,13 +5,13 @@ var formatSql = require('../../../src/data/sql/query/format'),
     equal = require('assert').equal,
     mssql = require('mssql');
 
-describe('azure-mobile-apps.data.sql.query', function () {
+describe('azure-mobile-apps.data.sql.query.sqlite', function () {
     it("preserves float parameters with zeroes", function () {
         var query = {
             table: 'intIdMovies',
             filters: 'ceiling((Duration div 60.0)) eq 2.0'
         },
-            statements = formatSql(query, { schema: 'testapp'});
+            statements = formatSql(query);
         equal(statements.length, 1);
         equal(statements[0].parameters[1].type, mssql.FLOAT);
     });
@@ -25,9 +25,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             skip: 500,
             take: null
         },
-            expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [Title]) AS [ROW_NUMBER], " +
-            "* FROM [testapp].[intIdMovies] WHERE ([Duration] = [Duration])) AS [t1] WHERE [t1].[ROW_NUMBER] " +
-            "BETWEEN 500 + 1 AND 500 + 9007199254740992 ORDER BY [t1].[ROW_NUMBER]";
+            expectedSql = "SELECT * FROM [intIdMovies] WHERE ([Duration] = [Duration]) ORDER BY [Title] LIMIT -1 OFFSET 500";
 
         verifySqlFormatting(query, expectedSql);
     });
@@ -36,13 +34,12 @@ describe('azure-mobile-apps.data.sql.query', function () {
         var query = {
             table: 'intIdMovies',
             skip: 10,
-            take: 10,
+            take: 11,
             includeTotalCount: true
         },
             expectedSql = [
-                "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], * FROM [testapp].[intIdMovies] WHERE (1 = 1)) " +
-                    "AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 10 + 1 AND 10 + 10 ORDER BY [t1].[ROW_NUMBER]",
-                "SELECT COUNT(*) AS [count] FROM [testapp].[intIdMovies]"
+                "SELECT * FROM [intIdMovies] LIMIT 11 OFFSET 10",
+                "SELECT COUNT(*) AS [count] FROM [intIdMovies]"
             ];
 
         verifySqlFormatting(query, expectedSql);
@@ -53,7 +50,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'books',
                 filters: "(col1 eq 1) and (col2 eq 2)",
             },
-            expectedSql = "SELECT * FROM [testapp].[books] WHERE (([col1] = @p1) AND ([col2] = @p2))",
+            expectedSql = "SELECT * FROM [books] WHERE (([col1] = @p1) AND ([col2] = @p2))",
             statements = verifySqlFormatting(query, expectedSql);
 
         equal(statements.length, 1);
@@ -67,7 +64,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 filters: "(type eq 'psychology') and (price lt 25.00)",
                 skip: 4
             },
-            expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], * FROM [testapp].[books] WHERE (([type] = @p1) AND ([price] < @p2))) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 9007199254740992 ORDER BY [t1].[ROW_NUMBER]";
+            expectedSql = "SELECT * FROM [books] WHERE (([type] = @p1) AND ([price] < @p2)) LIMIT -1 OFFSET 4";
 
         verifySqlFormatting(query, expectedSql);
     });
@@ -77,7 +74,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'books',
                 filters: "(true eq null) and false",
             },
-            expectedSql = "SELECT * FROM [testapp].[books] WHERE ((@p1 IS NULL) AND (@p2 = @p3))",
+            expectedSql = "SELECT * FROM [books] WHERE ((@p1 IS NULL) AND (@p2 = @p3))",
             statements = verifySqlFormatting(query, expectedSql);
 
         equal(statements.length, 1);
@@ -91,7 +88,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'books',
                 filters: "datetime eq 1",
             },
-            expectedSql = "SELECT * FROM [testapp].[books] WHERE ([datetime] = @p1)",
+            expectedSql = "SELECT * FROM [books] WHERE ([datetime] = @p1)",
             statements = verifySqlFormatting(query, expectedSql);
 
         equal(statements.length, 1);
@@ -103,7 +100,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'checkins',
                 includeDeleted: true
             },
-            expectedSql = "SELECT * FROM [testapp].[checkins]";
+            expectedSql = "SELECT * FROM [checkins]";
 
         verifySqlFormatting(query, expectedSql, { hasStringId: true, softDelete: true });
     });
@@ -112,7 +109,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
         var query = {
                 table: 'checkins'
             },
-            expectedSql = "SELECT * FROM [testapp].[checkins] WHERE ([deleted] = @p1)";
+            expectedSql = "SELECT * FROM [checkins] WHERE ([deleted] = @p1)";
 
         verifySqlFormatting(query, expectedSql, { hasStringId: true, softDelete: true });
     });
@@ -121,9 +118,9 @@ describe('azure-mobile-apps.data.sql.query', function () {
         var query = {
                 table: 'checkins',
                 skip: 4,
-                take: 4
+                take: 5
             },
-            expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], * FROM [testapp].[checkins] WHERE ([deleted] = @p1)) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 4 ORDER BY [t1].[ROW_NUMBER]";
+            expectedSql = "SELECT * FROM [checkins] WHERE ([deleted] = @p1) LIMIT 5 OFFSET 4";
 
         verifySqlFormatting(query, expectedSql, { hasStringId: true, softDelete: true });
     });
@@ -134,12 +131,12 @@ describe('azure-mobile-apps.data.sql.query', function () {
             filters: "(type eq 'psychology') and (price lt 25.00)",
             selections: 'title,type,price',
             skip: 4,
-            take: 4,
+            take: 5,
             inlineCount: 'allpages'
         };
         var expectedSql = [
-            "SELECT [t1].[ROW_NUMBER], [t1].[title], [t1].[type], [t1].[price] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], [title], [type], [price] FROM [testapp].[books] WHERE (([type] = @p1) AND ([price] < @p2))) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 4 ORDER BY [t1].[ROW_NUMBER]",
-            "SELECT COUNT(*) AS [count] FROM [testapp].[books] WHERE (([type] = @p3) AND ([price] < @p4))"
+            "SELECT [title], [type], [price] FROM [books] WHERE (([type] = @p1) AND ([price] < @p2)) LIMIT 5 OFFSET 4",
+            "SELECT COUNT(*) AS [count] FROM [books] WHERE (([type] = @p3) AND ([price] < @p4))"
         ];
 
         var statements = verifySqlFormatting(query, expectedSql);
@@ -156,7 +153,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'checkins',
                 filters: "(user eq 'mathewc')"
             },
-            expectedSql = "SELECT * FROM [testapp].[checkins] WHERE ([user] = @p1)";
+            expectedSql = "SELECT * FROM [checkins] WHERE ([user] = @p1)";
 
         verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [] });
     });
@@ -166,7 +163,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'products',
                 filters: "((ProductName ne 'Doritos') or (UnitPrice lt 5.00))"
             },
-            expectedSql = "SELECT * FROM [testapp].[products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2))";
+            expectedSql = "SELECT * FROM [products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2))";
 
         verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [] });
 
@@ -177,11 +174,11 @@ describe('azure-mobile-apps.data.sql.query', function () {
             ordering: 'UnitPrice asc',
             resultLimit: 1000
         };
-        expectedSql = "SELECT TOP 1000 [ProductID], [ProductName] FROM [testapp].[products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2)) ORDER BY [UnitPrice]";
+        expectedSql = "SELECT [ProductID], [ProductName] FROM [products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2)) ORDER BY [UnitPrice] LIMIT 1000";
         verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [] });
 
         query.take = 5;
-        expectedSql = "SELECT TOP 5 [ProductID], [ProductName] FROM [testapp].[products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2)) ORDER BY [UnitPrice]";
+        expectedSql = "SELECT [ProductID], [ProductName] FROM [products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2)) ORDER BY [UnitPrice] LIMIT 5";
         verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [] });
     });
 
@@ -191,7 +188,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 filters: "((ProductName ne 'Doritos') or (UnitPrice lt 5.00))",
                 ordering: "UnitPrice desc"
             },
-            expectedSql = "SELECT * FROM [testapp].[products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2)) ORDER BY [UnitPrice] DESC";
+            expectedSql = "SELECT * FROM [products] WHERE (([ProductName] != @p1) OR ([UnitPrice] < @p2)) ORDER BY [UnitPrice] DESC";
 
         var statements = verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [] });
         equal(statements.length, 1);
@@ -205,7 +202,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'products',
                 ordering: "UnitPrice desc, Category, ProductName"
             },
-            expectedSql = "SELECT * FROM [testapp].[products] ORDER BY [UnitPrice] DESC, [Category], [ProductName]";
+            expectedSql = "SELECT * FROM [products] ORDER BY [UnitPrice] DESC, [Category], [ProductName]";
 
         verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [] });
     });
@@ -217,7 +214,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             ordering: "price",
             take: 100
         };
-        verifySqlFormatting(query, "SELECT TOP 100 * FROM [testapp].[products] WHERE ([name] = @p1) ORDER BY [price]");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] = @p1) ORDER BY [price] LIMIT 100");
     });
 
     it("orderby", function () {
@@ -225,7 +222,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             ordering: 'price'
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] ORDER BY [price]");
+        verifySqlFormatting(query, "SELECT * FROM [products] ORDER BY [price]");
     });
 
     it("orderby ascending descending", function () {
@@ -233,10 +230,10 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             ordering: 'price asc'
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] ORDER BY [price]");
+        verifySqlFormatting(query, "SELECT * FROM [products] ORDER BY [price]");
 
         query.ordering = 'price desc';
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] ORDER BY [price] DESC");
+        verifySqlFormatting(query, "SELECT * FROM [products] ORDER BY [price] DESC");
     });
 
     it("equality operator", function () {
@@ -244,7 +241,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "name eq 'Doritos'"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] = @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] = @p1)");
     });
 
     it("not equal operator", function () {
@@ -252,7 +249,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "name ne 'Doritos'"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] != @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] != @p1)");
     });
 
     it("greater than operator", function () {
@@ -260,7 +257,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price gt 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([price] > @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([price] > @p1)");
     });
 
     it("greater than equal operator", function () {
@@ -268,7 +265,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price ge 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([price] >= @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([price] >= @p1)");
     });
 
     it("less than operator", function () {
@@ -276,7 +273,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price lt 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([price] < @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([price] < @p1)");
     });
 
     it("less than equal operator", function () {
@@ -284,7 +281,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price le 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([price] <= @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([price] <= @p1)");
     });
 
     it("or operator", function () {
@@ -292,7 +289,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price le 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([price] <= @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([price] <= @p1)");
     });
 
     it("negative numbers", function () {
@@ -300,7 +297,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price eq 5.00 or price eq 10.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (([price] = @p1) OR ([price] = @p2))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (([price] = @p1) OR ([price] = @p2))");
     });
 
     it("and operator", function () {
@@ -308,7 +305,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price gt 5.00 and price lt 10.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (([price] > @p1) AND ([price] < @p2))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (([price] > @p1) AND ([price] < @p2))");
     });
 
     it("negation operator", function () {
@@ -318,25 +315,25 @@ describe('azure-mobile-apps.data.sql.query', function () {
 
         // boolean odata functions
         query.filters = "not(substringof('foo', name))";
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT ([name] LIKE ('%' + @p1 + '%'))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT ([name] LIKE ('%' + @p1 + '%'))");
 
         // inequality
         query.filters = "not(price lt 5.00)";
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT ([price] < @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT ([price] < @p1)");
 
         // simple not requiring no conversion
         query.filters = "not(price eq 5.00)";
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT ([price] = @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT ([price] = @p1)");
 
         // non boolean expression
         query.filters = "not(discontinued)";
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT ([discontinued] = @p1)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT ([discontinued] = @p1)");
         equal(statements.length, 1);
         equal((statements[0].parameters[0].value === true), true);
 
         // nested not
         query.filters = "not(not(discontinued))";
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT NOT ([discontinued] = @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT NOT ([discontinued] = @p1)");
     });
 
     it("subtraction", function () {
@@ -344,7 +341,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price sub 1.00 lt 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (([price] - @p1) < @p2)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (([price] - @p1) < @p2)");
     });
 
     // verifies that bit expressions are translated to boolean expressions when required
@@ -354,25 +351,25 @@ describe('azure-mobile-apps.data.sql.query', function () {
             filters: 'not(discontinued)'
         };
 
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT ([discontinued] = @p1)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT ([discontinued] = @p1)");
         equal(statements.length, 1);
         equal((statements[0].parameters[0].value === true), true);
 
         query.filters = 'discontinued';
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([discontinued] = @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([discontinued] = @p1)");
         equal(statements.length, 1);
         equal((statements[0].parameters[0].value === true), true);
 
         query.table = 'person';
         query.filters = 'likesBeer and isMale';
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[person] WHERE (([likesBeer] = @p1) AND ([isMale] = @p2))");
+        statements = verifySqlFormatting(query, "SELECT * FROM [person] WHERE (([likesBeer] = @p1) AND ([isMale] = @p2))");
         equal(statements.length, 1);
         equal((statements[0].parameters[0].value === true), true);
         equal((statements[0].parameters[1].value === true), true);
 
         query.table = 'person';
         query.filters = 'not(isUgly) and (likesBeer or isMale)';
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[person] WHERE (NOT ([isUgly] = @p1) AND (([likesBeer] = @p2) OR ([isMale] = @p3)))");
+        verifySqlFormatting(query, "SELECT * FROM [person] WHERE (NOT ([isUgly] = @p1) AND (([likesBeer] = @p2) OR ([isMale] = @p3)))");
     });
 
     // verifies that when any boolean expression is compared to a bit literal (true/false)
@@ -382,24 +379,24 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "substringof('foo', name) eq true"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] LIKE ('%' + @p1 + '%'))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] LIKE ('%' + @p1 + '%'))");
 
         query.filters = "substringof('foo', name) eq false";
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT ([name] LIKE ('%' + @p1 + '%'))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT ([name] LIKE ('%' + @p1 + '%'))");
 
         query.filters = "true eq substringof('foo', name)";
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] LIKE ('%' + @p1 + '%'))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] LIKE ('%' + @p1 + '%'))");
 
         query.filters = "false eq substringof('foo', name)";
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE NOT ([name] LIKE ('%' + @p1 + '%'))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE NOT ([name] LIKE ('%' + @p1 + '%'))");
 
         query.table = 'person';
         query.filters = '(likesBeer or isMale) eq true';
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[person] WHERE (([likesBeer] = @p1) OR ([isMale] = @p2))");
+        verifySqlFormatting(query, "SELECT * FROM [person] WHERE (([likesBeer] = @p1) OR ([isMale] = @p2))");
 
         query.table = 'person';
         query.filters = 'false eq (likesBeer or isMale)';
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[person] WHERE NOT (([likesBeer] = @p1) OR ([isMale] = @p2))");
+        verifySqlFormatting(query, "SELECT * FROM [person] WHERE NOT (([likesBeer] = @p1) OR ([isMale] = @p2))");
     });
 
     it("mixed bit boolean conversions", function () {
@@ -407,7 +404,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'person',
             filters: "(endswith(name, 'foo') eq true) and (likesBeer)"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[person] WHERE (([name] LIKE ('%' + @p1)) AND ([likesBeer] = @p2))");
+        verifySqlFormatting(query, "SELECT * FROM [person] WHERE (([name] LIKE ('%' + @p1)) AND ([likesBeer] = @p2))");
     });
 
     it("addition", function () {
@@ -415,7 +412,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price add 1.00 lt 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (([price] + @p1) < @p2)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (([price] + @p1) < @p2)");
     });
 
     it("multiplication", function () {
@@ -423,7 +420,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price mul 1.25 lt 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (([price] * @p1) < @p2)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (([price] * @p1) < @p2)");
     });
 
     it("division", function () {
@@ -431,7 +428,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price div 1.25 lt 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (([price] / @p1) < @p2)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (([price] / @p1) < @p2)");
     });
 
     // Bug#599392
@@ -440,7 +437,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "price mod 1.25 lt 5.00"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ((CONVERT(numeric, [price]) % @p1) < @p2)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ((CONVERT(numeric, [price]) % @p1) < @p2)");
     });
 
     it("grouping", function () {
@@ -448,7 +445,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "((name ne 'Doritos') or (price lt 5.00))"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (([name] != @p1) OR ([price] < @p2))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (([name] != @p1) OR ([price] < @p2))");
     });
 
     it("null literal equality", function () {
@@ -456,7 +453,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "name eq null"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] IS NULL)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] IS NULL)");
     });
 
     it("null literal inequality", function () {
@@ -464,7 +461,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "name ne null"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] IS NOT NULL)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] IS NOT NULL)");
     });
 
     it("string length", function () {
@@ -472,14 +469,14 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "length(name) gt 5"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ((LEN([name] + 'X') - 1) > @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ((LEN([name] + 'X') - 1) > @p1)");
 
         // pass a string concat expression into length
         query = {
             table: 'products',
             filters: "length(concat(name, category)) gt 5"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ((LEN((CONVERT(NVARCHAR(MAX), [name]) + [category]) + 'X') - 1) > @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ((LEN((CONVERT(NVARCHAR(MAX), [name]) + [category]) + 'X') - 1) > @p1)");
     });
 
     it("string startswith", function () {
@@ -487,7 +484,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "startswith(name, 'Abc')"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] LIKE (@p1 + '%'))");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] LIKE (@p1 + '%'))");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 'Abc');
     });
@@ -497,7 +494,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "endswith(name, 'Abc')"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] LIKE ('%' + @p1))");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] LIKE ('%' + @p1))");
     });
 
     it("string substringof", function () {
@@ -505,7 +502,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "substringof('Abc', name)"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ([name] LIKE ('%' + @p1 + '%'))");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE ([name] LIKE ('%' + @p1 + '%'))");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 'Abc');
     });
@@ -515,7 +512,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "indexof(name, 'Abc') eq 5"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ((PATINDEX('%' + @p1 + '%', [name]) - 1) = @p2)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE ((PATINDEX('%' + @p1 + '%', [name]) - 1) = @p2)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 'Abc');
         equal(statements[0].parameters[1].value, 5);
@@ -527,7 +524,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             filters: "concat(concat(city, ', '), country) eq 'Berlin, Germany'"
         };
         var statements = verifySqlFormatting(query,
-            "SELECT * FROM [testapp].[customers] WHERE ((CONVERT(NVARCHAR(MAX), (CONVERT(NVARCHAR(MAX), [city]) + @p1)) + [country]) = @p2)");
+            "SELECT * FROM [customers] WHERE ((CONVERT(NVARCHAR(MAX), (CONVERT(NVARCHAR(MAX), [city]) + @p1)) + [country]) = @p2)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, ', ');
         equal(statements[0].parameters[1].value, 'Berlin, Germany');
@@ -538,7 +535,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "replace(name, ' ', '') eq 'ApplePie'"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (REPLACE([name], @p1, @p2) = @p3)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE (REPLACE([name], @p1, @p2) = @p3)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, ' ');
         equal(statements[0].parameters[1].value, '');
@@ -552,14 +549,14 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'books',
             filters: "substring(title, 1) eq 'he Rise and Fall of the Roman Empire'"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[books] WHERE (SUBSTRING([title], @p1 + 1, LEN([title])) = @p2)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [books] WHERE (SUBSTRING([title], @p1 + 1, LEN([title])) = @p2)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 1);
         equal(statements[0].parameters[1].value, 'he Rise and Fall of the Roman Empire');
 
         // second overload taking a length
         query.filters = "substring(title, 1, 10) eq 'he Rise and Fall of the Roman Empire'";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[books] WHERE (SUBSTRING([title], @p1 + 1, @p2) = @p3)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [books] WHERE (SUBSTRING([title], @p1 + 1, @p2) = @p3)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 1);
         equal(statements[0].parameters[1].value, 10);
@@ -571,7 +568,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "trim(name) eq 'foobar'"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (LTRIM(RTRIM([name])) = @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (LTRIM(RTRIM([name])) = @p1)");
     });
 
     it("string tolower", function () {
@@ -579,7 +576,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "tolower(name) eq 'tasty treats'"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (LOWER([name]) = @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (LOWER([name]) = @p1)");
     });
 
     it("string toupper", function () {
@@ -587,7 +584,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "toupper(name) eq 'TASTY TREATS'"
         };
-        verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE (UPPER([name]) = @p1)");
+        verifySqlFormatting(query, "SELECT * FROM [products] WHERE (UPPER([name]) = @p1)");
     });
 
     it("string concat", function () {
@@ -595,7 +592,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'products',
             filters: "concat(name, 'Bar') eq 'FooBar'"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[products] WHERE ((CONVERT(NVARCHAR(MAX), [name]) + @p1) = @p2)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [products] WHERE ((CONVERT(NVARCHAR(MAX), [name]) + @p1) = @p2)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 'Bar');
         equal(statements[0].parameters[1].value, 'FooBar');
@@ -606,28 +603,28 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'checkins',
             filters: "day(checkinDate) lt 25"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE (DAY([checkinDate]) < @p1)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE (DAY([checkinDate]) < @p1)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 25);
 
         query.filters = "month(checkinDate) eq 8";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE (MONTH([checkinDate]) = @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE (MONTH([checkinDate]) = @p1)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 8);
 
         query.filters = "year(checkinDate) gt 1974";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE (YEAR([checkinDate]) > @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE (YEAR([checkinDate]) > @p1)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 1974);
 
         query.filters = "hour(checkinDate) gt 6";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE (DATEPART(HOUR, [checkinDate]) > @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE (DATEPART(HOUR, [checkinDate]) > @p1)");
 
         query.filters = "minute(checkinDate) eq 33";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE (DATEPART(MINUTE, [checkinDate]) = @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE (DATEPART(MINUTE, [checkinDate]) = @p1)");
 
         query.filters = "second(checkinDate) lt 30";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE (DATEPART(SECOND, [checkinDate]) < @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE (DATEPART(SECOND, [checkinDate]) < @p1)");
     });
 
     it("math functions", function () {
@@ -635,17 +632,17 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'books',
             filters: "floor(price) lt 77"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[books] WHERE (FLOOR([price]) < @p1)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [books] WHERE (FLOOR([price]) < @p1)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 77);
 
         query.filters = "ceiling(price) eq 8";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[books] WHERE (CEILING([price]) = @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [books] WHERE (CEILING([price]) = @p1)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 8);
 
         query.filters = "round(price) gt 19.00";
-        statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[books] WHERE (ROUND([price], 0) > @p1)");
+        statements = verifySqlFormatting(query, "SELECT * FROM [books] WHERE (ROUND([price], 0) > @p1)");
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value, 19.00);
     });
@@ -654,9 +651,9 @@ describe('azure-mobile-apps.data.sql.query', function () {
         var query = {
             table: 'books',
             skip: 4,
-            take: 4
+            take: 5
         };
-        var expectedSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], * FROM [testapp].[books] WHERE (1 = 1)) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 4 ORDER BY [t1].[ROW_NUMBER]";
+        var expectedSql = "SELECT * FROM [books] LIMIT 5 OFFSET 4";
         verifySqlFormatting(query, expectedSql);
     });
 
@@ -664,8 +661,8 @@ describe('azure-mobile-apps.data.sql.query', function () {
         var query = {
             table: 'query'
         };
-        var expectedSql = "SELECT * FROM [testapp].[tableName]";
-        verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [], schema: 'testapp', name: 'tableName' });
+        var expectedSql = "SELECT * FROM [tableName]";
+        verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [], name: 'tableName' });
     })
 
     it("paging query with filter and select", function () {
@@ -674,9 +671,9 @@ describe('azure-mobile-apps.data.sql.query', function () {
             filters: "type eq 'psychology'",
             selections: 'title,type,price',
             skip: 4,
-            take: 4
+            take: 5
         };
-        var expectedSql = "SELECT [t1].[ROW_NUMBER], [t1].[title], [t1].[type], [t1].[price] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [id]) AS [ROW_NUMBER], [title], [type], [price] FROM [testapp].[books] WHERE ([type] = @p1)) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 4 ORDER BY [t1].[ROW_NUMBER]";
+        var expectedSql = "SELECT [title], [type], [price] FROM [books] WHERE ([type] = @p1) LIMIT 5 OFFSET 4";
         verifySqlFormatting(query, expectedSql);
     });
 
@@ -687,9 +684,9 @@ describe('azure-mobile-apps.data.sql.query', function () {
             selections: 'title,type,price',
             ordering: 'price desc',
             skip: 4,
-            take: 4
+            take: 5
         };
-        var expectedSql = "SELECT [t1].[ROW_NUMBER], [t1].[title], [t1].[type], [t1].[price] FROM (SELECT ROW_NUMBER() OVER (ORDER BY [price] DESC) AS [ROW_NUMBER], [title], [type], [price] FROM [testapp].[books] WHERE ([type] = @p1)) AS [t1] WHERE [t1].[ROW_NUMBER] BETWEEN 4 + 1 AND 4 + 4 ORDER BY [t1].[ROW_NUMBER]";
+        var expectedSql = "SELECT [title], [type], [price] FROM [books] WHERE ([type] = @p1) ORDER BY [price] DESC LIMIT 5 OFFSET 4";
         verifySqlFormatting(query, expectedSql);
     });
 
@@ -698,7 +695,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'checkins',
             filters: "checkinDate lt datetime'2000-12-12T12:00:00Z'"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE ([checkinDate] < @p1)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE ([checkinDate] < @p1)");
 
         equal(statements.length, 1);
         var value = statements[0].parameters[0].value;
@@ -708,7 +705,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
         var expectedExceptionCaught = false;
         try {
             query.filters = "checkinDate lt datetime'2000x12-12blah2:00'";
-            verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE ([checkinDate] < @p1)");
+            verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE ([checkinDate] < @p1)");
         }
         catch (e) {
             expectedExceptionCaught = true;
@@ -722,7 +719,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
             table: 'checkins',
             filters: "checkinDate lt datetimeoffset'2000-12-12T04:00:00.0000000-08:00'"
         };
-        var statements = verifySqlFormatting(query, "SELECT * FROM [testapp].[checkins] WHERE ([checkinDate] < @p1)");
+        var statements = verifySqlFormatting(query, "SELECT * FROM [checkins] WHERE ([checkinDate] < @p1)");
 
         equal(statements.length, 1);
         var value = statements[0].parameters[0].value;
@@ -735,7 +732,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'products',
                 filters: "description eq 'lots of qu''ote''''s i''n he''r''e!'"
             },
-            expectedSql = "SELECT * FROM [testapp].[products] WHERE ([description] = @p1)";
+            expectedSql = "SELECT * FROM [products] WHERE ([description] = @p1)";
 
         var statements = verifySqlFormatting(query, expectedSql, { idType: "number", binaryColumns: [] })
         equal(statements.length, 1);
@@ -747,7 +744,7 @@ describe('azure-mobile-apps.data.sql.query', function () {
                 table: 'products',
                 filters: "version eq 'AAAAAAAAUDU='"
             },
-            statements = formatSql(query, { schema: 'testapp' });
+            statements = formatSql(query);
         equal(statements.length, 1);
         equal(statements[0].parameters[0].value.constructor, Buffer);
         equal(statements[0].parameters[0].value.toString('base64'), 'AAAAAAAAUDU=');
@@ -819,8 +816,14 @@ describe('azure-mobile-apps.data.sql.query', function () {
     });
 
     function verifySqlFormatting(query, expectedSql, metadata) {
-        if(metadata) metadata.schema = 'testapp';
-        var statements = formatSql(query, metadata || { idType: "number", binaryColumns: [], schema: 'testapp' });
+        
+        if (metadata) {
+            metadata.flavor = 'sqlite';
+        } else {
+            metadata = { idType: "number", binaryColumns: [], flavor: 'sqlite' };
+        }
+        
+        var statements = formatSql(query, metadata);
         
         var expectedStatements = expectedSql;
         if (expectedSql.constructor !== Array) {

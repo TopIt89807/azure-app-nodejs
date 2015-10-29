@@ -48,7 +48,7 @@ var helpers = module.exports = {
             return '[' + schemaName + '].[' + tableName + ']';
         }
         
-        return tableName;
+        return '[' + tableName + ']';
     },
 
     formatSchemaName: function (appName) {

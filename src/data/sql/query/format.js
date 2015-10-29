@@ -35,7 +35,12 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
         // max. Really when doing paging, the user should also be
         // specifying a top explicitly however.
         if (query.skip > 0 && (query.take === undefined || query.take === null)) {
-            query.take = 9007199254740992; // Number.MAX_SAFE_INTEGER + 1; // ES6
+            if (this.flavor !== 'sqlite') {
+                query.take = 9007199254740992; // Number.MAX_SAFE_INTEGER + 1; // ES6
+            } else {
+                // A negative LIMIT in sqlite returns all rows.
+                query.take = -1;
+            }
         }
 
         var statements = [];
@@ -82,9 +87,14 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
                 takeClause = 'TOP ' + limit.toString() + ' ';
             }
         } else {
-            takeClause = ' LIMIT ' + limit.toString();
             if (query.skip > 0) {
                 skipClause = ' OFFSET ' + query.skip.toString();
+            }
+            
+            // Specifiy a take clause if either skip or limit is specified.
+            // Note: SQLite needs LIMIT for OFFSET to work.
+            if (query.skip > 0 || limit >= 0) {
+                takeClause = ' LIMIT ' + limit.toString();
             }
         }
         
