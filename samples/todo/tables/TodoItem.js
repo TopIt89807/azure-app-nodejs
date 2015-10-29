@@ -41,15 +41,15 @@ table.insert(function (context) {
 
 // UPDATE - for this scenario, we don't need to do anything - this is
 // the default version
-table.update(function (context) {
-  return context.execute();
-});
+//table.update(function (context) {
+//  return context.execute();
+//});
 
 // DELETE - for this scenario, we don't need to do anything - this is
 // the default version
-table.delete(function (context) {
-  return context.execute();
-});
+//table.delete(function (context) {
+//  return context.execute();
+//});
 // An example to disable deletions
 //table.delete.access = 'disabled';
 

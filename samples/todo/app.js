@@ -12,7 +12,7 @@ var app = express();
 // If you are producing a combined Web + Mobile app, then you should handle
 // anything like logging, registering middleware, etc. here
 
-// Configuration of hte Azure Mobile Apps can be done via an object, the
+// Configuration of the Azure Mobile Apps can be done via an object, the
 // environment or an auxiliary file.  You can check out the default object
 // within node_modules/azure-mobile-apps/index.js (look for defaults).  You
 // can also export an object using azureMobile.js (it is required).  In this

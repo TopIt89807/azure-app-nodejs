@@ -37,16 +37,18 @@ module.exports = {
 
   // See http://azure.github.io/azure-mobile-apps-node/global.html#dataConfiguration
   // Normally this is not required for Azure hosted environments - we pick it up
-  // from the ConnectionString for SQL Azure in the App Settings
+  // from the ConnectionString for SQL Azure in the App Settings of the Azure Portal
   //data: {
-  //  provider: 'memory',
-  //  schema: 'dbo',
-  //  dynamicSchema: true
+  //  provider: 'sql',
+  //  server: 'localhost',
+  //  database: 'my-mobile-app',
+  //  user: 'db-username',
+  //  password: 'db-password'
   //},
 
   // See http://azure.github.io/azure-mobile-apps-node/global.html#notificationsConfiguration
   // Normally this is not required for Azure hosted environments as it is in the
-  // App Settings
+  // App Settings in the Azure Portal
   //notifications: {
   //  hubName: 'your-hub-name',
   //  connectionString: 'your-nh-connection-string'
@@ -56,9 +58,7 @@ module.exports = {
   // As with the other sensitive information, this is normally set within the Azure
   // Portal in App Settings.
   //auth: {
-  //  secret: 'my-base64-zumo-secret',
-  //  audience: 'urn:microsoft:windows-azure:zumo',
-  //  issuer: 'urn:microsoft:windows-azure:zumo',
-  //  expiresInMinutes: 1440
+  //  secret: 'my-zumo-secret',
+  //  expires: 1440 // in seconds
   //}
 };
