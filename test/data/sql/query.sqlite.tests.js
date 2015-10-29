@@ -815,6 +815,16 @@ describe('azure-mobile-apps.data.sql.query.sqlite', function () {
         }
     });
 
+    it("SQL statement formatting with schema specified", function () {
+        var query = {
+                table: 'books'
+            },
+            statements = formatSql(query, { flavor: 'sqlite', schema: 'someschema' });
+
+        equal(statements.length, 1);
+        equal(statements[0].sql, "SELECT * FROM [books]");
+    });
+
     function verifySqlFormatting(query, expectedSql, metadata) {
         
         if (metadata) {
