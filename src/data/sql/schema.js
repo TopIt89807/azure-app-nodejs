@@ -49,6 +49,8 @@ module.exports = function (config) {
                 } else {
                     throw new Error('Index configuration of table \'' + table.name + '\' should be an array containing either strings or arrays of strings.');
                 }
+            } else {
+                return promises.resolved();
             }
         }
     };

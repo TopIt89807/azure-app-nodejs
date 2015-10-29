@@ -12,7 +12,9 @@ var express = require('express'),
     table = require('./table'),
     logger = require('../../logger'),
     tableRouter = require('./tableRouter'),
-    assert = require('../../utilities/assert').argument;
+    data = require('../../data'),
+    assert = require('../../utilities/assert').argument,
+    promises = require('../../utilities/promises');
 
 /**
 Create an instance of an express router for routing and handling table requests.
@@ -22,7 +24,8 @@ Create an instance of an express router for routing and handling table requests.
 module.exports = function (configuration) {
     configuration.tables = configuration.tables || {};
 
-    var router = express.Router();
+    var router = express.Router(),
+        dataProvider = data(configuration);
 
     /**
     Register a single table with the specified definition.
@@ -50,6 +53,12 @@ module.exports = function (configuration) {
 
     // expose configuration through zumoInstance.tables.configuration
     router.configuration = configuration.tables;
+
+    router.initialize = function () {
+        return promises.all(Object.keys(configuration.tables).map(function (name) {
+            return dataProvider(configuration.tables[name]).initialize();
+        }));
+    };
 
     return router;
 

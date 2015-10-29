@@ -1,18 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var helpers = require('../helpers');
+var helpers = require('../helpers'),
+    assign = require('deep-assign');
 
 module.exports = function (tableConfig, existingColumns, item) {
     var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),
-        properties = Object.keys(item).concat(helpers.getSystemProperties()),
-        columnSql = properties.reduce(function (sql, property) {
-            if(!existingColumns.some(function (col) { return col.name === property })) {
-                if (helpers.isSystemProperty(property))
-                    sql.push(helpers.getSystemPropertiesDDL()[property]);
-                else if (item[property] !== null && item[property] !== undefined)
-                    sql.push('[' + property + '] ' + helpers.getSqlType(item[property]) + ' NULL');
+        columns = assign(itemColumnsSql(), predefinedColumnsSql(), systemPropertiesSql()),
+        columnSql = Object.keys(columns).reduce(function (sql, property) {
+            if(!existingColumns.some(function (column) { return column.name.toLowerCase() === property })) {
                 existingColumns.push({ name: property });
+                sql.push(columns[property]);
             }
             return sql;
         }, []).join(',');
@@ -20,4 +18,32 @@ module.exports = function (tableConfig, existingColumns, item) {
     return {
         sql: "ALTER TABLE " + tableName + " ADD " + columnSql
     };
+
+    function systemPropertiesSql() {
+        var columns = helpers.getSystemPropertiesDDL();
+        return Object.keys(columns).reduce(function (sql, column) {
+            sql[column.toLowerCase()] = columns[column];
+            return sql;
+        }, {});
+    }
+
+    function itemColumnsSql() {
+        if(!item)
+            return {};
+
+        return Object.keys(item).reduce(function (sql, property) {
+            if(item[property] !== null && item[property] !== undefined && property !== 'id' && !helpers.isSystemProperty(property))
+                sql[property.toLowerCase()] = '[' + property + '] ' + helpers.getSqlType(item[property]) + ' NULL';
+
+            return sql;
+        }, {});
+    }
+
+    function predefinedColumnsSql() {
+        if(!tableConfig.columns) return {};
+        return Object.keys(tableConfig.columns).reduce(function (sql, columnName) {
+            sql[columnName.toLowerCase()] = '[' + columnName + '] ' + helpers.getPredefinedColumnType(tableConfig.columns[columnName]) + ' NULL';
+            return sql;
+        }, {});
+    }
 };

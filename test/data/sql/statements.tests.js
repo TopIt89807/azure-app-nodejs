@@ -109,6 +109,23 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             var statement = updateSchema({ name: 'table' }, [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }], { id: 1, text: 'test', version: 'someVersion' });
             expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL');
         });
+
+        it('generates statement for predefined columns', function () {
+            var statement = updateSchema(
+                { name: 'table', columns: { 'text': 'string' } },
+                [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }, { name : 'version' }],
+                { id: 1 }
+            );
+            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL');
+        });
+
+        it('generates statement for predefined columns when item is not supplied', function () {
+            var statement = updateSchema(
+                { name: 'table', columns: { 'text': 'string' } },
+                [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }, { name : 'version' }]
+            );
+            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL');
+        });
     });
 
     describe('createTable', function () {
@@ -137,6 +154,11 @@ describe('azure-mobile-apps.data.sql.statements', function () {
         it('generates create statement with predefined columns', function () {
             var statement = createTable({ name: 'table', columns: { number: 'number' } }, { text: 'test' });
             expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0,[text] NVARCHAR(MAX) NULL,[number] FLOAT(53)) ON [PRIMARY]')
+        });
+
+        it('generates create statement without an item', function () {
+            var statement = createTable({ name: 'table', columns: { number: 'number' } });
+            expect(statement.sql).to.equal('CREATE TABLE [dbo].[table] ([id] NVARCHAR(255) NOT NULL PRIMARY KEY,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0,[number] FLOAT(53)) ON [PRIMARY]')
         });
     });
 
