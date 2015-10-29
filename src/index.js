@@ -63,7 +63,6 @@ module.exports = function (configuration) {
     configuration = assign({ logging: {}, data: {}, auth: {} }, loadConfiguration.fromFile(configFile), defaults, configuration);
     loadConfiguration.fromEnvironment(configuration);
     loadConfiguration.fromSettingsJson(configuration);
-    logger.configure(configuration.logging);
 
     return platforms[configuration.platform](configuration);
 };

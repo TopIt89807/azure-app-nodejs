@@ -9,6 +9,10 @@ var config = require('./infrastructure/config'),
 
 describe('azure-mobile-apps.data.sql.integration.softDelete', function () {
     var operations = index(config)({ name: 'softDelete', softDelete: true });
+    
+    before(function () {
+        require('../../../src/logger').configure();
+    });
 
     afterEach(function (done) {
         execute(config, { sql: 'drop table dbo.softDelete' }).then(done, done);
