@@ -58,3 +58,8 @@ If the includeTotalCount option was set on the query, the second element is the 
 @description Clear all rows from the table
 @returns A promise.
 */
+/**
+@function initialize
+@description Create or update the underlying database table with the columns specified in the table configuration.
+@returns A promise that resolves when the table schema has been created or updated.
+*/
