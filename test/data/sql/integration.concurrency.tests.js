@@ -8,6 +8,10 @@ var config = require('./infrastructure/config'),
 
 describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
     var operations = index(config)({ name: 'concurrency' });
+    
+    before(function () {
+        require('../../../src/logger').configure();
+    });
 
     afterEach(function (done) {
         execute(config, { sql: 'drop table dbo.concurrency' }).then(done, done);

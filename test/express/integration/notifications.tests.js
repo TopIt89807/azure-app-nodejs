@@ -10,9 +10,14 @@ var sinon = require('sinon'),
     express = require('express'),
     nhStub, notifFactoryStub, app, installation;
 
+
 var notificationMiddleware = require('../../../src/express/middleware/notifications');
 
 describe('azure-mobile-apps.express.integration.notifications', function () {
+    before(function () {
+        require('../../../src/logger').configure();
+    });
+    
     beforeEach(function () {
         installation = createInstallation();
 

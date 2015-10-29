@@ -31,7 +31,7 @@ describe('azure-mobile-apps.express.integration.errors', function () {
 
     function setup(debug) {
         app = express();
-        mobileApp = mobileApps({ debug: debug, skipVersionCheck: true });
+        mobileApp = mobileApps({ debug: debug, logging: false, skipVersionCheck: true });
         var table = mobileApp.table();
         table.read.use(function (req, res, next) { throw new Error('test'); });
         mobileApp.tables.add('todoitem', table);
