@@ -8,7 +8,7 @@ var helpers = require('../helpers'),
 module.exports = function (tableConfig, item) {
     var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),
 
-        pkType = tableConfig.autoIncrement ? 'INT' : helpers.getSqlType((item.id === undefined || item.id === null) ? '' : item.id, true),
+        pkType = tableConfig.autoIncrement ? 'INT' : helpers.getSqlType((!item || item.id === undefined || item.id === null) ? '' : item.id, true),
         pkColumnSql = '[id] ' + pkType + ' NOT NULL' + (tableConfig.autoIncrement ? ' IDENTITY (1, 1)' : '') + ' PRIMARY KEY',
 
         systemProperties = [pkColumnSql].concat(utilities.object.values(helpers.getSystemPropertiesDDL())),
@@ -20,10 +20,10 @@ module.exports = function (tableConfig, item) {
     };
 
     function itemColumnsSql() {
+        if(!item)
+            return {};
+            
         return Object.keys(item).reduce(function (sql, property) {
-            // if(item[property] === null || item[property] === undefined)
-            //     throw new Error('Unable to determine column type for table ' + tableConfig.name + ', property ' + property);
-
             if(item[property] !== null && item[property] !== undefined && property !== 'id' && !helpers.isSystemProperty(property))
                 sql[property.toLowerCase()] = '[' + property + '] ' + helpers.getSqlType(item[property]) + ' NULL';
 

@@ -78,7 +78,7 @@ module.exports = function (configuration) {
                     return execute(configuration, statements.truncate(table));
                 },
                 initialize: function () {
-                    return schema.initialize(table);
+                    return schema(configuration).initialize(table);
                 }
             };
     };
