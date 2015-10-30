@@ -27,8 +27,6 @@ app.listen(process.env.PORT || 3000);
 }
 ```
 
-An official npm package will be published soon.
-
 ## Documentation & Resources
 
  - [API Documentation](https://azure.github.io/azure-mobile-apps-node)
