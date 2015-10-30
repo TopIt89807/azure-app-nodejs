@@ -23,7 +23,7 @@ app.listen(process.env.PORT || 3000);
 
 ```json
 "dependencies": {
-  "azure-mobile-apps":"azure-mobile-apps-node"
+  "azure-mobile-apps":"azure-mobile-apps"
 }
 ```
 
