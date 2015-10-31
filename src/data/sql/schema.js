@@ -4,7 +4,8 @@
 var statements = require('./statements'),
     execute = require('./execute'),
     promises = require('../../utilities/promises'),
-    log = require('../../logger');
+    log = require('../../logger'),
+    data = require('./index');
 
 module.exports = function (config) {
     var api = {
@@ -23,6 +24,9 @@ module.exports = function (config) {
                 })
                 .then(function () {
                     return api.createIndexes(table);
+                })
+                .then(function () {
+                    return api.seedData(table);
                 });
         },
 
@@ -52,6 +56,14 @@ module.exports = function (config) {
             } else {
                 return promises.resolved();
             }
+        },
+
+        seedData: function (table) {
+            if(table.seed) {
+                var insert = data(config)(table).insert;
+                return promises.all(table.seed.map(insert));
+            }
+            return promises.resolved();
         }
     };
     return api;
