@@ -1,8 +1,8 @@
 var express = require('express'),
-	azureMobileApps = require('azure-mobile-apps');
+    azureMobileApps = require('azure-mobile-apps');
 	
 var app = express(),
-	mobile = azureMobileApps();
+    mobile = azureMobileApps();
 	
 // Define a TodoItem table
 mobile.tables.add('TodoItem');
