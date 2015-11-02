@@ -4,22 +4,18 @@
 
 // This contains all the defaults right now and is just an example.  You
 // only need to include the differences between the defaults and your
-// settings.  YOu can see all the settings at http://azure.github.io/azure-mobile-apps-node/global.html
+// settings.  You can see all the settings at http://azure.github.io/azure-mobile-apps-node/global.html#configuration
 
 // If you set debug, then use that.  If you are using Azure, then don't set
 // DEBUG - use the MS_DebugMode app setting.
 var debugValue = environment.debug || false;
 
 module.exports = {
-  platform: 'express',
-  promiseConstructor: Promise,
-  apiRootPath: '/api',
-  tableRootPath: '/tables',
-  debug: debugValue,
-  maxTop: 1000,
-
   // Use this to disable the version header that is sent out
   //version: undefined,
+
+  // Use this to skip the API version check
+  //skipVersionCheck: true,
 
   logging: {
     // Override for the Winston transports
@@ -27,12 +23,19 @@ module.exports = {
     // transports: {
       // Place any Winston compatible transport here
     //},
-    level: debugValue ? 'debug' : 'info'
+
+    // The debug level can be one of 'debug, 'info', 'verbose' and defines
+    // the minimum level to be logged.  By default, it is set to 'info' or
+    // 'debug' depending on the setting of the MS_DebugMode app settings or
+    // the debug switch (when running locally)
+    //level: 'verbose'
   },
 
   cors: {
-    maxAge: 300,
-    origins: [ 'localhost' ]
+    origins: [
+      'localhost',
+      'contoso-website.azurewebsites.net'
+    ]
   },
 
   // See http://azure.github.io/azure-mobile-apps-node/global.html#dataConfiguration
