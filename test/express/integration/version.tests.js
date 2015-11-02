@@ -92,4 +92,20 @@ describe('azure-mobile-apps.express.integration.version', function () {
             .get('/tables/todoitem')
             .expect(200);
     });
+
+    it('ignores api version when MS_SkipVersionCheck environment setting is specified', function () {
+        process.env.MS_SkipVersionCheck = true;
+
+        app = express();
+        mobileApp = mobileApps();
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .expect(200)
+            .then(function () {
+                delete process.env.MS_SkipVersionCheck;
+            });
+    });
 });

@@ -62,6 +62,10 @@ module.exports = function (configuration) {
                 if(parseBoolean(process.env[key]))
                     configuration.version = undefined;
                 break;
+
+            case 'ms_skipversioncheck':
+                configuration.skipVersionCheck = parseBoolean(process.env[key]);
+                break;
         }
     });
 
