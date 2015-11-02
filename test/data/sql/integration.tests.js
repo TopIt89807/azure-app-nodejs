@@ -96,6 +96,16 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             });
     });
 
+    it("handles read operations with no query", function () {
+        return insert({ id: '1' })
+            .then(function () {
+                return operations.read();
+            })
+            .then(function (results) {
+                expect(results.length).to.equal(1);
+            });
+    });
+
     function read() {
         return operations.read(queries.create('integration'));
     }
