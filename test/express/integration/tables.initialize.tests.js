@@ -63,7 +63,6 @@ describe('azure-mobile-apps.express.integration.tables.initialize', function () 
                         expect(res.body[0].boolean).to.be.null;
                     });
             });
-
     });
 
     function setup(columns) {
