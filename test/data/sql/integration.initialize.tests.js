@@ -4,7 +4,7 @@
 var config = require('./infrastructure/config'),
     data = require('../../../src/data')({ data: config }),
     execute = require('../../../src/data/sql/execute'),
-    expect = require('chai').expect;
+    expect = require('chai').use(require('chai-subset')).expect;
 
 describe('azure-mobile-apps.data.sql.integration.initialize', function () {
     afterEach(function (done) {
@@ -42,10 +42,48 @@ describe('azure-mobile-apps.data.sql.integration.initialize', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].boolean).to.be.null;
             });
-
     });
 
-    function definition(columns) {
-        return data({ name: 'initialize', dynamicSchema: false, columns: columns });
+    it('seeds data on initialize', function () {
+        var table = definition({ string: 'string' }, [{ id: '1' }, { id: '2', string: 'test2' }]);
+        return table.initialize()
+            .then(function () {
+                return table.read();
+            })
+            .then(function (results) {
+                expect(results.length).to.equal(2);
+                expect(results[0]).to.containSubset({ id: '1', string: null });
+                expect(results[1]).to.containSubset({ id: '2', string: 'test2' });
+            });
+    });
+
+    it('seeds data on initialize for dynamicSchema tables', function () {
+        var table = definition({ string: 'string' }, [{ id: '1' }, { id: '2', string: 'test2' }], true);
+        return table.initialize()
+            .then(function () {
+                return table.read();
+            })
+            .then(function (results) {
+                expect(results.length).to.equal(2);
+                expect(results[0]).to.containSubset({ id: '1', string: null });
+                expect(results[1]).to.containSubset({ id: '2', string: 'test2' });
+            });
+    });
+
+    it('constructs schema from seeded data for dynamicSchema tables', function () {
+        var table = definition(undefined, [{ id: '1' }, { id: '2', string: 'test2' }], true);
+        return table.initialize()
+            .then(function () {
+                return table.read();
+            })
+            .then(function (results) {
+                expect(results.length).to.equal(2);
+                expect(results[0]).to.containSubset({ id: '1', string: null });
+                expect(results[1]).to.containSubset({ id: '2', string: 'test2' });
+            });
+    });
+
+    function definition(columns, seed, dynamicSchema) {
+        return data({ name: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
     }
 });

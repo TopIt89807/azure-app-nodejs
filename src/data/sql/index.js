@@ -49,8 +49,7 @@ module.exports = function (configuration) {
                     return execute(configuration, statements.truncate(table));
                 },
                 initialize: function () {
-                    // if dynamic schema is on, let the table be created / updated on insert / update
-                    return promises.resolved();
+                    return schema(configuration).initialize(table);
                 }
             };
         else
