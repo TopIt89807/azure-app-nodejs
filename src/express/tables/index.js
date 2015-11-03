@@ -74,6 +74,8 @@ module.exports = function (configuration) {
             definition.schema = configuration.data.schema;
         if (!definition.hasOwnProperty('maxTop'))
             definition.maxTop = configuration.maxTop;
+        if (!definition.hasOwnProperty('pageSize'))
+            definition.pageSize = configuration.pageSize;
 
         return definition;
     }

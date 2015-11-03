@@ -12,6 +12,8 @@ var parseQuery = require('../middleware/parseQuery'),
     parseItem = require('../middleware/parseItem'),
     authorize = require('../middleware/authorize'),
     notAllowed = require('../middleware/notAllowed'),
+    nextLink = require('../middleware/nextLink'),
+    eTag = require('../middleware/eTag')
     importDefinition = require('../../configuration/importDefinition');
 
 /* Creates an express router with appropriate routes configures for each HTTP verb.
@@ -23,11 +25,12 @@ module.exports = function (table) {
         idRoute = '/:id'
         router = table.execute;
 
-    configureOperation('read', 'get', [parseQuery(table)], [defaultRoute, idRoute]);
-    configureOperation('insert', 'post', [parseItem(table)], [defaultRoute]);
-    configureOperation('undelete', 'post', [parseQuery(table)], [idRoute]);
-    configureOperation('update', 'patch', [parseItem(table)], [defaultRoute, idRoute]);
-    configureOperation('delete', 'delete', [parseQuery(table)], [defaultRoute, idRoute]);
+    configureOperation('read', 'get', [defaultRoute], [parseQuery(table)], [nextLink]);
+    configureOperation('read', 'get', [idRoute], [parseQuery(table)], [eTag.readIdResult]);
+    configureOperation('insert', 'post', [defaultRoute], [parseItem(table)], [eTag.singleResult]);
+    configureOperation('undelete', 'post', [idRoute], [parseQuery(table)], [eTag.singleResult]);
+    configureOperation('update', 'patch', [defaultRoute, idRoute], [parseItem(table)], [eTag.singleResult]);
+    configureOperation('delete', 'delete', [defaultRoute, idRoute], [parseQuery(table)], [eTag.singleResult]);
 
     // Return table middleware configured by the user (set on the middleware.execute property by the table module).
     // If none has been provided, just return the router we configured
@@ -36,15 +39,15 @@ module.exports = function (table) {
         : table.middleware.execute;
 
     // attach middleware for the specified operation to the appropriate routes
-    function configureOperation(operation, verb, pre, routes) {
-        var middleware = buildOperationMiddleware(operation, pre);
+    function configureOperation(operation, verb, routes, pre, post) {
+        var middleware = buildOperationMiddleware(operation, pre, post);
 
         routes.forEach(function (route) {
             router[verb](route, middleware);
         });
     }
 
-    function buildOperationMiddleware(operation, pre) {
+    function buildOperationMiddleware(operation, pre, post) {
         importDefinition.setAccess(table, operation);
 
         // return 405 not allowed for disabled operations
@@ -60,6 +63,7 @@ module.exports = function (table) {
 
         // add required internal middleware, e.g. parseItem, parseQuery
         if (pre) middleware.unshift.apply(middleware, pre);
+        if (post) middleware.push.apply(middleware, post);
 
         return middleware;
     }

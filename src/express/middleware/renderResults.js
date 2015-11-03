@@ -18,7 +18,6 @@ module.exports = function (req, res, next) {
                 else
                     res.status(404).end();
             } else if(res.results.length > 0) {
-                addETag(res.results[0]);
                 res.status(200).json(res.results[0]);
             } else {
                 res.status(404).end();
@@ -27,16 +26,11 @@ module.exports = function (req, res, next) {
             if(res.recordsAffected === 0)
                 res.status(404).end();
             else {
-                addETag(res.results);
                 res.status(200).json(res.results);
             }
         }
     } else
         res.status(404).end();
-
-    function addETag(item) {
-        res.set('ETag', '"' + item.version + '"');
-    }
 
     function preventCaching() {
         // this is very nasty, but the simplest way I can find to circumvent the default express/fresh behaviour for 304s
