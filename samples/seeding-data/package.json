@@ -1,7 +1,7 @@
 {
-  "name": "azure-mobile-apps-node.samples.readonly-table",
+  "name": "azure-mobile-apps-node.samples.seeding-data",
   "version": "1.0.0",
-  "description": "An Azure App Service Mobile App backend with a read-only table",
+  "description": "An Azure App Service Mobile App backend with a read-only table that is seeded with data on creation",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
