@@ -1,5 +1,5 @@
 {
-  "name": "basic-app",
+  "name": "azure-mobile-apps-node.samples.basic-app",
   "version": "1.0.0",
   "description": "A basic Node server for Azure App Service Mobile Apps",
   "main": "app.js",
