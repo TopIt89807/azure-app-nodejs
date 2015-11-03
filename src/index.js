@@ -11,7 +11,7 @@ var loadConfiguration = require('./configuration'),
     environment = require('./utilities/environment'),
     table = require('./express/tables/table'),
     logger = require('./logger'),
-    assign = require('deep-assign'),
+    assign = require('deeply'),
     path = require('path'),
 
     platforms = {
