@@ -12,4 +12,5 @@
 @property {string} schema=dbo - SQL Server schema name to use for the table
 @property {string} [databaseTableName] - The name of the database table to use. If unspecified, the name property is used
 @property {integer} maxTop - Limit the maximum number of rows a client can request
+@property {boolean} softDelete=false Turn on soft deletion for the table
 */
