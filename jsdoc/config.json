@@ -24,7 +24,9 @@
     "methodHeadingReturns": true,
     "encoding": "utf8",
     "private": true,
-    "recurse": true
+    "recurse": true,
+    "sortByName": true,
+    "stripModuleName": "azure-mobile-apps"
   },
   "markdown": {
     "parser": "gfm",
