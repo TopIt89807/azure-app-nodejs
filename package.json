@@ -31,7 +31,7 @@
     "chai-subset": "^1.0.1",
     "jsdoc": "^3.3.2",
     "jshint": "^2.8.0",
-    "minami": "mamaso/minami",
+    "minami": "devigned/minami",
     "mocha": "^2.2.5",
     "sinon": "^1.16.1",
     "sinon-as-promised": "4.0.0",
