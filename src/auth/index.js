@@ -16,7 +16,8 @@ Create an instance of a helper based on the supplied configuration.
 @returns An object with members described below.
 */
 module.exports = function (configuration) {
-    var key = hashSecret(configuration.secret);
+    // var key = hashSecret(configuration.secret);
+    var key = hexStringToBuffer(configuration.secret);
 
     return {
         /**
@@ -27,8 +28,8 @@ module.exports = function (configuration) {
         validate: function (token) {
             return promises.create(function (resolve, reject) {
                 var options = {
-                    audience: configuration.audience || 'urn:microsoft:windows-azure:zumo',
-                    issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo'
+                    audience: configuration.audience || 'https://daeasyauth.azurewebsites.net/',
+                    issuer: configuration.issuer || 'https://daeasyauth.azurewebsites.net/'
                 };
 
                 jwt.verify(token, key, options, function (err, claims) {
@@ -55,8 +56,15 @@ module.exports = function (configuration) {
     };
 };
 
-function hashSecret(secret) {
-    var hasher = crypto.createHash('sha256');
-    hasher.update(secret, 'utf8');
-    return hasher.digest();
+function hexStringToBuffer(hexString) {
+    var bytes = [];
+    for (var i = 0; i < hexString.length; i += 2)
+        bytes.push(parseInt(hexString.substr(i, 2), 16));
+    return new Buffer(bytes);
 }
+
+// function hashSecret(secret) {
+//     var hasher = crypto.createHash('sha256');
+//     hasher.update(secret, 'utf8');
+//     return hasher.digest();
+// }

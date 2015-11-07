@@ -21,12 +21,6 @@ app.listen(process.env.PORT || 3000);
 
 `npm install --save azure-mobile-apps`
 
-```json
-"dependencies": {
-  "azure-mobile-apps":"^2.0.0-alpha3"
-}
-```
-
 ## Documentation & Resources
 
  - [API Documentation](https://azure.github.io/azure-mobile-apps-node)
