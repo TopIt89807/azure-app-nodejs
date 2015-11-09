@@ -3,7 +3,8 @@
 // ----------------------------------------------------------------------------
 ﻿var path = require('path')
     fs = require('fs'),
-    utilities = require('../utilities'),
+    logger = require('../logger');
+    merge = require('../utilities/merge'),
     supportedExtensions = ['.js', '.json'];
 
 module.exports = {
@@ -35,9 +36,14 @@ module.exports = {
 
 function loadModule(target, targetPath) {
     var moduleName = path.basename(targetPath, path.extname(targetPath)),
-        loadedModule = require(targetPath);
+        loadedModule = require(targetPath),
+        targetModule = target[moduleName] || {};
+
+    merge.getConflictingProperties(targetModule, loadedModule).forEach(function (conflict) {
+        logger.warn('Property \'' + conflict + '\' in module ' + moduleName + ' overwritten by JSON configuration');
+    });
     // due to lexicographic ordering, .js is loaded before .json
-    target[moduleName] = utilities.merge(target[moduleName] || {}, loadedModule);
+    target[moduleName] = merge.mergeObjects(targetModule, loadedModule);
     return target;
 }
 

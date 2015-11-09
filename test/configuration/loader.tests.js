@@ -7,6 +7,10 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.configuration.loader', function () {
     var loader = requireWithRefresh('../../src/configuration/loader');
 
+    before(function () {
+        require('../../src/logger').configure();
+    });
+
     it('loads configuration from single file', function () {
         var configuration = loader.loadPath('./files/tables/table1');
         expect(configuration).to.deep.equal({
@@ -53,9 +57,9 @@ describe('azure-mobile-apps.configuration.loader', function () {
     });
 
     it('defaults to json property value', function () {
-        var configuration = loader.loadPath('./files/jsontables/conflict');
+        var configuration = loader.loadPath('./files/jsontables/conflictDefinition');
         expect(configuration).to.deep.equal({
-            conflict: { source: '.json' }
+            conflictDefinition: { source: '.json', deep: { object: { conflict: 2 } }}
         });
     })
 });
