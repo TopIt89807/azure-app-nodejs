@@ -1,51 +1,75 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿module.exports = function (target, source) {
-    // test for valid target
-    toObject(target);
+﻿module.exports = {
+    mergeObjects: function (target, source) {
+        toObject(target);
 
-    // wrap defined arguments in objects
-    var args = Array.prototype.slice.call(arguments).filter(function (arg) {
-        return arg;
-    }).map(function (definedArg) {
-        return { m: definedArg };
-    });
+        // wrap objects
+        target = { wrap: target };
+        source = { wrap: (source || {})};
 
-    // recursively merge object-wrapped arguments
-    var merged = merge.apply(undefined, args);
+        // merge objects to enable top level merge
+        var merged = mapProperties(target, source, assignProperty);
 
-    // return unwrapped merged arguments
-    return merged.m;
+        // return unwrapped merged object
+        return merged.wrap;
+    },
+
+    getConflictingProperties: function (target, source) {
+        toObject(target);
+
+        // wrap objects
+        target = { wrap: target };
+        source = { wrap: (source || {})};
+
+        var conflicts = [];
+
+        function trackConflict(target, source, prop, propertiesList) {
+            if (target.hasOwnProperty(prop) && target[prop] !== source[prop]) {
+                // slice propertiesList to remove wrap property
+                conflicts.push(propertiesList.slice(1).join('.'));
+            }
+        }
+
+        mapProperties(target, source, trackConflict);
+
+        // return tracked conflicts
+        return conflicts;
+    }
 }
 
-function merge(target, source) {
-    var from;
-    var keys;
-    var to = toObject(target);
+function assignProperty(target, source, prop) {
+    target[prop] = source[prop];
+}
 
-    for (var s = 1; s < arguments.length; s++) {
-        from = arguments[s];
-        keys = Object.keys(Object(from));
+function mapProperties(target, source, assignmentCallback, propertiesList) {
+    var to = toObject(target),
+        from = source,
+        propertiesList = propertiesList || [];
 
-        for (var i = 0; i < keys.length; i++) {
-            
-            // if first is object and second is function, swap to allow for recursive assignment
-            if(isObj(to[keys[i]]) && isFunc(from[keys[i]])) {
-                var temp = from[keys[i]];
-                from[keys[i]] = to[keys[i]];
-                to[keys[i]] = temp;
-            }
+    Object.keys(Object(source)).forEach(function (prop) {
+        // keep a record of seen properties
+        propertiesList.push(prop);
 
-            // if first is object or function and second is object, assign recursively
-            if((isObj(to[keys[i]]) || isFunc(to[keys[i]])) && isObj(from[keys[i]]))
-                merge(to[keys[i]], from[keys[i]]);
-            else
-                to[keys[i]] = from[keys[i]];
+        // if first is object and second is function, swap to allow for recursive assignment
+        if(isObj(to[prop]) && isFunc(from[prop])) {
+            var temp = from[prop];
+            from[prop] = to[prop];
+            to[prop] = temp;
         }
-    }
+
+        // if first is object or function and second is object, assign recursively
+        if((isObj(to[prop]) || isFunc(to[prop])) && isObj(from[prop]))
+            mapProperties(to[prop], from[prop], assignmentCallback, propertiesList);
+        else
+            assignmentCallback(to, from, prop, propertiesList);
+
+        propertiesList.pop(prop);
+    });
+
     return to;
-};
+}
 
 function toObject(val) {
     if (val === null || val === undefined) {
