@@ -34,7 +34,7 @@
 
         mapProperties(target, source, trackConflict);
 
-        // return unwrapped merged object
+        // return tracked conflicts
         return conflicts;
     }
 }
