@@ -28,8 +28,8 @@ module.exports = function (configuration) {
         validate: function (token) {
             return promises.create(function (resolve, reject) {
                 var options = {
-                    audience: configuration.audience || 'https://daeasyauth.azurewebsites.net/',
-                    issuer: configuration.issuer || 'https://daeasyauth.azurewebsites.net/'
+                    audience: configuration.audience || 'urn:microsoft:windows-azure:zumo',
+                    issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo'
                 };
 
                 jwt.verify(token, key, options, function (err, claims) {
@@ -62,9 +62,3 @@ function hexStringToBuffer(hexString) {
         bytes.push(parseInt(hexString.substr(i, 2), 16));
     return new Buffer(bytes);
 }
-
-// function hashSecret(secret) {
-//     var hasher = crypto.createHash('sha256');
-//     hasher.update(secret, 'utf8');
-//     return hasher.digest();
-// }
