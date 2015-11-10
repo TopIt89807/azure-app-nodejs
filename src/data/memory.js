@@ -27,6 +27,13 @@ module.exports = function () {
             undelete: function (id) {
                 // unsupported
                 return promises.resolved({ id: id });
+            },
+            truncate: function () {
+                tables[table.name] = {};
+                return promises.resolved();
+            },
+            initialize: function () {
+                return promises.resolved();                
             }
         }
 
