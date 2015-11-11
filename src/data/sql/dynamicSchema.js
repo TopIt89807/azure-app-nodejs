@@ -4,12 +4,8 @@
 var statements = require('./statements'),
     execute = require('./execute'),
     promises = require('../../utilities/promises'),
-    schemas = require('./schema');
-
-var errorCodes = {
-    InvalidColumnName: 207,
-    InvalidObjectName: 208
-}
+    schemas = require('./schema'),
+    errorCodes = require('./errorCodes');
 
 module.exports = function (config) {
     var schema = schemas(config),
