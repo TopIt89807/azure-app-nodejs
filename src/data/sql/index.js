@@ -16,7 +16,7 @@ module.exports = function (configuration) {
     assert(configuration.user, 'A database user was not specified.');
     assert(configuration.password, 'A password for the database user was not specified');
 
-    log.debug('Using SQL Server data source, server: ' + configuration.server + ':' + (configuration.port || 'default') + ', user: ' + configuration.user);
+    log.verbose('Using SQL Server data source, server: ' + configuration.server + ':' + (configuration.port || 'default') + ', user: ' + configuration.user);
     setEncryption();
 
     var tableAccess = function (table) {
@@ -142,7 +142,7 @@ module.exports = function (configuration) {
     function setEncryption() {
         configuration.options = configuration.options || {};
         if(configuration.server.indexOf('database.windows.net') > -1) {
-            log.debug('SQL Azure database detected - setting connection encryption');
+            log.verbose('SQL Azure database detected - setting connection encryption');
             configuration.options.encrypt = true;
         }
     }
