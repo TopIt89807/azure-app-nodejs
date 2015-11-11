@@ -16,7 +16,7 @@ module.exports = function (table) {
             } else {
                 var item = req.body;
 
-                if(item.id && req.params.id && item.id !== req.params.id) {
+                if(!idsMatch()) {
                     next(badRequest('The item ID and querystring ID did not match'));
                 } else {
                     // for PATCH operations, the ID can come from the querystring
@@ -31,6 +31,10 @@ module.exports = function (table) {
 
                     req.azureMobile.item = item;
                     next();
+                }
+
+                function idsMatch() {
+                    return item.id === undefined || req.params.id === undefined || item.id.toString() === req.params.id.toString();
                 }
             }
         }

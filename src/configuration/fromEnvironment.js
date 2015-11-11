@@ -66,6 +66,11 @@ module.exports = function (configuration) {
             case 'ms_skipversioncheck':
                 configuration.skipVersionCheck = parseBoolean(process.env[key]);
                 break;
+
+            case 'website_hostname':
+                configuration.auth.audience = 'https://' + process.env[key] + '/';
+                configuration.auth.issuer = 'https://' + process.env[key] + '/';
+                break;
         }
     });
 
