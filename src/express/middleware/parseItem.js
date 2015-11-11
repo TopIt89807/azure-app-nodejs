@@ -11,23 +11,34 @@ module.exports = function (table) {
         bodyParser.json()(req, res, callback);
 
         function callback(error) {
-            if(error)  {
+            if(error) {
                 next(error);
             } else {
                 var item = req.body;
 
-                // if no id was specified by the client, set one here. This will be overwritten by autoIncrement if set
-                item.id = item.id || uuid.v4();
+                if(item.id && req.params.id && item.id !== req.params.id) {
+                    next(badRequest('The item ID and querystring ID did not match'));
+                } else {
+                    // for PATCH operations, the ID can come from the querystring
+                    // if no id was specified by the client, set one here. This will be overwritten by autoIncrement if set
+                    item.id = req.params.id || item.id || uuid.v4();
 
-                // set version property from if-match header, if specified
-                var etag = req.get('if-match');
-                if(etag) {
-                    item.version = strings.extractEtag(etag);;
+                    // set version property from if-match header, if specified
+                    var etag = req.get('if-match');
+                    if(etag) {
+                        item.version = strings.extractEtag(etag);;
+                    }
+
+                    req.azureMobile.item = item;
+                    next();
                 }
-
-                req.azureMobile.item = item;
-                next();
             }
+        }
+
+        function badRequest(message) {
+            var error = new Error(message);
+            error.badRequest = true;
+            return error;
         }
     };
 };
