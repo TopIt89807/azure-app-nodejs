@@ -105,4 +105,44 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .get('/tables/todoitem')
             .expect(405);
     });
+
+    it('accepts ID on querystring for patch request', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send({ id: 1, text: 'test' })
+            .expect(200)
+            .then(function () {
+                return supertest(app)
+                    .patch('/tables/todoitem/1')
+                    .send({ text: 'test2' })
+                    .expect(200);
+            })
+            .then(function () {
+                return supertest(app)
+                    .get('/tables/todoitem')
+                    .expect(function (res) {
+                        expect(res.body.length).to.equal(1);
+                        expect(res.body[0].text).to.equal('test2');
+                    })
+            });
+    });
+
+    it('returns 400 if item ID and querystring ID do not match', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send({ id: 1, text: 'test' })
+            .expect(200)
+            .then(function () {
+                return supertest(app)
+                    .patch('/tables/todoitem/2')
+                    .send({ id: 1, text: 'test2' })
+                    .expect(400);
+            })
+    });
 });
