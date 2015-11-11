@@ -8,13 +8,17 @@ module.exports = function (configuration) {
         dynamicSchema = require('./dynamicSchema'),
         promises = require('../../utilities/promises'),
         log = require('../../logger'),
-        data = require('./index');
+        data = require('./index'),
+        errorCodes = require('./errorCodes');
 
     var api = {
         initialize: function (table) {
             return api.createTable(table)
-                .catch(function () {
-                    return api.updateSchema(table);
+                .catch(function (error) {
+                    if(error.number === errorCodes.ObjectAlreadyExists)
+                        return api.updateSchema(table);
+                    else
+                        throw error;
                 });
         },
 

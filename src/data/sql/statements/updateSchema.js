@@ -7,17 +7,24 @@ var helpers = require('../helpers'),
 module.exports = function (tableConfig, existingColumns, item) {
     var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),
         columns = assign(itemColumnsSql(), predefinedColumnsSql(), systemPropertiesSql()),
-        columnSql = Object.keys(columns).reduce(function (sql, property) {
+        newColumns = newColumnSql();
+
+    if(newColumns.length > 0)
+        return {
+            sql: "ALTER TABLE " + tableName + " ADD " + newColumns.join(',')
+        };
+    else
+        return { noop: true };
+
+    function newColumnSql() {
+        return Object.keys(columns).reduce(function (sql, property) {
             if(!existingColumns.some(function (column) { return column.name.toLowerCase() === property })) {
                 existingColumns.push({ name: property });
                 sql.push(columns[property]);
             }
             return sql;
-        }, []).join(',');
-
-    return {
-        sql: "ALTER TABLE " + tableName + " ADD " + columnSql
-    };
+        }, []);
+    }
 
     function systemPropertiesSql() {
         var columns = helpers.getSystemPropertiesDDL();

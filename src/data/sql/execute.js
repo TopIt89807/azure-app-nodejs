@@ -8,6 +8,9 @@ var mssql = require('mssql'),
     connection;
 
 module.exports = function (config, sql) {
+    if(sql.noop)
+        return promises.resolved();
+
     // for some reason, creating a new connection object for each request hangs on the second request when hosted
     // not sure if this will have any effect on performance, i.e. does each request have to wait for the last to complete?
     if(!connection) {
@@ -28,23 +31,23 @@ module.exports = function (config, sql) {
         if (sql.constructor !== Array) {
             statements = [sql];
         }
-        
+
         // We expect multiple results if there are multiple statements to be executed or if
         // 'multiple' results are explicitly requested
         request.multiple = statements.length > 1 ||  statements[0].multiple;
-        
+
         var statement = '',
             params = [];
-        
+
         // Combine the statements into a single statement
         statements.forEach(function(st) {
             statement += st.sql + '; ';
-            
+
             if (st.parameters) {
                 params = params.concat(st.parameters)
             }
         });
-        
+
         // Combine the parameter lists into a single list
         params.forEach(function (parameter) {
             var type = parameter.type || helpers.getMssqlType(parameter.value);
