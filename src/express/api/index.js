@@ -51,7 +51,7 @@ module.exports = function (configuration) {
         var apiRouter = express.Router();
         Object.getOwnPropertyNames(definition).forEach(function (method) {
             if (supportedVerbs.some(function (verb) { return verb === method; })) {
-                logger.debug("Adding method " + method + " to api " + definition.name);
+                logger.verbose("Adding method " + method + " to api " + definition.name);
                 apiRouter[method]('/', buildMethodMiddleware(definition, method));
             } else if (method !== 'authorize') {
                 logger.warn("Unrecognized property '" + method + "' in api " + definition.name);
@@ -74,10 +74,10 @@ module.exports = function (configuration) {
         var middleware = utilities.object.convertArrayLike(definition[method]);
 
         if (definition[method].authorize) {
-            logger.debug("Adding authorization to " + method + " for api " + definition.name);
+            logger.verbose("Adding authorization to " + method + " for api " + definition.name);
             middleware = [authorize].concat(middleware);
         }
 
-        return middleware; 
+        return middleware;
     }
 }

@@ -8,7 +8,7 @@ module.exports = function (configuration) {
     var basePath = configuration.basePath || './',
         settingsPath = path.resolve(basePath, '../diagnostics/settings.json'),
         levelMappings = {
-            'Verbose': 'verbose',
+            'Verbose': 'silly',
             'Information': 'info',
             'Error': 'error',
             'Warning': 'warn'

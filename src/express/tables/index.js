@@ -35,7 +35,7 @@ module.exports = function (configuration) {
     */
     router.add = function (name, definition) {
         assert(name, 'A table name was not specified');
-        logger.debug("Adding table definition for " + name);
+        logger.verbose("Adding table definition for " + name);
         definition = buildTableDefinition(name, definition);
         configuration.tables[name] = definition;
         router.use('/' + name, tableRouter(definition));
