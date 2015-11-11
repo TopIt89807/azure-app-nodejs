@@ -16,8 +16,11 @@ Create a new user object.
 */
 module.exports = function (authConfiguration, token, claims) {
     return {
-        /** The user ID */
-        id: claims.uid,
+        /** 
+         * The user ID 
+         * Per #168, the proper claim is subject (sub), not uid
+         */
+        id: claims.sub,
         /** The JWT token */
         token: token,
         /** The authenticated claims */
