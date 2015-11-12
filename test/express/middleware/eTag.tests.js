@@ -35,6 +35,13 @@ describe('azure-mobile-apps.express.middleware.eTag', function () {
                 expect(res.headers).to.have.property('ETag', '"version"');
             });
         });
+
+        it('escapes quotes', function () {
+            res.results = { id: 1, version: 'versi"on' };
+            eTag.singleResult(req, res, function () {
+                expect(res.headers).to.have.property('ETag', '"versi\\"on"');
+            });
+        });
     });
 
     describe('readIdResult', function () {

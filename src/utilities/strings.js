@@ -30,6 +30,10 @@ var strings = module.exports = {
         return value.replace(/^"|\\(?=")|"$/g, '');
     },
 
+    packEtag: function (value) {
+        return '"' + value.replace(/(")/g, '\\"') + '"';
+    },
+
     convertDate: function (value) {
         var date = strings.parseISODate(value);
         if (date) {
