@@ -36,8 +36,17 @@ module.exports = {
 
 function loadModule(target, targetPath) {
     var moduleName = path.basename(targetPath, path.extname(targetPath)),
-        loadedModule = require(targetPath),
-        targetModule = target[moduleName] || {};
+        targetModule = target[moduleName] || {},
+        loadedModule;
+
+    try {
+        logger.verbose('Attempting to load ' + targetPath);
+        loadedModule = require(targetPath);
+    } catch (err) {
+        var error = targetPath + ' is formatted incorrectly';
+        logger.error(error);
+        throw new Error(error);
+    }
 
     merge.getConflictingProperties(targetModule, loadedModule).forEach(function (conflict) {
         logger.warn('Property \'' + conflict + '\' in module ' + moduleName + ' overwritten by JSON configuration');
