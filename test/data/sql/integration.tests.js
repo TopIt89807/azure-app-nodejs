@@ -5,13 +5,26 @@ var index = require('../../../src/data/sql'),
     execute = require('../../../src/data/sql/execute'),
     queries = require('../../../src/query'),
     config = require('./infrastructure/config'),
-    expect = require('chai').expect;
+    expect = require('chai')
+        .use(require('chai-subset'))
+        .expect,
+    operations;
 
 describe('azure-mobile-apps.data.sql.integration', function () {
-    var operations = index(config)({ name: 'integration' });
+    before(function (done) {
+        operations = index(config)({ name: 'integration', 
+            columns: { string: 'string', number: 'number', bool: 'boolean' }
+        });
+
+        operations.initialize().then(done);
+    });
 
     beforeEach(function (done) {
         return operations.truncate().then(done);
+    });
+
+    after(function (done) {
+        index(config).execute({ sql: 'DROP TABLE integration' }).then(done);
     });
 
     it("basic connection test", function () {
@@ -21,16 +34,16 @@ describe('azure-mobile-apps.data.sql.integration', function () {
     it("basic integration test", function () {
         return insert({ id: '1', string: 'test', bool: false, number: 1.1 })
             .then(function (results) {
-                expect(results).to.deep.equal({ id: '1', string: 'test', bool: false, number: 1.1 });
+                expect(results).to.containSubset({ id: '1', string: 'test', bool: false, number: 1.1 });
                 return read();
             })
             .then(function (results) {
-                expect(results).to.deep.equal([{ id: '1', string: 'test', bool: false, number: 1.1 }]);
+                expect(results).to.containSubset([{ id: '1', string: 'test', bool: false, number: 1.1 }]);
                 return update({ id: '1', string: 'test2', bool: true, number: 2.2  });
             })
             .then(read)
             .then(function (results) {
-                expect(results).to.deep.equal([{ id: '1', string: 'test2', bool: true, number: 2.2 }]);
+                expect(results).to.containSubset([{ id: '1', string: 'test2', bool: true, number: 2.2 }]);
                 return del(1);
             })
             .then(read)
@@ -46,7 +59,7 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             })
             .then(read)
             .then(function (results) {
-                expect(results).to.deep.equal([{ id: '1', string: 'test2', bool: true, number: 1.1 }]);
+                expect(results).to.containSubset([{ id: '1', string: 'test2', bool: true, number: 1.1 }]);
                 return del(1);
             });
     });
