@@ -4,7 +4,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../../src/express'),
+    mobileApps = require('../../../src'),
     data = require('../../../src/data/sql'),
     config = require('../infrastructure/config').data(),
 
@@ -13,7 +13,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.tables.data', function () {
     beforeEach(function (done) {
         app = express();
-        mobileApp = mobileApps({ data: config, skipVersionCheck: true });
+        mobileApp = mobileApps({ data: config, skipVersionCheck: true, logging: false });
         data(config)({ name: 'integration' }).truncate().then(done);
     });
 

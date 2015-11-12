@@ -4,7 +4,7 @@
 ﻿var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../../src/express'),
+    mobileApps = require('../../../src'),
 
     app, mobileApp;
 
@@ -12,7 +12,7 @@
 describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ skipVersionCheck: true });
+        mobileApp = mobileApps({ skipVersionCheck: true, logging: false });
     });
 
     it('returns 200 for table route', function () {
@@ -45,7 +45,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     it('returns 500 with error details when exception is thrown', function (done) {
         var table = mobileApp.table();
         table.read.use(function (req, res, next) { throw 'test'; });
-        mobileApp = mobileApps({ debug: true, skipVersionCheck: true });
+        mobileApp = mobileApps({ debug: true, skipVersionCheck: true, logging: false });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
@@ -59,7 +59,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 400 when request size limit is exceeded', function () {
-        mobileApp = mobileApps({ maxTop: 1000 });
+        mobileApp = mobileApps({ maxTop: 1000, logging: false });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -78,7 +78,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .expect(200);
     });
 
-    it('sets request size limit implicitly', function () {
+    it('sets request size limit implicitly (query.take) to pageSize', function () {
         var table = mobileApps.table(),
             query;
 
@@ -86,14 +86,14 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             query = context.query.toOData();
         });
 
-        mobileApp = mobileApps({ maxTop: 1000, skipVersionCheck: true });
+        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
             .expect(function (err, res) {
-                expect(query).to.contain('$top=1000');
+                expect(query).to.contain('$top=40');
             });
     });
 
