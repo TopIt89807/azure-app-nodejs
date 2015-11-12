@@ -17,8 +17,9 @@ var util = require('util'),
  * @return An object with members described below
  */
 module.exports = function (configuration) {
-    var nhClient = configuration.client || new NotificationHubService(configuration.hubName, configuration.connectionString
-        || configuration.endpoint, configuration.sharedAccessKeyName, configuration.sharedAccessKeyValue);
+    var nhClient = configuration && (configuration.client ||
+        (configuration.hubName && (configuration.connectionString || configuration.endpoint) && configuration.sharedAccessKeyName && configuration.sharedAccessKeyValue &&
+            new NotificationHubService(configuration.hubName, configuration.connectionString || configuration.endpoint, configuration.sharedAccessKeyName, configuration.sharedAccessKeyValue)));
 
     return {
         /**
@@ -97,7 +98,7 @@ module.exports = function (configuration) {
                 nhClient.listRegistrationsByTag(tag, { top: top, skip: skip }, function (err, res) {
                     if (err) {
                         reject(err);
-                    } 
+                    }
                     results = results.concat(res.map(mapFunction));
                     if (res.length < top) {
                         result(results);
