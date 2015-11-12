@@ -12,7 +12,8 @@ var index = require('../../../src/data/sql'),
 
 describe('azure-mobile-apps.data.sql.integration', function () {
     before(function (done) {
-        operations = index(config)({ name: 'integration', 
+        operations = index(config)({ 
+            name: 'integration', 
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         });
 

@@ -11,7 +11,8 @@ var index = require('../../../src/data/sql'),
 
 describe('azure-mobile-apps.data.sql.integration.query', function () {
     before(function (done) {
-        operations = index(config)({ name: 'query', 
+        operations = index(config)({ 
+            name: 'query', 
             columns: { string: 'string', number: 'number', bool: 'boolean' },
             seed: [
                 { id: 1, string: 'one', number: 1, bool: 1 },
