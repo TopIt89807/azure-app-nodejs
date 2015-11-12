@@ -7,7 +7,7 @@ var expect = require('chai').expect,
     mobileApps = require('../../../src/express'),
     auth = require('../../../src/auth')({ secret: 'secret' }),
     secret = 'secret',
-    token = auth.sign({ "uid": "Facebook:someuserid@hotmail.com" }),
+    token = auth.sign({ "sub": "Facebook:someuserid@hotmail.com" }),
 
     app, mobileApp;
 
