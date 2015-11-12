@@ -4,7 +4,8 @@
 var https = require('https'),
     URL = require('url'),
     promises = require('../utilities/promises'),
-    log = require('../logger');
+    log = require('../logger'),
+    normalizeClaims = require('./normalizeClaims');
 
 module.exports = function (authConfiguration, token, provider) {
     var endpoint = URL.parse(authConfiguration.issuer);
@@ -31,7 +32,7 @@ module.exports = function (authConfiguration, token, provider) {
            });
            response.on('end', function () {
                log.verbose('[getIdentity] Response Data: ', responseData);
-               var responseObj = JSON.parse(responseData);
+               var responseObj = normalizeClaims(JSON.parse(responseData));
                resolve(responseObj);
            });
         });
