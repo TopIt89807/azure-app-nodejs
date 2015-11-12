@@ -26,6 +26,9 @@ module.exports = function (table) {
         if(etag)
             context.version = etag;
 
+        // set take to the min of $top and pageSize, can be overridden in server middleware
+        context.query = context.query.take(Math.min(table.pageSize, req.query.$top));
+
         next();
 
         function enforceMaxTop() {

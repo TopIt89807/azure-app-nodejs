@@ -4,25 +4,24 @@
 var mssql = require('mssql'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
-    log = require('../../logger'),
-    connection;
+    log = require('../../logger');
 
 module.exports = function (config, sql) {
     if(sql.noop)
         return promises.resolved();
 
-    // for some reason, creating a new connection object for each request hangs on the second request when hosted
-    // not sure if this will have any effect on performance, i.e. does each request have to wait for the last to complete?
-    if(!connection) {
-        connection = new mssql.Connection(config)
-        return connection.connect()
-            .then(executeRequest)
-            .catch(function (err) {
-                connection = undefined;
-                throw err;
-            });
-    } else
-        return executeRequest();
+     var connection = new mssql.Connection(config)
+
+     return connection.connect()
+            .then(executeRequest);
+            // .then(function (results) {
+            //     close();
+            //     return results;
+            // });
+
+    // function close() {
+    //     connection.close();
+    // }
 
     function executeRequest() {
         var request = new mssql.Request(connection);
@@ -58,6 +57,7 @@ module.exports = function (config, sql) {
         });
 
         log.verbose('Executing SQL statement ' + statement + ' with parameters ' + JSON.stringify(params));
+
         return request.query(statement).catch(function (err) {
             log.debug('SQL statement failed - ' + err.message + ': ' + statement + ' with parameters ' + JSON.stringify(params));
             if(err.number === 2627) {

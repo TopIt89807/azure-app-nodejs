@@ -28,6 +28,7 @@ var loadConfiguration = require('./configuration'),
         debug: environment.debug,
         version: 'node-' + require('../package.json').version,
         maxTop: 1000,
+        pageSize: 50,
         logging: {
             level: environment.debug ? 'debug' : 'info',
             transports: {
