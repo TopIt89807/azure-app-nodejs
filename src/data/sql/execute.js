@@ -13,12 +13,15 @@ module.exports = function (config, sql) {
      var connection = new mssql.Connection(config)
 
      return connection.connect()
-            .then(executeRequest)
-            .then(close);
+            .then(executeRequest);
+            // .then(function (results) {
+            //     close();
+            //     return results;
+            // });
 
-    function close() {
-        connection.close();
-    }
+    // function close() {
+    //     connection.close();
+    // }
 
     function executeRequest() {
         var request = new mssql.Request(connection);

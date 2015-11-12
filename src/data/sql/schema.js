@@ -18,7 +18,6 @@ module.exports = function (configuration) {
                     if(error.number === errorCodes.ObjectAlreadyExists)
                         return api.updateSchema(table);
                     else
-                        log.error("Unable to connect to database:", error);
                         throw error;
                 });
         },
