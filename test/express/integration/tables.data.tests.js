@@ -1,7 +1,9 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var expect = require('chai').expect,
+var expect = require('chai')
+        .use(require('chai-subset'))
+        .expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../src/express'),
@@ -11,6 +13,16 @@ var expect = require('chai').expect,
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.tables.data', function () {
+    before(function (done) {
+        data(config)({ name: 'integration', 
+            columns: { string: 'string', number: 'number', bool: 'boolean' }
+        }).initialize().then(done);
+    });
+
+    after(function (done) {
+        data(config).execute({ sql: 'DROP TABLE integration' }).then(done);
+    });
+
     beforeEach(function (done) {
         app = express();
         mobileApp = mobileApps({ data: config, skipVersionCheck: true });
@@ -31,7 +43,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
                     .expect(200);
             })
             .then(function (res) {
-                expect(res.body).to.deep.equal([{ id: '1', string: "test", bool: true, number: 1 }]);
+                expect(res.body).to.containSubset([{ id: '1', string: "test", bool: true, number: 1 }]);
             });
     });
 
@@ -51,7 +63,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
                 return supertest(app).get('/tables/integration');
             })
             .then(function (res) {
-                expect(res.body).to.deep.equal([{ id: '1', string: "test2", bool: true, number: 1 }]);
+                expect(res.body).to.containSubset([{ id: '1', string: "test2", bool: true, number: 1 }]);
             });
     });
 
@@ -85,7 +97,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
             .send({ id: '1', string: "test", bool: true, number: 1 })
             .expect(200)
             .then(function (res) {
-                expect(res.body).to.deep.equal({ id: '1', string: "test", bool: true, number: 1 });
+                expect(res.body).to.containSubset({ id: '1', string: "test", bool: true, number: 1 });
             });
     });
 
@@ -151,7 +163,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
                     .expect(200);
             })
             .then(function (res) {
-                expect(res.body).to.deep.equal({ id: '1', string: "test", bool: true, number: 1 });
+                expect(res.body).to.containSubset({ id: '1', string: "test", bool: true, number: 1 });
             });
     });
 
@@ -245,7 +257,7 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
                     .expect(200);
             })
             .then(function (results) {
-                expect(results.body).to.deep.equal({
+                expect(results.body).to.containSubset({
                     results: [{ id: '1', string: "test", bool: true, number: 1 }],
                     count: 2
                 })
