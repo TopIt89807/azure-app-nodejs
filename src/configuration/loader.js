@@ -43,7 +43,7 @@ function loadModule(target, targetPath) {
         logger.verbose('Attempting to load ' + targetPath);
         loadedModule = require(targetPath);
     } catch (err) {
-        var error = targetPath + ' is formatted incorrectly';
+        var error = 'Unable to load ' + targetPath;
         logger.error(error);
         throw new Error(error);
     }
