@@ -20,10 +20,10 @@ module.exports = function (authConfiguration, token, provider) {
                 'x-zumo-auth': token
             }
         };
-        log.verbose('[getIdentity] Request: ', requestOptions);
+        log.verbose('GetIdentity Request: ', requestOptions);
         
         var request = https.request(requestOptions, function (response) {
-           log.verbose('[getIdentity] Response Code: ', response.statusCode);
+           log.verbose('GetIdentity Response Code: ', response.statusCode);
            
            var responseData = '';
            response.setEncoding('utf8');
@@ -31,14 +31,14 @@ module.exports = function (authConfiguration, token, provider) {
                responseData += chunk;
            });
            response.on('end', function () {
-               log.verbose('[getIdentity] Response Data: ', responseData);
+               log.verbose('GetIdentity Response: ', responseData);
                var responseObj = normalizeClaims(JSON.parse(responseData));
                resolve(responseObj);
            });
         });
         
         request.on('error', function (error) {
-            log.error('[getIdentity] Could not retrieve identity: ', error);
+            log.error('Could not retrieve identity: ', error);
             reject(error);
         });
         
