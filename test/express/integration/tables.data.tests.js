@@ -14,7 +14,8 @@ var expect = require('chai')
 
 describe('azure-mobile-apps.express.integration.tables.data', function () {
     before(function (done) {
-        data(config)({ name: 'integration', 
+        data(config)({ 
+            name: 'integration', 
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         }).initialize().then(done);
     });
