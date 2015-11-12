@@ -12,11 +12,11 @@
 describe('azure-mobile-apps.express.integration.tables.link', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true });
     });
 
     it('adds Link header when top > pageSize & results.length === pageSize', function () {
-        mobileApp = mobileApps({ pageSize: 1, skipVersionCheck: true, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ pageSize: 1, skipVersionCheck: true });
         mobileApp.tables.add('headers');
         app.use(mobileApp);
         return supertest(app)

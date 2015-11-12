@@ -12,7 +12,7 @@
 describe('azure-mobile-apps.express.integration.tables.etag', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true });
         var table = mobileApps.table();
         table.read(function (context) {
             return [{
