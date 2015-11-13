@@ -1,3 +1,6 @@
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Azure/azure-mobile-apps-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 # Azure Mobile Apps - Node SDK
 
 **This package is still in development!** This software is still likely to change dramatically and have minimal documentation prior to official release. Use caution before using this in a production application.
