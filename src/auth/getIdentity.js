@@ -2,12 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var https = require('https'),
-    URL = require('url'),
+    url = require('url'),
     promises = require('../utilities/promises'),
-    log = require('../logger');
+    log = require('../logger'),
+    normalizeClaims = require('./normalizeClaims');
 
 module.exports = function (authConfiguration, token, provider) {
-    var endpoint = URL.parse(authConfiguration.issuer);
+    var endpoint = url.parse(authConfiguration.issuer);
     
     return promises.create(function (resolve, reject) {
         var requestOptions = {
@@ -19,10 +20,10 @@ module.exports = function (authConfiguration, token, provider) {
                 'x-zumo-auth': token
             }
         };
-        log.verbose('[getIdentity] Request: ', requestOptions);
+        log.silly('GetIdentity Request: ', requestOptions);
         
         var request = https.request(requestOptions, function (response) {
-           log.verbose('[getIdentity] Response Code: ', response.statusCode);
+           log.silly('GetIdentity Response Code: ', response.statusCode);
            
            var responseData = '';
            response.setEncoding('utf8');
@@ -30,14 +31,14 @@ module.exports = function (authConfiguration, token, provider) {
                responseData += chunk;
            });
            response.on('end', function () {
-               log.verbose('[getIdentity] Response Data: ', responseData);
-               var responseObj = JSON.parse(responseData);
+               log.silly('GetIdentity Response: ', responseData);
+               var responseObj = normalizeClaims(JSON.parse(responseData));
                resolve(responseObj);
            });
         });
         
         request.on('error', function (error) {
-            log.error('[getIdentity] Could not retrieve identity: ', error);
+            log.silly('Could not retrieve identity: ', error);
             reject(error);
         });
         
