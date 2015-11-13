@@ -40,13 +40,12 @@ function loadModule(target, targetPath) {
         loadedModule;
 
     try {
-        logger.verbose('Attempting to load ' + targetPath);
         loadedModule = require(targetPath);
     } catch (err) {
-        var error = 'Unable to load ' + targetPath;
-        logger.error(error);
-        throw new Error(error);
+        logger.error('Unable to load ' + targetPath, err);
+        throw err;
     }
+    logger.silly('Loaded ' + targetPath);
 
     merge.getConflictingProperties(targetModule, loadedModule).forEach(function (conflict) {
         logger.warn('Property \'' + conflict + '\' in module ' + moduleName + ' overwritten by JSON configuration');
