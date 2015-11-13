@@ -11,7 +11,7 @@ module.exports = function (claims) {
     for (var idp in normalizedClaims) {
         normalizedClaims[idp].claims = normalizedClaims[idp].user_claims.reduce(function (obj, value, idx) {
             obj[value.typ] = value.val;
-			if (value.typ.startsWith('http://schemas.xmlsoap.org/ws')) {
+			if (value.typ.indexOf('http://schemas.xmlsoap.org/ws') !== -1) {
 			    obj[value.typ.slice(value.typ.lastIndexOf('/')+1)] = value.val;
             }
             return obj;
