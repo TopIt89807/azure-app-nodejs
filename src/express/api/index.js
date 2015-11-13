@@ -13,6 +13,7 @@ var express = require('express'),
     authorize = require('../middleware/authorize'),
     notAllowed = require('../middleware/notAllowed'),
     utilities = require('../../utilities'),
+    types = require('../../utilities/types'),
     importDefinition = require('../../configuration/importDefinition'),
     supportedVerbs = ['get', 'post', 'put', 'patch', 'delete'];
 
@@ -50,11 +51,14 @@ module.exports = function (configuration) {
     function buildApiRouter(definition) {
         var apiRouter = express.Router();
         Object.getOwnPropertyNames(definition).forEach(function (method) {
-            if (supportedVerbs.some(function (verb) { return verb === method; })) {
-                logger.verbose("Adding method " + method + " to api " + definition.name);
-                apiRouter[method]('/', buildMethodMiddleware(definition, method));
-            } else if (method !== 'authorize') {
-                logger.warn("Unrecognized property '" + method + "' in api " + definition.name);
+            var middleware = getDefinedMiddleware(definition[method]);
+            if (types.isFunction(middleware) || types.isArray(middleware)) {
+                if (isSupportedVerb(method)) {
+                    logger.verbose("Adding method " + method + " to api " + definition.name);
+                    apiRouter[method]('/', configureMiddleware(definition, method, middleware));
+                } else {
+                    logger.warn("Unsupported method '" + method + "' in api " + definition.name);
+                }
             }
         });
         return apiRouter;
@@ -62,16 +66,13 @@ module.exports = function (configuration) {
 
     // definition is an api definition object
     // returns a middleware function or an array of middleware function
-    function buildMethodMiddleware(definition, method) {
+    function configureMiddleware(definition, method, middleware) {
         importDefinition.setAccess(definition, method);
 
-        if (definition[method].disable)
+        if (definition[method].disable) {
+            logger.verbose("Disabling " + method + " for api " + definition.name);
             return notAllowed(method);
-
-        // method definitions are either a function, an array of functions, or an array-like object
-        // if array-like object convert to array
-        // {'0': addHeader, '1': return200, authorize: true} should convert to [addHeader,return200]
-        var middleware = utilities.object.convertArrayLike(definition[method]);
+        }
 
         if (definition[method].authorize) {
             logger.verbose("Adding authorization to " + method + " for api " + definition.name);
@@ -79,5 +80,16 @@ module.exports = function (configuration) {
         }
 
         return middleware;
+    }
+
+    function getDefinedMiddleware(methodDefinition) {
+        // method definitions are either a function, an array of functions, or an array-like object
+        // if array-like object convert to array
+        // {'0': addHeader, '1': return200, authorize: true} should convert to [addHeader,return200]
+        return utilities.object.convertArrayLike(methodDefinition);
+    }
+
+    function isSupportedVerb(verb) {
+        return supportedVerbs.some(function (supportedVerb) { return supportedVerb === verb; });
     }
 }
