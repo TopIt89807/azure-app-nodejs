@@ -5,18 +5,29 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../src'),
+    connectionString,
 
     app, mobileApp;
 
 // the default configuration uses the in-memory data provider - it does not (yet) support queries
 describe('azure-mobile-apps.express.integration.tables.link', function () {
+    before(function () {
+        connectionString = process.env.MS_TableConnectionString;
+        delete process.env.MS_TableConnectionString;
+    });
+
+    after(function () {
+        if (connectionString)
+            process.env.MS_TableConnectionString = connectionString;
+    });
+
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true });
     });
 
     it('adds Link header when top > pageSize & results.length === pageSize', function () {
-        mobileApp = mobileApps({ pageSize: 1, skipVersionCheck: true, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ pageSize: 1, skipVersionCheck: true });
         mobileApp.tables.add('headers');
         app.use(mobileApp);
         return supertest(app)

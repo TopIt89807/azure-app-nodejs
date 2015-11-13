@@ -5,14 +5,25 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../src'),
+    connectionString,
 
     app, mobileApp;
 
 // the default configuration uses the in-memory data provider - it does not (yet) support queries
 describe('azure-mobile-apps.express.integration.tables.behavior', function () {
+    before(function () {
+        connectionString = process.env.MS_TableConnectionString;
+        delete process.env.MS_TableConnectionString;
+    });
+
+    after(function () {
+        if (connectionString)
+            process.env.MS_TableConnectionString = connectionString;
+    });
+
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ skipVersionCheck: true, logging: false, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ skipVersionCheck: true, logging: false });
     });
 
     it('returns 200 for table route', function () {
@@ -45,7 +56,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     it('returns 500 with error details when exception is thrown', function (done) {
         var table = mobileApp.table();
         table.read.use(function (req, res, next) { throw 'test'; });
-        mobileApp = mobileApps({ debug: true, skipVersionCheck: true, logging: false, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ debug: true, skipVersionCheck: true, logging: false });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
@@ -59,7 +70,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 400 when request size limit is exceeded', function () {
-        mobileApp = mobileApps({ maxTop: 1000, logging: false, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ maxTop: 1000, logging: false });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -69,7 +80,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 200 when request size limit is set to 0', function () {
-        mobileApp = mobileApps({ maxTop: 0, skipVersionCheck: true, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ maxTop: 0, skipVersionCheck: true });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -86,7 +97,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             query = context.query.toOData();
         });
 
-        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true, data: { provider: 'memory' } });
+        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
