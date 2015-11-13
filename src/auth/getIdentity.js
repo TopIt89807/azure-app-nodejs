@@ -2,13 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var https = require('https'),
-    URL = require('url'),
+    url = require('url'),
     promises = require('../utilities/promises'),
     log = require('../logger'),
     normalizeClaims = require('./normalizeClaims');
 
 module.exports = function (authConfiguration, token, provider) {
-    var endpoint = URL.parse(authConfiguration.issuer);
+    var endpoint = url.parse(authConfiguration.issuer);
     
     return promises.create(function (resolve, reject) {
         var requestOptions = {
