@@ -3,18 +3,18 @@
 // ----------------------------------------------------------------------------
 
 module.exports = function (claims) {
-    var normalizedClaims = claims.reduce(function (obj, value, idx) {
-        obj[value['provider_name']] = value;
-        return obj;
+    var normalizedClaims = claims.reduce(function (object, value, index) {
+        object[value['provider_name']] = value;
+        return object;
     }, {});
 	
     for (var idp in normalizedClaims) {
-        normalizedClaims[idp].claims = normalizedClaims[idp].user_claims.reduce(function (obj, value, idx) {
-            obj[value.typ] = value.val;
+        normalizedClaims[idp].claims = normalizedClaims[idp].user_claims.reduce(function (object, value, index) {
+            object[value.typ] = value.val;
 			if (value.typ.indexOf('http://schemas.xmlsoap.org/ws') !== -1) {
-			    obj[value.typ.slice(value.typ.lastIndexOf('/')+1)] = value.val;
+			    object[value.typ.slice(value.typ.lastIndexOf('/')+1)] = value.val;
             }
-            return obj;
+            return object;
         }, {});
     }
 	
