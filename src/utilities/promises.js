@@ -51,7 +51,7 @@ var api = module.exports = {
     /** Returns a promise that resolves after the promise created for each provided item has resolved in series */
     series: function (items, promiseFactory) {
         if(!items || items.length === 0)
-            return api.resolved([]);
+            return api.resolved();
 
         return api.create(function (resolve, reject) {
             var index = 0,
