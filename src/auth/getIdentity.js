@@ -2,22 +2,45 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var https = require('https'),
+    URL = require('url'),
     promises = require('../utilities/promises'),
     log = require('../logger');
 
 module.exports = function (authConfiguration, token, provider) {
+    var endpoint = URL.parse(authConfiguration.issuer);
+    
     return promises.create(function (resolve, reject) {
-        var request = https.request({
-            hostname: authConfiguration.gatewayUrl,
-            path: '/api/tokens?tokenName=' + provider + '&api-version=2015-01-14',
+        var requestOptions = {
+            hostname: endpoint.hostname,
+            port: endpoint.port || 443,
+            path: '/.auth/me' + (provider ? '?provider=' + provider : ''),
+            method: 'GET',
             headers: {
                 'x-zumo-auth': token
             }
-        }, resolve);
-
+        };
+        log.verbose('[getIdentity] Request: ', requestOptions);
+        
+        var request = https.request(requestOptions, function (response) {
+           log.verbose('[getIdentity] Response Code: ', response.statusCode);
+           
+           var responseData = '';
+           response.setEncoding('utf8');
+           response.on('data', function (chunk) {
+               responseData += chunk;
+           });
+           response.on('end', function () {
+               log.verbose('[getIdentity] Response Data: ', responseData);
+               var responseObj = JSON.parse(responseData);
+               resolve(responseObj);
+           });
+        });
+        
         request.on('error', function (error) {
-            log.error('Could not retrieve identity from gateway', error);
+            log.error('[getIdentity] Could not retrieve identity: ', error);
             reject(error);
         });
+        
+        request.end();
     });
 };
