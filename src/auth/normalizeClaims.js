@@ -4,8 +4,8 @@
 
 module.exports = function (claims) {
     return claims.reduce(function (target, identity) {
+        identity.claims = identity.user_claims.reduce(mapClaims, {});
         target[identity['provider_name']] = identity;
-        target[identity['provider_name']].claims = identity.user_claims.reduce(mapClaims, {});
         return target;
     }, {});
 
