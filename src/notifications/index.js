@@ -17,14 +17,10 @@ var util = require('util'),
  * @return An object with members described below
  */
 module.exports = function (configuration) {
-    var nhClient = configuration && (configuration.client ||
-        (configuration.hubName && (configuration.connectionString || configuration.endpoint) && configuration.sharedAccessKeyName && configuration.sharedAccessKeyValue &&
-            new NotificationHubService(configuration.hubName, configuration.connectionString || configuration.endpoint, configuration.sharedAccessKeyName, configuration.sharedAccessKeyValue)));
+    var nhClient = createClient();
 
     return {
-        /**
-         * Returns an instance of the {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|Notification Hubs Service}
-         */
+        /** Returns an instance of the {@link http://azure.github.io/azure-sdk-for-node/azure-sb/latest/NotificationHubService.html|Notification Hubs Service} */
         getClient: function () { return nhClient; },
 
         /**
@@ -39,15 +35,7 @@ module.exports = function (configuration) {
             return getTagsByInstallationId(installationId)
                 .then(function (tags) {
                     installation.tags = addUserTag(tags, user);
-                    return promises.create(function (result, reject) {
-                        nhClient.createOrUpdateInstallation(installation, function (err, res) {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                result(res);
-                            }
-                        });
-                    });
+                    return promises.wrap(nhClient.createOrUpdateInstallation)(installation);
                 });
         },
 
@@ -57,15 +45,7 @@ module.exports = function (configuration) {
          * @return A promise that yields the notification hubs client response
          */
         deleteInstallation: function (installationId) {
-            return promises.create(function (result, reject) {
-                nhClient.deleteInstallation(installationId, function (err, res) {
-                    if (err) {
-                        return reject(err);
-                    } else {
-                        return result(res);
-                    }
-                });
-            });
+            return promises.wrap(nhClient.deleteInstallation)(installationId);
         }
     };
 
@@ -108,5 +88,16 @@ module.exports = function (configuration) {
                 });
             }
         });
+    }
+
+    function createClient() {
+        if(!configuration)
+            return;
+        if(configuration.client)
+            return configuration.client;
+        if(configuration.hubName && configuration.connectionString)
+            return new NotificationHubService(configuration.hubName, configuration.connectionString);
+        if(configuration.hubName && configuration.endpoint && configuration.sharedAccessKeyName && configuration.sharedAccessKeyValue)
+            return new NotificationHubService(configuration.hubName, configuration.endpoint, configuration.sharedAccessKeyName, configuration.sharedAccessKeyValue);
     }
 }
