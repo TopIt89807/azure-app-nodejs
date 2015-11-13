@@ -25,7 +25,6 @@ module.exports = function (configuration) {
                 configuration.auth.gatewayUrl = process.env[key];
                 break;
 
-            case 'ms_signingkey':
             case 'website_auth_signing_key':
                 configuration.auth.secret = process.env[key];
                 break;
