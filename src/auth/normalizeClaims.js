@@ -3,20 +3,17 @@
 // ----------------------------------------------------------------------------
 
 module.exports = function (claims) {
-    var normalizedClaims = claims.reduce(function (object, value, index) {
-        object[value['provider_name']] = value;
-        return object;
+    return claims.reduce(function (target, identity) {
+        target[identity['provider_name']] = identity;
+        target[identity['provider_name']].claims = identity.user_claims.reduce(mapClaims, {});
+        return target;
     }, {});
 
-    for (var idp in normalizedClaims) {
-        normalizedClaims[idp].claims = normalizedClaims[idp].user_claims.reduce(function (object, value, index) {
-            object[value.typ] = value.val;
-            if (value.typ.indexOf('http://schemas.xmlsoap.org/ws') !== -1) {
-                object[value.typ.slice(value.typ.lastIndexOf('/') + 1)] = value.val;
-            }
-            return object;
-        }, {});
+    function mapClaims(target, claim) {
+        target[claim.typ] = claim.val;
+        if (claim.typ.indexOf('http://schemas.xmlsoap.org/ws') !== -1) {
+            target[claim.typ.slice(claim.typ.lastIndexOf('/') + 1)] = claim.val;
+        }
+        return target;
     }
-
-    return normalizedClaims;
 };
