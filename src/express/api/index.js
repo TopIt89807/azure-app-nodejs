@@ -14,8 +14,7 @@ var express = require('express'),
     notAllowed = require('../middleware/notAllowed'),
     utilities = require('../../utilities'),
     types = require('../../utilities/types'),
-    importDefinition = require('../../configuration/importDefinition'),
-    supportedVerbs = ['get', 'post', 'put', 'patch', 'delete'];
+    importDefinition = require('../../configuration/importDefinition');
 
 /**
 Create an instance of an express router for routing and handling api requests.
@@ -53,7 +52,7 @@ module.exports = function (configuration) {
         Object.getOwnPropertyNames(definition).forEach(function (method) {
             var middleware = getDefinedMiddleware(definition[method]);
             if (types.isFunction(middleware) || types.isArray(middleware)) {
-                if (isSupportedVerb(method)) {
+                if (supportsVerb(method)) {
                     logger.verbose("Adding method " + method + " to api " + definition.name);
                     apiRouter[method]('/', configureMiddleware(definition, method, middleware));
                 } else {
@@ -89,7 +88,7 @@ module.exports = function (configuration) {
         return utilities.object.convertArrayLike(methodDefinition);
     }
 
-    function isSupportedVerb(verb) {
-        return supportedVerbs.some(function (supportedVerb) { return supportedVerb === verb; });
+    function supportsVerb(verb) {
+        return !!router[verb] && types.isFunction(router[verb]);
     }
 }

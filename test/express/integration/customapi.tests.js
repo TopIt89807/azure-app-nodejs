@@ -35,10 +35,6 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
             .expect(200);
     });
 
-    it('returns 404 on unsupported verbs', function () {
-        return request(app).trace('/api/customapiname').expect(404);
-    });
-
     it('correctly imports middleware array', function () {
         return request(app).put('/api/customapiname')
             .set('x-zumo-auth', token)

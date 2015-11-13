@@ -5,9 +5,6 @@ var api = module.exports = {
     put: [ addHeader, send ],
     delete: function(req, res, next) {
         res.status(200).end();
-    },
-    trace: function(req, res, next) {
-        res.status(500).end();
     }
 };
 
