@@ -1,7 +1,9 @@
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Azure/azure-mobile-apps-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 # Azure Mobile Apps - Node SDK
 
 **This package is still in development!** This software is still likely to change dramatically and have minimal documentation prior to official release. Use caution before using this in a production application.
-
 
 ## Basic Usage
 
@@ -28,6 +30,8 @@ app.listen(process.env.PORT || 3000);
  - [StackOverflow #azure-mobile-services](http://stackoverflow.com/questions/new/azure-mobile-services?show=all&sort=recentlyactive&pageSize=50)
  - [MSDN Forums](https://social.msdn.microsoft.com/forums/azure/en-US/home?forum=azuremobile)
  - [Client & Server Quickstarts](https://github.com/Azure/azure-mobile-services-quickstarts)
+ - [Samples](https://github.com/Azure/azure-mobile-apps-node/tree/master/samples)
+ - [Chat on Gitter](https://gitter.im/Azure/azure-mobile-apps-node?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 ## Quickstart
 
@@ -92,7 +96,7 @@ For information on how to contribute to this project, please see the [contributo
 
 ## Contact Us
 
-We can be contacted via a variety of methods.  The most effective are on Twitter (via @AzureMobile) and the [MSDN Forums](https://social.msdn.microsoft.com/forums/azure/en-US/home?forum=azuremobile)  If you need to reference a GitHub Issue, ensure you cut-and-paste the URL of the issue into the message.
+We can be contacted via a variety of methods.  The most effective are on Twitter (via @AzureMobile) and the [MSDN Forums](https://social.msdn.microsoft.com/forums/azure/en-US/home?forum=azuremobile)  If you need to reference a GitHub Issue, ensure you cut-and-paste the URL of the issue into the message.  You can also reach us on [Gitter](https://gitter.im/Azure/azure-mobile-apps-node?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 
 ## License
 
