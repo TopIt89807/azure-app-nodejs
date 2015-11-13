@@ -35,6 +35,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
                     .expect(409);
             })
             .then(function (res) {
+                expect(res.headers.etag).to.not.be.undefined;
                 expect(res.body).to.containSubset({ id: '1', value: 'test' });
                 expect(res.body.version).to.not.equal('incorrect version');
             });
@@ -56,6 +57,7 @@ describe('azure-mobile-apps.express.integration.tables.concurrency', function ()
                     .expect(412);
             })
             .then(function (res) {
+                expect(res.headers.etag).to.not.be.undefined;
                 expect(res.body).to.containSubset({ id: '1', value: 'test' });
                 expect(res.body.version).to.not.equal('incorrect version');
             });
