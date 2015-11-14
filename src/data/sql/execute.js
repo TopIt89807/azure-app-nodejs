@@ -56,7 +56,7 @@ module.exports = function (config, sql) {
                 request.input(parameter.name, parameter.value);
         });
 
-        log.verbose('Executing SQL statement ' + statement + ' with parameters ' + JSON.stringify(params));
+        log.silly('Executing SQL statement ' + statement + ' with parameters ' + JSON.stringify(params));
 
         return request.query(statement).catch(function (err) {
             log.debug('SQL statement failed - ' + err.message + ': ' + statement + ' with parameters ' + JSON.stringify(params));

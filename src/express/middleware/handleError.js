@@ -1,13 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var log = require('../../logger');
+var log = require('../../logger'),
+    strings = require('../../utilities/strings');
 
 module.exports = function (configuration) {
     return function (err, req, res, next) {
         if(err.concurrency)
             if(err.item) {
-                res.status(req.get('if-match') ? 412 : 409).json(err.item);
+                res.status(req.get('if-match') ? 412 : 409)
+                    .set("ETag", strings.getEtagFromVersion(err.item.version))
+                    .json(err.item);
             } else {
                 res.status(404).json({ error: 'The item does not exist' });
             }

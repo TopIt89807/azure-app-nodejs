@@ -66,9 +66,7 @@ module.exports = function (configuration) {
         },
 
         seedData: function (table) {
-            if(table.seed)
-                return promises.all(table.seed.map(insert));
-            return promises.resolved();
+            return promises.series(table.seed, insert);
 
             function insert(item) {
                 return dynamicSchema(configuration).execute(table, statements.insert(table, item), item);
