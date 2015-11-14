@@ -35,7 +35,7 @@ module.exports = function (configuration) {
             return getTagsByInstallationId(installationId)
                 .then(function (tags) {
                     installation.tags = addUserTag(tags, user);
-                    return promises.wrap(nhClient.createOrUpdateInstallation)(installation);
+                    return promises.wrap(nhClient.createOrUpdateInstallation, nhClient)(installation);
                 });
         },
 
@@ -45,7 +45,7 @@ module.exports = function (configuration) {
          * @return A promise that yields the notification hubs client response
          */
         deleteInstallation: function (installationId) {
-            return promises.wrap(nhClient.deleteInstallation)(installationId);
+            return promises.wrap(nhClient.deleteInstallation, nhClient)(installationId);
         }
     };
 
