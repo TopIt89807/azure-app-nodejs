@@ -19,13 +19,14 @@ describe('azure-mobile-apps.express.integration.errors', function () {
             });
     });
 
-    it('does not return error details when not in debug mode', function () {
+    it('does not return stack trace when not in debug mode', function () {
         setup(false);
         return supertest(app)
             .get('/tables/todoitem')
             .expect(500)
             .then(function (res) {
-                expect(res.body).to.be.empty;
+                expect(res.body.error).to.equal('test');
+                expect(res.body.stack).to.be.undefined;
             });
     });
 

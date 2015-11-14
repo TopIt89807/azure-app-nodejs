@@ -25,9 +25,6 @@ module.exports = function (configuration) {
     };
 
     function normaliseError(err) {
-        if(!configuration.debug)
-            return;
-
         if(!err)
             return {
                 error: 'Unknown error'
@@ -36,7 +33,7 @@ module.exports = function (configuration) {
         if(err instanceof Error)
             return {
                 error: err.message,
-                stack: err.stack
+                stack: configuration.debug ? err.stack : undefined
             };
 
         if(err.constructor === String)
