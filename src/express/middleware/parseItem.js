@@ -3,46 +3,68 @@
 // ----------------------------------------------------------------------------
 var bodyParser = require('body-parser'),
     strings = require('../../utilities/strings'),
+    types = require('../../utilities/types'),
     uuid = require('node-uuid');
 
 module.exports = function (table) {
-    return function (req, res, next) {
+    return [
+        attachTableContext,
+        parseItem,
+        configureItem
+    ];
+
+    function attachTableContext (req, res, next) {
         req.azureMobile.table = table;
-        bodyParser.json()(req, res, callback);
+        next();
+    }
 
-        function callback(error) {
-            if(error) {
-                next(error);
-            } else {
-                var item = req.body;
+    function parseItem (req, res, next) {
+        if (!req.headers['content-type']) {
+            req.headers['content-type'] = 'application/json';
+        }
 
-                if(!idsMatch()) {
-                    next(badRequest('The item ID and querystring ID did not match'));
-                } else {
-                    // for PATCH operations, the ID can come from the querystring
-                    // if no id was specified by the client, set one here. This will be overwritten by autoIncrement if set
-                    item.id = req.params.id || item.id || uuid.v4();
-
-                    // set version property from if-match header, if specified
-                    var etag = req.get('if-match');
-                    if(etag) {
-                        item.version = strings.getVersionFromEtag(etag);
-                    }
-
-                    req.azureMobile.item = item;
-                    next();
+        if (!req.body && req.headers['content-type'] === 'application/json') {
+            bodyParser.json()(req, res, function (error) {
+                if (error) {
+                    error.badRequest = true;
                 }
+                next(error);
+            });
+        } else {
+            next();
+        }
+    }
 
-                function idsMatch() {
-                    return item.id === undefined || req.params.id === undefined || item.id.toString() === req.params.id.toString();
+    function configureItem (req, res, next) {
+        var item = req.body;
+
+        if (types.isObject(item)) {
+            if(!idsMatch(item)) {
+                next(badRequest('The item ID and querystring ID did not match'));
+            } else {
+                // for PATCH operations, the ID can come from the querystring
+                // if no id was specified by the client, set one here. This will be overwritten by autoIncrement if set
+                item.id = req.params.id || item.id || uuid.v4();
+
+                // set version property from if-match header, if specified
+                var etag = req.get('if-match');
+                if(etag) {
+                    item.version = strings.getVersionFromEtag(etag);
                 }
             }
         }
 
-        function badRequest(message) {
-            var error = new Error(message);
-            error.badRequest = true;
-            return error;
+        req.azureMobile.item = item;
+        next();        
+
+        function idsMatch(item) {
+            return item.id === undefined || req.params.id === undefined || item.id.toString() === req.params.id.toString();
         }
-    };
+    }
+
+    function badRequest(message) {
+        var error = new Error(message);
+        error.badRequest = true;
+        return error;
+    }
 };

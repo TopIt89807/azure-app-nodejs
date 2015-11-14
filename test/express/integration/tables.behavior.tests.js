@@ -4,6 +4,7 @@
 ﻿var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
+    bodyParser = require('body-parser'),
     mobileApps = require('../../../src'),
     connectionString,
 
@@ -155,5 +156,58 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                     .send({ id: 1, text: 'test2' })
                     .expect(400);
             })
+    });
+
+    it('returns 400 if invalid json', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send('{ "id": 1,, "text": "test" }')
+            .set('Content-Type', 'application/json')
+            .expect(400);
+    });
+
+    it('treats content as json if falsey content-type', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send('{ "id": 1, "text": "test" }')
+            .set('Content-Type', '')
+            .expect(200)
+            .then(function (res) {
+                expect(res.body.id).to.equal(1);
+            });
+    });
+
+    it('passes through non-json content-type', function () {
+        var table = mobileApp.table();
+
+        table.use(function (req, res, next) {
+            var options = { type: function () { return true; }};
+            bodyParser.text(options)(req, res, function (error) {
+                req.azureMobile.item = req.body;
+                next(error);
+            });
+        }, table.operation);
+
+        table.insert(function (context) {
+            return { id: 1, text: context.item }
+        });
+
+        mobileApp.tables.add('todoitem', table);
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send('text')
+            .set('Content-Type', 'text')
+            .expect(200)
+            .then(function (res) {
+                expect(res.body.text).to.equal('text');
+            });
     });
 });
