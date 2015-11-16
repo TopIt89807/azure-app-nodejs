@@ -4,24 +4,23 @@
 var mssql = require('mssql'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
-    log = require('../../logger');
+    log = require('../../logger'),
+    connection, connectionPromise;
 
 module.exports = function (config, sql) {
     if(sql.noop)
         return promises.resolved();
 
-     var connection = new mssql.Connection(config)
+    if (!connectionPromise) {
+        connection = new mssql.Connection(config);
+        connectionPromise = connection.connect()
+            .catch(function (err) {
+                connectionPromise = undefined;
+                throw err;
+            });
+    }
 
-     return connection.connect()
-            .then(executeRequest);
-            // .then(function (results) {
-            //     close();
-            //     return results;
-            // });
-
-    // function close() {
-    //     connection.close();
-    // }
+    return connectionPromise.then(executeRequest);
 
     function executeRequest() {
         var request = new mssql.Request(connection);
