@@ -17,9 +17,10 @@ module.exports = function (configuration) {
                 .catch(function (error) {
                     if(error.number === errorCodes.ObjectAlreadyExists)
                         return api.updateSchema(table);
-                    else
+                    else {
                         log.error("Error occurred creating table " + table.name + ":", error);
                         throw error;
+                    }
                 });
         },
 
