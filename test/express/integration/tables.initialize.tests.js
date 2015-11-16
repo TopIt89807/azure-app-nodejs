@@ -7,68 +7,97 @@
     mobileApps = require('../../../src/express'),
     config = require('../infrastructure/config').data(),
     data = require('../../../src/data/sql'),
+    promises = require('../../../src/utilities/promises'),
 
     app, mobileApp;
 
 // the default configuration uses the in-memory data provider - it does not (yet) support queries
 describe('azure-mobile-apps.express.integration.tables.initialize', function () {
-    beforeEach(function () {
-        setup({ string: 'string', number: 'number' });
+    describe('basic initialization', function () {
+        beforeEach(function () {
+            setup({ string: 'string', number: 'number' });
+        });
+
+        afterEach(function (done) {
+            data(config).execute({ sql: 'drop table initialize' }).then(done, done);
+        });
+
+        it('creates non-dynamic tables', function () {
+            return supertest(app)
+                .post('/tables/initialize')
+                .send({ id: '1' })
+                .expect(500)
+                .then(function () {
+                    return mobileApp.tables.initialize();
+                })
+                .then(function () {
+                    return supertest(app)
+                        .post('/tables/initialize')
+                        .send({ id: '1' })
+                        .expect(200)
+                        .expect(function (res) {
+                            expect(res.body.string).to.be.null;
+                            expect(res.body.number).to.be.null;
+                        });
+                })
+        });
+
+        it('updates non-dynamic tables', function () {
+            return mobileApp.tables.initialize()
+                .then(function () {
+                    return supertest(app)
+                        .post('/tables/initialize')
+                        .send({ id: '1' })
+                        .expect(200)
+                        .expect(function (res) {
+                            expect(res.body.boolean).to.be.undefined;
+                        });
+                })
+                .then(function () {
+                    setup({ string: 'string', number: 'number', boolean: 'boolean' });
+                    return mobileApp.tables.initialize();
+                })
+                .then(function () {
+                    return supertest(app)
+                        .get('/tables/initialize')
+                        .expect(200)
+                        .expect(function (res) {
+                            expect(res.body[0].boolean).to.be.null;
+                        });
+                });
+        });
+
+        function setup(columns) {
+            app = express();
+            mobileApp = mobileApps({ skipVersionCheck: true, data: config });
+            mobileApp.tables.add('initialize', { dynamicSchema: false, columns: columns });
+            app.use(mobileApp);
+        }
     });
 
-    afterEach(function (done) {
-        data(config).execute({ sql: 'drop table initialize' }).then(done, done);
-    });
+    describe('concurrent initialization', function () {
+        it('successfully initializes multiple tables concurrently', function () {
+            app = express();
+            mobileApp = mobileApps({ skipVersionCheck: true, data: config });
 
-    it('creates non-dynamic tables', function () {
-        return supertest(app)
-            .post('/tables/initialize')
-            .send({ id: '1' })
-            .expect(500)
-            .then(function () {
-                return mobileApp.tables.initialize();
-            })
-            .then(function () {
-                return supertest(app)
-                    .post('/tables/initialize')
-                    .send({ id: '1' })
-                    .expect(200)
-                    .expect(function (res) {
-                        expect(res.body.string).to.be.null;
-                        expect(res.body.number).to.be.null;
-                    });
-            })
-    });
+            var tables = [];
+            for (var i = 0; i < 10; i++)
+                tables.push(i);
 
-    it('updates non-dynamic tables', function () {
-        return mobileApp.tables.initialize()
-            .then(function () {
-                return supertest(app)
-                    .post('/tables/initialize')
-                    .send({ id: '1' })
-                    .expect(200)
-                    .expect(function (res) {
-                        expect(res.body.boolean).to.be.undefined;
-                    });
-            })
-            .then(function () {
-                setup({ string: 'string', number: 'number', boolean: 'boolean' });
-                return mobileApp.tables.initialize();
-            })
-            .then(function () {
-                return supertest(app)
-                    .get('/tables/initialize')
-                    .expect(200)
-                    .expect(function (res) {
-                        expect(res.body[0].boolean).to.be.null;
-                    });
-            });
-    });
+            tables.forEach(create);
 
-    function setup(columns) {
-        app = express();
-        mobileApp = mobileApps({ skipVersionCheck: true, data: config });
-        mobileApp.tables.add('initialize', { dynamicSchema: false, columns: columns });
-        app.use(mobileApp);
-    }
+            return mobileApp.tables.initialize()
+                .then(function () {
+                    return promises.all(tables.map(drop));
+                });
+        });
+
+        function create(id) {
+            mobileApp.tables.add('table' + id);
+        }
+
+        function drop(id) {
+            return data(config).execute({ sql: 'drop table table' + id });
+        }
+    })
 });
