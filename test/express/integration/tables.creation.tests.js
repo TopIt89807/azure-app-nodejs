@@ -14,7 +14,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
     tableName = 'tableCreationTest',
     table, app, mobileApp;
 
-describe('azure-mobile-apps.express.integration.tables.creation', function () {
+describe('azure-mobile-apps.express.sql.integration.tables.creation', function () {
     beforeEach(function () {
         app = express();
         mobileApp = mobileApps({ data: config, skipVersionCheck: true });

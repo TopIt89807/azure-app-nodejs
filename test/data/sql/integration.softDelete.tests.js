@@ -5,13 +5,13 @@ var config = require('./infrastructure/config'),
     execute = require('../../../src/data/sql/execute'),
     index = require('../../../src/data/sql'),
     queries = require('../../../src/query'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    operations;
 
 describe('azure-mobile-apps.data.sql.integration.softDelete', function () {
-    var operations = index(config)({ name: 'softDelete', softDelete: true });
-    
     before(function () {
         require('../../../src/logger').configure();
+        operations = index(config)({ name: 'softDelete', softDelete: true });
     });
 
     afterEach(function (done) {

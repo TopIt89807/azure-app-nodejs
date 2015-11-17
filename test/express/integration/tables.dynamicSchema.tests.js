@@ -11,7 +11,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.integration.tables.dynamicSchema', function () {
+describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', function () {
     beforeEach(function () {
         app = express();
         mobileApp = mobileApps({ data: config, skipVersionCheck: true });
