@@ -210,4 +210,15 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 expect(res.body.text).to.equal('text');
             });
     });
+
+    it('handles content-type with charset', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send('{ "id": 1, "text": "test" }')
+            .set('Content-Type', 'application/json; charset=utf-8')
+            .expect(200);
+    })
 });

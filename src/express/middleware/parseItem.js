@@ -23,7 +23,7 @@ module.exports = function (table) {
             req.headers['content-type'] = 'application/json';
         }
 
-        if (!req.body && req.headers['content-type'] === 'application/json') {
+        if (!req.body && req.headers['content-type'].indexOf('application/json') > -1) {
             bodyParser.json()(req, res, function (error) {
                 if (error) {
                     error.badRequest = true;
@@ -55,7 +55,7 @@ module.exports = function (table) {
         }
 
         req.azureMobile.item = item;
-        next();        
+        next();
 
         function idsMatch(item) {
             return item.id === undefined || req.params.id === undefined || item.id.toString() === req.params.id.toString();
