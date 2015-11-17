@@ -12,7 +12,7 @@ var expect = require('chai')
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.integration.tables.data', function () {
+describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
     before(function (done) {
         data(config)({ 
             name: 'integration', 

@@ -5,9 +5,21 @@ var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../..'),
+    connectionString,
+    
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.version', function () {
+    before(function () {
+        connectionString = process.env.MS_TableConnectionString;
+        delete process.env.MS_TableConnectionString;
+    });
+
+    after(function () {
+        if (connectionString)
+            process.env.MS_TableConnectionString = connectionString;
+    });
+
     it('attaches server version header', function () {
         app = express();
         mobileApp = mobileApps({ skipVersionCheck: true });

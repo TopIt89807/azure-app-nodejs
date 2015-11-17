@@ -4,13 +4,13 @@
 var config = require('./infrastructure/config'),
     execute = require('../../../src/data/sql/execute'),
     index = require('../../../src/data/sql'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    operations;
 
 describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
-    var operations = index(config)({ name: 'concurrency' });
-    
     before(function () {
         require('../../../src/logger').configure();
+        operations = index(config)({ name: 'concurrency' });
     });
 
     afterEach(function (done) {
