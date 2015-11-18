@@ -5,13 +5,12 @@ var path = require('path'),
     app = require('express')(),
     mobileApps = require('azure-mobile-apps'),
     configuration = require('azure-mobile-apps/src/configuration'),
-    mobileApp;
+    mobileApp,
 
     config = {
         skipVersionCheck: true,
         pageSize: 1000,
-        auth: { secret: 'secret' },
-        notifications: { hubName: 'daend2end-hub', connectionString: 'Endpoint=sb://daend2end-namespace.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=739+sRJUNuMj/5l3vt/Fir0tHvaV1K0N+n+TtDgRy/Y=' }
+        auth: { secret: 'secret' }
     };
 
 mobileApp = mobileApps(config);
