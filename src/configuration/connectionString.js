@@ -7,7 +7,7 @@ module.exports = {
         var properties = parseProperties(connectionString),
             server = parseServer(properties['server'] || properties['data source']);
 
-        return {
+        return connectionString && {
             provider: 'sql',
             user: properties['user id'] || properties['userid'] || properties['uid'],
             password: properties['password'] || properties['pwd'],
