@@ -20,6 +20,7 @@ module.exports = function (configuration) {
 
             case 'ms_databaseschemaname':
                 configuration.data.schema = process.env[key];
+                break;
 
             case 'ema_runtimeurl':
                 configuration.auth.gatewayUrl = process.env[key];
