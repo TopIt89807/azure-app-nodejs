@@ -2,7 +2,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var connectionString = require('./connectionString'),
-    environment = require('../utilities/environment');
+    environment = require('../utilities/environment'),
+    assign = require('deeply');
 
 // determine various configuration information from environment such as web.config settings, etc.
 module.exports = function (configuration) {
@@ -15,11 +16,15 @@ module.exports = function (configuration) {
             case 'sqlconnstr_ms_tableconnectionstring':
             case 'sqlazureconnstr_ms_tableconnectionstring':
             case 'ms_tableconnectionstring':
-                configuration.data = connectionString.parse(process.env[key]);
+                configuration.data = assign(configuration.data, connectionString.parse(process.env[key]));
                 break;
 
             case 'ms_databaseschemaname':
                 configuration.data.schema = process.env[key];
+                break;
+
+            case 'ms_dynamicschema':
+                configuration.data.dynamicSchema = parseBoolean(process.env[key]);
                 break;
 
             case 'ema_runtimeurl':
@@ -52,10 +57,6 @@ module.exports = function (configuration) {
 
             case 'ms_debugmode':
                 configuration.debug = parseBoolean(process.env[key]);
-                break;
-
-            case 'ms_dynamicschema':
-                configuration.data.dynamicSchema = parseBoolean(process.env[key]);
                 break;
 
             case 'ms_disableversionheader':

@@ -37,6 +37,17 @@ describe('azure-mobile-apps.configuration', function () {
         expect(mobileApp.configuration.data.port).to.equal(1433);
     });
 
+    it("sets does not overwrite data configuration values", function () {
+        process.env.MS_DatabaseSchemaName = 'schema';
+        process.env.MS_TableConnectionString = 'Server=tcp:azure-mobile-apps-test.database.windows.net,1433;Database=e2etest-v2-node;User ID=azure-mobile-apps-test@azure-mobile-apps-test;Password=abc123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;';
+        var mobileApp = mobileApps();
+        delete process.env.MS_TableConnectionString;
+        delete process.env.MS_DatabaseSchemaName;
+        expect(mobileApp.configuration.data.server).to.equal('azure-mobile-apps-test.database.windows.net');
+        expect(mobileApp.configuration.data.port).to.equal(1433);
+        expect(mobileApp.configuration.data.schema).to.equal('schema');
+    });
+
     it("loads configuration from specified module", function () {
         var mobileApp = mobileApps({ basePath: __dirname, configFile: 'files/config' });
         expect(mobileApp.configuration.value).to.equal('test');
