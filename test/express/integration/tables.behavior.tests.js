@@ -6,25 +6,14 @@
     express = require('express'),
     bodyParser = require('body-parser'),
     mobileApps = require('../../../src'),
-    connectionString,
 
     app, mobileApp;
 
 // the default configuration uses the in-memory data provider - it does not (yet) support queries
 describe('azure-mobile-apps.express.integration.tables.behavior', function () {
-    before(function () {
-        connectionString = process.env.MS_TableConnectionString;
-        delete process.env.MS_TableConnectionString;
-    });
-
-    after(function () {
-        if (connectionString)
-            process.env.MS_TableConnectionString = connectionString;
-    });
-
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ skipVersionCheck: true, logging: false });
+        mobileApp = mobileApps({ skipVersionCheck: true, logging: false }, {});
     });
 
     it('returns 200 for table route', function () {

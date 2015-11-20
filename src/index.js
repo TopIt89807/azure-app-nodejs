@@ -55,14 +55,15 @@ var loadConfiguration = require('./configuration'),
 /**
 Creates an instance of the azure-mobile-apps server object for the platform specified in the configuration.
 Express 4.x is currently the only supported platform.
-@param {configuration} configuration
+@param {configuration} configuration Top level configuration for all aspects of the mobile app
+@param {object} environment=process.env An object containing the environment to load configuration from
 @returns {module:azure-mobile-apps/express}
 */
-module.exports = function (configuration) {
+module.exports = function (configuration, environment) {
     configuration = configuration || {};
     var configFile = path.resolve(configuration.basePath || defaults.basePath, configuration.configFile || defaults.configFile);
     configuration = assign({ logging: {}, data: {}, auth: {} }, defaults, loadConfiguration.fromFile(configFile), configuration);
-    loadConfiguration.fromEnvironment(configuration);
+    loadConfiguration.fromEnvironment(configuration, environment || process.env);
     loadConfiguration.fromSettingsJson(configuration);
 
     return platforms[configuration.platform](configuration);

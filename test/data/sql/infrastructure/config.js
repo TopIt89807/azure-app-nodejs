@@ -6,4 +6,4 @@
 var configuration = require('../../../../src/configuration'),
     path = require('path');
 
-module.exports = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../../config.js'))).data;
+module.exports = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../../config.js')), process.env).data;

@@ -5,24 +5,13 @@ var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../..'),
-    connectionString,
-    
+
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.version', function () {
-    before(function () {
-        connectionString = process.env.MS_TableConnectionString;
-        delete process.env.MS_TableConnectionString;
-    });
-
-    after(function () {
-        if (connectionString)
-            process.env.MS_TableConnectionString = connectionString;
-    });
-
     it('attaches server version header', function () {
         app = express();
-        mobileApp = mobileApps({ skipVersionCheck: true });
+        mobileApp = mobileApps({ skipVersionCheck: true }, {});
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -33,7 +22,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('does not attach version header if version is set to undefined', function() {
         app = express();
-        mobileApp = mobileApps({ version: undefined, skipVersionCheck: true });
+        mobileApp = mobileApps({ version: undefined, skipVersionCheck: true }, {});
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -45,10 +34,8 @@ describe('azure-mobile-apps.express.integration.version', function () {
     });
 
     it('does not attach version header if MS_DisableVersionHeader is specified', function() {
-        process.env.MS_DisableVersionHeader = 'true';
-
         app = express();
-        mobileApp = mobileApps({ skipVersionCheck: true });
+        mobileApp = mobileApps({ skipVersionCheck: true }, { MS_DisableVersionHeader: 'true' });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -56,7 +43,6 @@ describe('azure-mobile-apps.express.integration.version', function () {
             .get('/tables/todoitem')
             .expect(function (res) {
                 expect(res.headers['x-zumo-version']).to.be.undefined;
-                delete process.env.MS_DisableVersionHeader;
             });
     });
 
@@ -106,18 +92,13 @@ describe('azure-mobile-apps.express.integration.version', function () {
     });
 
     it('ignores api version when MS_SkipVersionCheck environment setting is specified', function () {
-        process.env.MS_SkipVersionCheck = true;
-
         app = express();
-        mobileApp = mobileApps();
+        mobileApp = mobileApps(undefined, { MS_SkipVersionCheck: 'true' });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
         return supertest(app)
             .get('/tables/todoitem')
-            .expect(200)
-            .then(function () {
-                delete process.env.MS_SkipVersionCheck;
-            });
+            .expect(200);
     });
 });

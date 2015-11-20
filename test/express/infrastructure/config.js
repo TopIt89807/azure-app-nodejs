@@ -7,7 +7,7 @@ var configuration = require('../../../src/configuration'),
     path = require('path');
 
 var api = module.exports = function () {
-    var config = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')));
+    var config = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')), process.env);
     config.basePath = __dirname;
     return config;
 }
