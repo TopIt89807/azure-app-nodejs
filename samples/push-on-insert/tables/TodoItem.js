@@ -4,22 +4,11 @@ var azureMobileApps = require('azure-mobile-apps'),
 
 var table = azureMobileApps.table();
 
-// Defines the list of columns
-table.columns = {
-	"userId": "string",
-	"text": "string",
-	"complete": "boolean"
-};
-// Turns off dynamic schema
-table.dynamicSchema = false;
-
-// Must be authenticated for this to work
-table.access = 'authenticated';
-
 // When adding record, send a push notification
 table.insert(function (context) {
     // For details of the Notification Hubs JavaScript SDK, 
     // see https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-nodejs-how-to-use-notification-hubs/
+    logger.info('Running TodoItem.insert');
     
     // The tag is used to send the push notification to a subset of users
     var tag = '#sometag';
@@ -30,14 +19,16 @@ table.insert(function (context) {
 	// Create the push notification - we are using the send function 
     // The Notification Hubs JavaScript SDK uses callbacks, so we have
     // to wrap the call in a promise.
+    logger.info('Running MPNS Send');
     promises.wrap(context.push.mpns.send)(tag, payload, 'toast', 22)
     .then(function () {
-        context.execute();
+        logger.info('Success! MPNS Send!');
+        return context.execute();
     })
     .catch(function (error) {
         logger.error("Error while sending push notification: " + error);
         // If the push notification doesn't happen, we STILL want to execute the insert
-        context.execute();
+        return context.execute();
     });
 });
 
