@@ -15,6 +15,7 @@ module.exports = function (configuration) {
             res: res,
             data: dataProvider,
             push: notificationsClient,
+            configuration: configuration,
             tables: function (name) {
                 return attachOperators(name, dataProvider(configuration.tables[name]));
             }
