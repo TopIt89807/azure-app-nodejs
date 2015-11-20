@@ -1,5 +1,6 @@
 var azureMobileApps = require('azure-mobile-apps'),
-    promises = require('azure-mobile-apps/src/utilities/promises');
+    promises = require('azure-mobile-apps/src/utilities/promises'),
+    logger = require('azure-mobile-apps/src/logger');
 
 var table = azureMobileApps.table();
 
@@ -30,10 +31,12 @@ table.insert(function (context) {
     // The Notification Hubs JavaScript SDK uses callbacks, so we have
     // to wrap the call in a promise.
     promises.wrap(context.push.mpns.send)(tag, payload, 'toast', 22)
-    .then(function (err) {
-        if (err) {
-            console.error("Error while sending push notification: " + err);
-        }
+    .then(function () {
+        context.execute();
+    })
+    .catch(function (error) {
+        logger.error("Error while sending push notification: " + error);
+        // If the push notification doesn't happen, we STILL want to execute the insert
         context.execute();
     });
 });
