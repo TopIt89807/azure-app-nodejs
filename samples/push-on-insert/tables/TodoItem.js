@@ -4,32 +4,36 @@ var azureMobileApps = require('azure-mobile-apps'),
 
 var table = azureMobileApps.table();
 
-// When adding record, send a push notification
+// When adding record, send a push notification via WNS
+// For this to work, you must have a WNS Hub already configured
 table.insert(function (context) {
     // For details of the Notification Hubs JavaScript SDK, 
     // see https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-nodejs-how-to-use-notification-hubs/
-    logger.info('Running TodoItem.insert');
+    logger.silly('Running TodoItem.insert');
     
-    // The tag is used to send the push notification to a subset of users
-    var tag = '#sometag';
+    // This push uses a template mechanism, so we need a template/
+    var payload = '<toast><visual><binding template="Toast01"><text id="1">INSERT</text></binding></visual></toast>';
     
-    // This push uses a template mechanism, so we need a template.
-    var payload = '<?xml version="1.0" encoding="utf-8"?><wp:Notification xmlns:wp="WPNotification"><wp:Toast><wp:Text1>A new issue has arrived</wp:Text1></wp:Toast></wp:Notification>';
-    
-	// Create the push notification - we are using the send function 
-    // The Notification Hubs JavaScript SDK uses callbacks, so we have
-    // to wrap the call in a promise.
-    logger.info('Running MPNS Send');
-    promises.wrap(context.push.mpns.send)(tag, payload, 'toast', 22)
-    .then(function () {
-        logger.info('Success! MPNS Send!');
-        return context.execute();
-    })
-    .catch(function (error) {
-        logger.error("Error while sending push notification: " + error);
-        // If the push notification doesn't happen, we STILL want to execute the insert
-        return context.execute();
-    });
+    // Execute the insert.  The insert returns the results as a Promise,
+    // Do the push as a post-execute action within the promise flow.
+    return context.execute()
+        .then(function (results) {
+            // Only do the push if configured
+            if (context.push) {
+                context.push.wns.send(null, payload, 'wns/toast', function (error) {
+                    if (error) {
+                        logger.error('Error while sending push notification: ', error);
+                    } else {
+                        logger.silly('Push notification sent successfully!');
+                    }
+                });
+            }
+            // Don't forget to return the results from the context.execute()
+            return results;
+        })
+        .catch(function (error) {
+            logger.error('Error while running context.execute: ', error);
+        });
 });
 
 module.exports = table;

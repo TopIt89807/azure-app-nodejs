@@ -7,7 +7,7 @@ when you insert a record.
 # Features
 
 * Single Table (TodoItem) with Static Schema
-* Send a Push Notification when a record is inserted
+* Send a Push Notification after a record is inserted
 
 This project can be used with any of the client projects provided by the QuickStart blade under 
 your Web app in the (Azure Portal)[https://portal.azure.com].
