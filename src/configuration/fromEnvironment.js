@@ -10,7 +10,7 @@
  * @param {string} MS_MobileLogLevel Minimum log level of messages to log (debug, info, warn, error)
  * @param {boolean} MS_DebugMode Enables or disables debug mode
  * @param {string} MS_TableConnectionString Connection string to use to connect to SQL Server
- * @param {string} MS_DatabaseSchemaName Default schema name for sql tables. Can override in table config
+ * @param {string} MS_TableSchema Default schema name for sql tables. Can override in table config
  * @param {boolean} MS_DynamicSchema Disables dynamic schema for tables when set to false
  * @param {string} EMA_RuntimeUrl Authentication gateway URL
  * @param {string} Website_Auth_Signing_Key JWT token signing / validation key
@@ -19,7 +19,7 @@
  * @param {string} MS_NotificationHubConnectionString Connection string to notification hub for the app
  * @param {string} MS_DisableVersionHeader If specified, disables x-zumo-server-version header
  * @param {string} MS_SkipVersionCheck If specified, does not validate client api version before serving requests
- * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
+ * @param {string} MS_WebsiteHostName Hostname of the mobile app, used as issuer & audience for auth
  */
 var connectionString = require('./connectionString'),
     environment = require('../utilities/environment'),
@@ -29,7 +29,6 @@ var connectionString = require('./connectionString'),
 module.exports = function (configuration, environment) {
     Object.keys(environment).forEach(function (key) {
         switch(key.toLowerCase()) {
-            /** @var {string} MS_MobileLogLevel Minimum log level of messages to log (debug, info, warn, error) */
             case 'ms_mobileloglevel':
                 configuration.logging.level = environment[key];
                 break;
@@ -40,7 +39,7 @@ module.exports = function (configuration, environment) {
                 configuration.data = assign(configuration.data || {}, connectionString.parse(environment[key]));
                 break;
 
-            case 'ms_databaseschemaname':
+            case 'ms_tableschema':
                 configuration.data.schema = environment[key];
                 break;
 
@@ -52,7 +51,6 @@ module.exports = function (configuration, environment) {
                 configuration.auth.gatewayUrl = environment[key];
                 break;
 
-            case 'ms_signingkey':
             case 'website_auth_signing_key':
                 configuration.auth.secret = environment[key];
                 break;
@@ -90,7 +88,7 @@ module.exports = function (configuration, environment) {
                 configuration.skipVersionCheck = parseBoolean(environment[key]);
                 break;
 
-            case 'website_hostname':
+            case 'ms_websitehostname':
                 configuration.auth.audience = 'https://' + environment[key] + '/';
                 configuration.auth.issuer = 'https://' + environment[key] + '/';
                 break;
