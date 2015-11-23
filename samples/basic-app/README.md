@@ -10,4 +10,4 @@ provided by the QuickStart blade under your Web app in the (Azure Portal)[https:
 
 # More Information
 
-For more information, see the (Azure documentation)[https://azure.microsoft.com/en-us/documentation/articles/app-service-mobile-node-bacend-how-to-use-server-sdk/].
+For more information, see the (Azure documentation)[https://azure.microsoft.com/en-us/documentation/articles/app-service-mobile-node-backend-how-to-use-server-sdk/].

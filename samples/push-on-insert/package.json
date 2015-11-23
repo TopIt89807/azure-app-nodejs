@@ -1,7 +1,7 @@
 {
-  "name": "azure-mobile-apps-node.samples.static-schema",
+  "name": "azure-mobile-apps-node.samples.push-on-insert",
   "version": "1.0.0",
-  "description": "An Azure App Service Mobile App backend with static schema",
+  "description": "An Azure App Service Mobile App backend that shows performing a push notification when inserting into the table",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
