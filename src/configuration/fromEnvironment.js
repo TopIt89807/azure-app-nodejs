@@ -19,7 +19,7 @@
  * @param {string} MS_NotificationHubConnectionString Connection string to notification hub for the app
  * @param {string} MS_DisableVersionHeader If specified, disables x-zumo-server-version header
  * @param {string} MS_SkipVersionCheck If specified, does not validate client api version before serving requests
- * @param {string} MS_WebsiteHostName Hostname of the mobile app, used as issuer & audience for auth
+ * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
  */
 var connectionString = require('./connectionString'),
     environment = require('../utilities/environment'),
@@ -88,7 +88,7 @@ module.exports = function (configuration, environment) {
                 configuration.skipVersionCheck = parseBoolean(environment[key]);
                 break;
 
-            case 'ms_websitehostname':
+            case 'website_hostname':
                 configuration.auth.audience = 'https://' + environment[key] + '/';
                 configuration.auth.issuer = 'https://' + environment[key] + '/';
                 break;
