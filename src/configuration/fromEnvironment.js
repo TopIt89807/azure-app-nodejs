@@ -7,7 +7,7 @@
  * For configuration using Javascript, see {@link configuration global configuration}.
  * @module azure-mobile-apps/Environment Variables
  * @param {string} MS_MobileAppName Name of the mobile app
- * @param {string} MS_MobileLogLevel Minimum log level of messages to log (debug, info, warn, error)
+ * @param {string} MS_MobileLogLevel Minimum log level of messages to log (error, warn, info, verbose, debug, silly)
  * @param {boolean} MS_DebugMode Enables or disables debug mode
  * @param {string} MS_TableConnectionString Connection string to use to connect to SQL Server
  * @param {string} MS_TableSchema Default schema name for sql tables. Can override in table config
