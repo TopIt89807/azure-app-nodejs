@@ -6,7 +6,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
     config = require('../infrastructure/config')(),
     express = require('express'),
     mobileApps = require('../../../src/express'),
-    data = require('../../../src/data/sql'),
+    data = require('../../../src/data/mssql'),
     queries = require('../../../src/query'),
     app, mobileApp;
 

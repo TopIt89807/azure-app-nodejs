@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var config = require('./infrastructure/config'),
-    schema = require('../../../src/data/sql/schema')(config),
-    statements = require('../../../src/data/sql/statements'),
+    schema = require('../../../src/data/mssql/schema')(config),
+    statements = require('../../../src/data/mssql/statements'),
     queries = require('../../../src/query'),
-    execute = require('../../../src/data/sql/execute'),
+    execute = require('../../../src/data/mssql/execute'),
     expect = require('chai')
         .use(require('chai-subset'))
         .use(require('chai-as-promised'))

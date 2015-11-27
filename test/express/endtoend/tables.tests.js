@@ -6,7 +6,7 @@ var expect = require('chai').expect,
     config = require('../infrastructure/config')(),
     app = require('express')(),
     mobileApp = require('../../../src/express')(config),
-    data = require('../../../src/data/sql'),
+    data = require('../../../src/data/mssql'),
     config = require('../infrastructure/config').data();
 
 describe('azure-mobile-apps.express.sql.integration.endtoend.tables', function () {

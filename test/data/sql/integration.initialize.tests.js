@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var config = require('./infrastructure/config'),
     data = require('../../../src/data')({ data: config }),
-    execute = require('../../../src/data/sql/execute'),
+    execute = require('../../../src/data/mssql/execute'),
     expect = require('chai').use(require('chai-subset')).expect;
 
 describe('azure-mobile-apps.data.sql.integration.initialize', function () {

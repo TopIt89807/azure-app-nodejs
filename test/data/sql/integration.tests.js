@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var index = require('../../../src/data/sql'),
-    execute = require('../../../src/data/sql/execute'),
+var index = require('../../../src/data/mssql'),
+    execute = require('../../../src/data/mssql/execute'),
     queries = require('../../../src/query'),
     config = require('./infrastructure/config'),
     expect = require('chai')

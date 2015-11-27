@@ -7,7 +7,7 @@ var expect = require('chai')
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../src'),
-    data = require('../../../src/data/sql'),
+    data = require('../../../src/data/mssql'),
     config = require('../infrastructure/config').data(),
 
     app, mobileApp;

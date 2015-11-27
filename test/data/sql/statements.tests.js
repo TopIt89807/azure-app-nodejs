@@ -6,7 +6,7 @@
 
 var expect = require('chai').expect,
     mssql = require('mssql'),
-    statements = require('../../../src/data/sql/statements');
+    statements = require('../../../src/data/mssql/statements');
 
 describe('azure-mobile-apps.data.sql.statements', function () {
     describe('insert', function () {

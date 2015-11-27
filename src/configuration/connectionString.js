@@ -8,7 +8,7 @@ module.exports = {
             server = parseServer(properties['server'] || properties['data source']);
 
         return connectionString && {
-            provider: 'sql',
+            provider: 'mssql',
             user: properties['user id'] || properties['userid'] || properties['uid'],
             password: properties['password'] || properties['pwd'],
             server: server,
