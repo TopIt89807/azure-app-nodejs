@@ -1,6 +1,26 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+ * Azure Mobile Apps can be configured by providing values for specifiec environment
+ * variables. These variables are described below. Variable names are not case sensitive.
+ * For configuration using Javascript, see {@link configuration global configuration}.
+ * @module azure-mobile-apps/Environment Variables
+ * @param {string} MS_MobileAppName Name of the mobile app
+ * @param {string} MS_MobileLogLevel Minimum log level of messages to log (error, warn, info, verbose, debug, silly)
+ * @param {boolean} MS_DebugMode Enables or disables debug mode
+ * @param {string} MS_TableConnectionString Connection string to use to connect to SQL Server
+ * @param {string} MS_TableSchema Default schema name for sql tables. Can override in table config
+ * @param {boolean} MS_DynamicSchema Disables dynamic schema for tables when set to false
+ * @param {string} EMA_RuntimeUrl Authentication gateway URL
+ * @param {string} Website_Auth_Signing_Key JWT token signing / validation key
+ * @param {string} MS_CrossDomainWhitelist Comma delimited list of domains to allow cross domain requests from
+ * @param {string} MS_NotificationHubName Name of the notification hub for the app
+ * @param {string} MS_NotificationHubConnectionString Connection string to notification hub for the app
+ * @param {string} MS_DisableVersionHeader If specified, disables x-zumo-server-version header
+ * @param {string} MS_SkipVersionCheck If specified, does not validate client api version before serving requests
+ * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
+ */
 var connectionString = require('./connectionString'),
     environment = require('../utilities/environment'),
     assign = require('deeply');
@@ -19,7 +39,7 @@ module.exports = function (configuration, environment) {
                 configuration.data = assign(configuration.data || {}, connectionString.parse(environment[key]));
                 break;
 
-            case 'ms_databaseschemaname':
+            case 'ms_tableschema':
                 configuration.data.schema = environment[key];
                 break;
 

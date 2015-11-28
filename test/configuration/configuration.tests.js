@@ -20,7 +20,7 @@ describe('azure-mobile-apps.configuration', function () {
 
     it("sets does not overwrite data configuration values", function () {
         var environment = {
-                MS_DatabaseSchemaName: 'schema',
+                MS_TableSchema: 'schema',
                 MS_TableConnectionString: 'Server=tcp:azure-mobile-apps-test.database.windows.net,1433;Database=e2etest-v2-node;User ID=azure-mobile-apps-test@azure-mobile-apps-test;Password=abc123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
             },
             mobileApp = mobileApps(undefined, environment);
@@ -41,8 +41,8 @@ describe('azure-mobile-apps.configuration', function () {
         expect(mobileApp.configuration.logging).to.have.property('level', environment.MS_MobileLogLevel);
     });
 
-    it("database schema name is set on each table from ms_databaseschemaname", function () {
-        var environment = { MS_DatabaseSchemaName: 'schemaName' },
+    it("database schema name is set on each table from ms_tableschema", function () {
+        var environment = { MS_TableSchema: 'schemaName' },
             mobileApp = mobileApps(undefined, environment);
         mobileApp.tables.add('test');
         expect(mobileApp.configuration.data.schema).to.equal('schemaName');

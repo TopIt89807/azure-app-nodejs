@@ -33,7 +33,7 @@
     "hardwrap": true
   },
   "source": {
-    "include": ["."],
+    "include": ["src", "jsdoc"],
     "excludePattern": "node_modules",
     "exclude": ["jsdoc/template"]
   },
