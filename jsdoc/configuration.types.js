@@ -33,7 +33,7 @@ Logging configuration
 /**
 Data configuration. See {@link sqlServerDataConfiguration} for details on configuring SQL Server
 @typedef dataConfiguration
-@property {string} provider=memory - Data provider to use. Supported providers are sql and memory
+@property {string} provider=memory - Data provider to use. Supported providers are mssql and memory
 @property {bool} dynamicSchema=false - Global default for table dynamic schema, can override at table config level
 @property {string} schema=dbo - Global default for SQL Server schema name, can override at table config level
 */

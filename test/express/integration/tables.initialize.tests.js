@@ -6,7 +6,7 @@
     express = require('express'),
     mobileApps = require('../../../src/express'),
     config = require('../infrastructure/config').data(),
-    data = require('../../../src/data/sql'),
+    data = require('../../../src/data/mssql'),
     promises = require('../../../src/utilities/promises'),
 
     app, mobileApp;

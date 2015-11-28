@@ -2,12 +2,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var config = require('./infrastructure/config'),
-    dynamicSchema = require('../../../src/data/sql/dynamicSchema')(config),
-    statements = require('../../../src/data/sql/statements'),
-    execute = require('../../../src/data/sql/execute'),
+    dynamicSchema = require('../../../src/data/mssql/dynamicSchema')(config),
+    statements = require('../../../src/data/mssql/statements'),
+    execute = require('../../../src/data/mssql/execute'),
     queries = require('../../../src/query'),
     promises = require('../../../src/utilities/promises'),
-    helpers = require('../../../src/data/sql/helpers'),
+    helpers = require('../../../src/data/mssql/helpers'),
     expect = require('chai')
         .use(require('chai-subset'))
         .use(require('chai-as-promised'))
