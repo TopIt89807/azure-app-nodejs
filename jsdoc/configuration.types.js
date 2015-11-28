@@ -74,5 +74,7 @@ Cross-origin resource sharing configuration
 Notifications configuration
 @typedef notificationsConfiguration
 @property {string} hubName - The name of the associated notification hub
-@property {string} connectionString - The connection string of the associated notification hub
+@property {string} connectionString - The connection string of the associated notification hub, or the endpoint name
+@property {string} sharedAccessKeyName - (optional) Name of the shared access key
+@property {string} sharedAccessKeyValue - (optional) Shared access key value
 */
