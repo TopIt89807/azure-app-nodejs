@@ -71,10 +71,12 @@ Cross-origin resource sharing configuration
 */
 
 /**
-Notifications configuration
+Notifications configuration. hubName must be specified. Either a connection string or endpoint and shared access key details mst be provided.
 @typedef notificationsConfiguration
 @property {string} hubName - The name of the associated notification hub
-@property {string} connectionString - The connection string of the associated notification hub, or the endpoint name
-@property {string} sharedAccessKeyName - (optional) Name of the shared access key
-@property {string} sharedAccessKeyValue - (optional) Shared access key value
+@property {string} connectionString - The connection string of the associated notification hub
+@property {string} endpoint - The name of the endpoint
+@property {string} sharedAccessKeyName - Name of the shared access key
+@property {string} sharedAccessKeyValue - Shared access key value
+@see {@link https://github.com/Azure/azure-sdk-for-node/blob/master/lib/services/serviceBus/lib/notificationhubservice.js}
 */
