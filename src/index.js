@@ -11,6 +11,7 @@ var loadConfiguration = require('./configuration'),
     environment = require('./utilities/environment'),
     table = require('./express/tables/table'),
     logger = require('./logger'),
+    promises = require('./utilities/promises'),
     assign = require('deeply'),
     path = require('path'),
 
@@ -66,6 +67,8 @@ module.exports = function (configuration, environment) {
     configuration = assign({ logging: {}, data: {}, auth: {} }, defaults, loadConfiguration.fromFile(configFile), configuration);
     loadConfiguration.fromEnvironment(configuration, environment || process.env);
     loadConfiguration.fromSettingsJson(configuration);
+    
+    promises.setConstructor(configuration.promiseConstructor);
 
     return platforms[configuration.platform](configuration);
 };

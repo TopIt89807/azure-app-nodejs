@@ -3,7 +3,8 @@
 // ----------------------------------------------------------------------------
 var mobileApps = require('../..'),
     expect = require('chai').expect,
-    log = require('../../src/logger');
+    log = require('../../src/logger'),
+    promises = require('../../src/utilities/promises');
 
 describe('azure-mobile-apps.configuration', function () {
     it("does not override configuration with defaults", function () {
@@ -47,5 +48,20 @@ describe('azure-mobile-apps.configuration', function () {
         mobileApp.tables.add('test');
         expect(mobileApp.configuration.data.schema).to.equal('schemaName');
         expect(mobileApp.configuration.tables.test.schema).to.equal('schemaName');
+    });
+
+    it("consumes promiseConstructor setting if function", function () {
+        var oldConstructor = promises.getConstructor();
+
+        var mobileApp = mobileApps({
+            promiseConstructor: function () {
+                return {
+                    test: 'constr'
+                }
+            }
+        });
+
+        expect(promises.create()).to.deep.equal({ test: 'constr' });
+        promises.setConstructor(oldConstructor);
     });
 });
