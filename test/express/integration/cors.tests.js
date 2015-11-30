@@ -9,6 +9,7 @@ var expect = require('chai').expect,
     accessControlAllowOriginHeader = 'Access-Control-Allow-Origin',
     accessControlAllowMethodsHeader = 'Access-Control-Allow-Methods',
     accessControlAllowHeadersHeader = 'Access-Control-Allow-Headers',
+    accessControlExposeHeadersHeader = 'Access-Control-Expose-Headers',
     accessControlMaxAgeHeader = 'Access-Control-Max-Age',
     expectedAllowedMethods = 'GET, PUT, PATCH, POST, DELETE, OPTIONS',
 
@@ -72,6 +73,14 @@ describe('azure-mobile-apps.express.integration.cors', function () {
             .set(accessControlRequestHeader, 'list, of, headers')
             .expect(accessControlAllowOriginHeader, 'http://test.blah.net')
             .expect(accessControlAllowHeadersHeader, 'list, of, headers')
+            .expect(200);
+    });
+
+    it('sets exposed headers', function () {
+        return supertest(app)
+            .get('/tables/todoitem')
+            .set('origin', 'http://test.blah.net')
+            .expect(accessControlExposeHeadersHeader, 'ETag, Link')
             .expect(200);
     });
 });

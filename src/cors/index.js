@@ -32,6 +32,7 @@ module.exports = function (configuration) {
                 // CORS doesn't permit multiple origins or wildcards, so the standard
                 // pattern is to validate the incoming origin and echo it back if accepted.
                 responseHeaders['Access-Control-Allow-Origin'] = origin;
+                responseHeaders['Access-Control-Expose-Headers'] = 'ETag, Link';
 
                 if (headers && isAllowedHeaders(headers)) {
                     // CORS doesn't permit * here, so echo back whatever is requested
