@@ -209,5 +209,34 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .send('{ "id": 1, "text": "test" }')
             .set('Content-Type', 'application/json; charset=utf-8')
             .expect(200);
-    })
+    });
+
+    it('adds all settings to context object', function () {
+        var table = mobileApp.table();
+
+        table.read(function (context) {
+            return Object.keys(context);
+        });
+
+        mobileApp.tables.add('todoitem', table);
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .expect(200)
+            .then(function (res) {
+                expect(res.body).to.deep.equal([
+                    'req',
+                    'res',
+                    'data',
+                    'push',
+                    'configuration',
+                    'logger',
+                    'tables',
+                    'table',
+                    'query',
+                    'execute'
+                ]);
+            });
+    });
 });
