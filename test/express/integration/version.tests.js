@@ -101,4 +101,15 @@ describe('azure-mobile-apps.express.integration.version', function () {
             .get('/tables/todoitem')
             .expect(200);
     });
+
+    it("ignores api version when doing CORS preflight", function () {
+        app = express();
+        mobileApp = mobileApps();
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .options('/tables/todoitem')
+            .expect(200);
+    });
 });

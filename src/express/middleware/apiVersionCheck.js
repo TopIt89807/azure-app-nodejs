@@ -6,7 +6,7 @@ var acceptedVersionRegex = /^2[.]0[.]\d+$/,
 
 module.exports = function (configuration) {
     return function (req, res, next) {
-        if(!configuration.skipVersionCheck) {
+        if(!configuration.skipVersionCheck && req.method.toUpperCase() !== 'OPTIONS') {
             var apiVersion = req.get('zumo-api-version') || req.query['zumo-api-version'];
             if(!apiVersion || !apiVersion.match(acceptedVersionRegex))
                 next(versionError());
