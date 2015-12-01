@@ -3,7 +3,8 @@
 // ----------------------------------------------------------------------------
 var data = require('../../data'),
     notifications = require('../../notifications'),
-    attachOperators = require('../../query/attachOperators');
+    attachOperators = require('../../query/attachOperators'),
+    logger = require('../../logger');
 
 module.exports = function (configuration) {
     var dataProvider = data(configuration),
@@ -16,6 +17,7 @@ module.exports = function (configuration) {
             data: dataProvider,
             push: notificationsClient,
             configuration: configuration,
+            logger: logger,
             tables: function (name) {
                 return attachOperators(name, dataProvider(configuration.tables[name]));
             }
