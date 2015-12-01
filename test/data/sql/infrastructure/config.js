@@ -4,6 +4,8 @@
 
 // we can expand this to provide different configurations for different environments
 var configuration = require('../../../../src/configuration'),
-    path = require('path');
+    path = require('path'),
+    merge = require('deeply');
 
-module.exports = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../../config.js')), process.env).data;
+var dataConfig = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../../config.js')), process.env).data;
+module.exports = merge(dataConfig, configuration.parseConnectionString(dataConfig.connectionString));
