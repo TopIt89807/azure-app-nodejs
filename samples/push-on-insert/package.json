@@ -1,15 +1,15 @@
 {
-  "name": "azure-mobile-apps-node.samples.push-on-insert",
-  "version": "1.0.0",
-  "description": "An Azure App Service Mobile App backend that shows performing a push notification when inserting into the table",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Microsoft",
-  "license": "MIT",
-  "dependencies": {
-    "azure-mobile-apps": "^2.0.0-alpha6",
-    "express": "^4.13.3"
-  }
+    "name": "azure-mobile-apps-node.samples.push-on-insert",
+    "version": "1.0.0",
+    "description": "An Azure App Service Mobile App backend that shows performing a push notification when inserting into the table",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Microsoft",
+    "license": "MIT",
+    "dependencies": {
+        "azure-mobile-apps": "^2.0.0-alpha6",
+        "express": "^4.13.3"
+    }
 }

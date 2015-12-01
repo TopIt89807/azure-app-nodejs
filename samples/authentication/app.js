@@ -20,7 +20,7 @@ mobile.tables.import('./tables');
 // The tables.initialize() method does the initialization asynchronously
 // and returns a Promise.
 mobile.tables.initialize()
-  .then(function () {
-    app.use(mobile);    // Register the Azure Mobile Apps middleware
-    app.listen(process.env.PORT || 3000);   // Listen for requests
-  });
+    .then(function () {
+        app.use(mobile);    // Register the Azure Mobile Apps middleware
+        app.listen(process.env.PORT || 3000);   // Listen for requests
+    });
