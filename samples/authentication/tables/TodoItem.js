@@ -4,8 +4,8 @@ var table = azureMobileApps.table();
 
 // Defines the list of columns
 table.columns = {
-	"text": "string",
-	"complete": "boolean"
+    "text": "string",
+    "complete": "boolean"
 };
 // Turns off dynamic schema
 table.dynamicSchema = false;
