@@ -12,9 +12,15 @@ functions, allowing substitution of ES6 compliant promise implementations.
     : Promise;
 
 var api = module.exports = {
+    /** Gets the constructor that is used to create promises */
+    getConstructor: function () {
+        return constructor;
+    },
+
     /** Sets the constructor to be used for creation of promises */
     setConstructor: function (promiseConstructor) {
-        constructor = promiseConstructor;
+        if (typeof promiseConstructor === 'function')
+            constructor = promiseConstructor;
     },
     /** Creates a new promise from the provided executor */
     create: function (executor) {
