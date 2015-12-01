@@ -4,7 +4,7 @@
   "description": "Build mobile apps with data storage, push notifications and offline sync in minutes.",
   "main": "src/index.js",
   "author": "Microsoft",
-  "repository": "Azure/azure-mobile-apps",
+  "repository": "Azure/azure-mobile-apps-node",
   "license": "MIT",
   "scripts": {
     "test": "npm run lint & mocha",
