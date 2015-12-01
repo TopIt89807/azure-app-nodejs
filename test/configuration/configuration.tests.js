@@ -19,6 +19,16 @@ describe('azure-mobile-apps.configuration', function () {
         expect(mobileApp.configuration.data.port).to.equal(1433);
     });
 
+    it("sets table configuration from config connection string", function () {
+        var mobileApp = mobileApps({
+            data: {
+                connectionString: 'Server=tcp:azure-mobile-apps-test.database.windows.net,1433;Database=e2etest-v2-node;User ID=azure-mobile-apps-test@azure-mobile-apps-test;Password=abc123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+            }
+        }, {});
+        expect(mobileApp.configuration.data.server).to.equal('azure-mobile-apps-test.database.windows.net');
+        expect(mobileApp.configuration.data.port).to.equal(1433);
+    });
+
     it("sets does not overwrite data configuration values", function () {
         var environment = {
                 MS_TableSchema: 'schema',

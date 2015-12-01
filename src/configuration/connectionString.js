@@ -4,6 +4,9 @@
 module.exports = {
     // parse an ODBC or ADO.NET connection string into
     parse: function (connectionString) {
+        if (!connectionString)
+            return {};
+
         var properties = parseProperties(connectionString),
             server = parseServer(properties['server'] || properties['data source']);
 

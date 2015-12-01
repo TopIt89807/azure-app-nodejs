@@ -22,11 +22,12 @@
  * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
  */
 var connectionString = require('./connectionString'),
-    environment = require('../utilities/environment'),
-    assign = require('deeply');
+    environment = require('../utilities/environment');
 
 // determine various configuration information from environment such as web.config settings, etc.
 module.exports = function (configuration, environment) {
+    configuration.data = configuration.data || {};
+    
     Object.keys(environment).forEach(function (key) {
         switch(key.toLowerCase()) {
             case 'ms_mobileloglevel':
@@ -36,7 +37,7 @@ module.exports = function (configuration, environment) {
             case 'sqlconnstr_ms_tableconnectionstring':
             case 'sqlazureconnstr_ms_tableconnectionstring':
             case 'ms_tableconnectionstring':
-                configuration.data = assign(configuration.data || {}, connectionString.parse(environment[key]));
+                configuration.data.connectionString = environment[key];
                 break;
 
             case 'ms_tableschema':

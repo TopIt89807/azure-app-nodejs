@@ -40,6 +40,7 @@ Data configuration. See {@link sqlServerDataConfiguration} for details on config
 
 /**
 SQL Server data configuration
+SQL Server data configuration.  Can specify a connection with user/password/server/etc or a connectionString
 @typedef sqlServerDataConfiguration
 @property {string} user - User name to connect with
 @property {string} password - Password for user
@@ -47,6 +48,7 @@ SQL Server data configuration
 @property {integer} port=1433 - Port to connect to
 @property {string} database - Name of the database to connect to
 @property {integer} connectionTimeout=15000 - Connection timeout in milliseconds
+@property {string} connectionString - SQL Server connection string
 @property {Object} options - Additional options
 @property {bool} options.encrypt - Encrypt the connection. Required and turned on automatically for SQL Azure
 @see {@link https://www.npmjs.com/package/mssql}
