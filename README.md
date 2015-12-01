@@ -28,7 +28,7 @@ app.listen(process.env.PORT || 3000);
 
  - [API Documentation](https://azure.github.io/azure-mobile-apps-node)
  - [Tutorials & How-Tos](https://azure.microsoft.com/en-us/documentation/articles/app-service-mobile-value-prop-preview/)
- - [StackOverflow #azure-mobile-services](http://stackoverflow.com/questions/new/azure-mobile-services?show=all&sort=recentlyactive&pageSize=50)
+ - [StackOverflow #azure-mobile-services](http://stackoverflow.com/questions/tagged/azure-mobile-services?sort=newest&pageSize=20)
  - [MSDN Forums](https://social.msdn.microsoft.com/forums/azure/en-US/home?forum=azuremobile)
  - [Client & Server Quickstarts](https://github.com/Azure/azure-mobile-services-quickstarts)
  - [Samples](https://github.com/Azure/azure-mobile-apps-node/tree/master/samples)
