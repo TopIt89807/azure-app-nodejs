@@ -7,6 +7,7 @@
   "dependencies": {
     "azure-mobile-apps": "Azure/azure-mobile-apps-node",
     "body-parser": "^1.13.1",
+    "chai": "^3.4.1",
     "express": "^4.12.4"
   }
 }

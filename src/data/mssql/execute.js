@@ -59,11 +59,19 @@ module.exports = function (config, sql) {
 
         return request.query(statement).catch(function (err) {
             log.debug('SQL statement failed - ' + err.message + ': ' + statement + ' with parameters ' + JSON.stringify(params));
+
             if(err.number === 2627) {
                 var error = new Error('An item with the same ID already exists');
                 error.duplicate = true;
                 throw error;
             }
+
+            if(err.number === 245) {
+                var error = new Error('Invalid data type provided');
+                error.badRequest = true;
+                throw error
+            }
+
             return promises.rejected(err);
         });
     }
