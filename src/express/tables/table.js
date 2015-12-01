@@ -41,7 +41,7 @@ module.exports = function (definition) {
       -if the read is a query, an array of objects
       -if the read requests totalCount, an object with a 'results' array and a 'count' property
     @function read
-    @param {module:azure-mobile-apps/express/tables/table~readResultOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
 var table = require('azure-mobile-apps').table();
 table.read.authorize = true;
@@ -55,30 +55,21 @@ table.read(function (context) {
     table.read = attachOperation('read');
     
     /**
-     * The read operation handler
-     * @callback readResultOperationHandler
+     * The user defined operation handler which should call context.execute().
+     * The result of the context.execute() promise will be:
+     *   - if the operation is for a specific id, the object with that id
+     *   - if the operation is a query, an array of objects satisfying the query
+     *   - if the operation requests total count, an object with a 'results' array and a 'count' property
+     * @callback tableOperationHandler
      * @param {context} context The current azure-mobile-apps context object
      * @returns {Object} The result of the read operation
-     * The result of the context.execute() promise will be:
-     *   - if the read is for a specific id, a single object
-     *   - if the read is a query, an array of objects
-     *   - if the read requests totalCount, an object with a 'results' array and a 'count' property
-     */
-   
-    /**
-     * A single result operation handler (insert/update/delete/undelete)
-     * @callback singleResultOperationHandler
-     * @param {context} context The current azure-mobile-apps context object
-     * @returns {Object} The result of the operation
-     * The result of the context.execute() promise will be:
-     *   - a single object, the object that was operated upon
      */
 
     /** 
     Similar syntax and semantics to the read function, but for update operations.
     In an update logic handler, the result of the context.execute() promise will be the updated object
     @function update
-    @param {module:azure-mobile-apps/express/tables/table~singleResultOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.update = attachOperation('update');
 
@@ -86,7 +77,7 @@ table.read(function (context) {
     Similar syntax and semantics to the read function, but for insert operations.
     In an insert logic handler, the result of the context.execute() promise will be the inserted object
     @function insert
-    @param {module:azure-mobile-apps/express/tables/table~singleResultOperationHandler} handler - A function containing logic to execute each time a table insert is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table insert is performed.
     */
     table.insert = attachOperation('insert');
 
@@ -94,7 +85,7 @@ table.read(function (context) {
     Similar syntax and semantics to the read function, but for delete operations.
     In a delete logic handler, the result of the context.execute() promise will be the deleted object
     @function delete
-    @param {module:azure-mobile-apps/express/tables/table~singleResultOperationHandler} handler - A function containing logic to execute each time a table delete is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table delete is performed.
     */
     table.delete = attachOperation('delete');
 
@@ -102,7 +93,7 @@ table.read(function (context) {
     Similar syntax and semantics to the read function, but for undelete operations.
     In an undelete logic handler, the result of the context.execute() promise will be the undeleted object
     @function undelete
-    @param {module:azure-mobile-apps/express/tables/table~singleResultOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
+    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
     */
     table.undelete = attachOperation('undelete');
     return table;
