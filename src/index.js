@@ -12,7 +12,7 @@ var loadConfiguration = require('./configuration'),
     table = require('./express/tables/table'),
     logger = require('./logger'),
     promises = require('./utilities/promises'),
-    assign = require('deeply'),
+    merge = require('deeply'),
     path = require('path'),
 
     platforms = {
@@ -64,13 +64,11 @@ Express 4.x is currently the only supported platform.
 module.exports = function (configuration, environment) {
     configuration = configuration || {};
     var configFile = path.resolve(configuration.basePath || defaults.basePath, configuration.configFile || defaults.configFile);
-    configuration = assign({ logging: {}, data: {}, auth: {} }, defaults, loadConfiguration.fromFile(configFile), configuration);
+    configuration = merge({ logging: {}, data: {}, auth: {} }, defaults, loadConfiguration.fromFile(configFile), configuration);
     loadConfiguration.fromEnvironment(configuration, environment || process.env);
     loadConfiguration.fromSettingsJson(configuration);
     
     promises.setConstructor(configuration.promiseConstructor);
-
-    configuration.data = assign(configuration.data, loadConfiguration.parseConnectionString(configuration.data.connectionString));
 
     return platforms[configuration.platform](configuration);
 };
