@@ -37,7 +37,7 @@ describe('azure-mobile-apps.notifications.installation', function () {
             });
     });
 
-    it('creates installation with user', function () {
+    it('creates installation with user id', function () {
         return notifs.putInstallation('id', installation, 'user')
             .then(function (res) {
                 var arg = clientStub.createOrUpdateInstallation.args[0][0];

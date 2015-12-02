@@ -32,7 +32,7 @@ module.exports = function (configuration) {
             installation = req.body,
             user = req.azureMobile.user;
 
-        installationClient.putInstallation(installationId, installation, user)
+        installationClient.putInstallation(installationId, installation, user && user.id)
             .then(function (result) {
                 res.status(204).end();
             })

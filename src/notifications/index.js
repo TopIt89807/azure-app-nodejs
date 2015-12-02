@@ -30,11 +30,11 @@ module.exports = function (configuration) {
          * @param  {string} [user] The user id to associate with the installation
          * @return A promise that yields the notification hubs client response
          */
-        putInstallation: function (installationId, installation, user) {
+        putInstallation: function (installationId, installation, userId) {
             installation.installationId = installationId;
             return getTagsByInstallationId(installationId)
                 .then(function (tags) {
-                    installation.tags = addUserTag(tags, user);
+                    installation.tags = addUserTag(tags, userId);
                     return promises.wrap(nhClient.createOrUpdateInstallation, nhClient)(installation);
                 });
         },
@@ -55,12 +55,12 @@ module.exports = function (configuration) {
         return mapRegistrations(installationIdAsTag, function (registration) { return registration.Tag });
     }
 
-    function addUserTag(tags, user) {
-        if (user) {
+    function addUserTag(tags, userId) {
+        if (userId) {
             tags = tags.filter(function (tag) {
                 return !(tag && tag.indexOf(UserIdTagPrefix) === 0);
             });
-            tags.push(UserIdTagPrefix + user);
+            tags.push(UserIdTagPrefix + userId);
         }
         return tags;
     }

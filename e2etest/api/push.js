@@ -70,9 +70,11 @@ function getVerifyRegisterInstallationResult(req, res, next) {
 
         function verifyTags() {
             var tag = '$InstallationId:{' + installationId + '}';
-            return promises.wrap(push.listRegistrationsByTag, push)(tag).then(function (registrations) {
-                registrations.forEach(function (registration) {
-                    expect(registration.Tags).to.contain(tag);
+            return retry(function () {
+                return promises.wrap(push.listRegistrationsByTag, push)(tag).then(function (registrations) {
+                    registrations.forEach(function (registration) {
+                        expect(registration.Tags).to.contain(tag);
+                    });
                 });
             });
             /*
@@ -126,13 +128,14 @@ function retry(action, args) {
             try {
                 return promises.sleep(sleepTimes[tryCount])
                     .then(function () {
-                        action.apply(null, args)
+                        tryCount++;
+                        return action.apply(null, args);
                     })
                     .then(function (result) {
                         resolve(result);
                     })
                     .catch(function (error) {
-                        if(tryCount < 2)
+                        if(tryCount < 3)
                             return tryAction();
                         reject(error);
                     });

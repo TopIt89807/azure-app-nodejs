@@ -4,7 +4,7 @@ module.exports = function (configuration) {
     return function (req, res, next) {
         var payload = {
             "ver": "3",
-            "uid": "Facebook:someuserid@hotmail.com",
+            "sub": "Facebook:someuserid@hotmail.com",
             "iss": "urn:microsoft:windows-azure:zumo",
             "aud": "urn:microsoft:windows-azure:zumo",
             "exp": 1440009424,
