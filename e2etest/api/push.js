@@ -17,16 +17,16 @@ function push(req, res, next) {
 
     switch(data.type) {
         case 'template':
-            promises.wrap(push.send, push)(data.tag, data.payload).then(endRequest);
+            promises.wrap(push.send, push)(data.tag, data.payload).then(endRequest).catch(next);
             break;
         case 'gcm':
-            promises.wrap(push.gcm.send, push)(data.tag, data.payload).then(endRequest);
+            promises.wrap(push.gcm.send, push.gcm)(data.tag, data.payload).then(endRequest).catch(next);
             break;
         case 'apns':
-            promises.wrap(push.apns.send, push)(data.tag, data.payload).then(endRequest);
+            promises.wrap(push.apns.send, push.apns)(data.tag, data.payload).then(endRequest).catch(next);
             break;
         case 'wns':
-            promises.wrap(push.wns['send' + data.wnsType], push)(data.tag, data.payload).then(endRequest);
+            promises.wrap(push.wns.send, push.wns)(data.tag, data.payload, 'wns/' + data.wnsType).then(endRequest).catch(next);
             break;
     }
 
