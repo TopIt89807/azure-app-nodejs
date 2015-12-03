@@ -54,6 +54,7 @@ var api = module.exports = {
     all: function (promises) {
         return constructor.all(promises);
     },
+
     /** Returns a promise that resolves after the promise created for each provided item has resolved in series */
     series: function (items, promiseFactory) {
         if(!items || items.length === 0)
@@ -79,6 +80,7 @@ var api = module.exports = {
             }
         })
     },
+
     /** Returns a promise that wraps a function expecting a callback with the signature (err, result) as the last argument */
     wrap: function (functionToWrap, thisArg) {
         return function () {
@@ -90,7 +92,12 @@ var api = module.exports = {
                     else
                         resolve(result);
                 });
-                functionToWrap.apply(thisArg, args);
+
+                try {
+                    functionToWrap.apply(thisArg, args);
+                } catch (error) {
+                    reject(error);
+                }
             });
         };
     }

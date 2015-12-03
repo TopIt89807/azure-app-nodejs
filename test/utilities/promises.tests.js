@@ -3,18 +3,29 @@ var promises = require('../../src/utilities/promises'),
 
 describe('azure-mobile-apps.utilities.promises', function () {
     describe('wrap', function () {
-        it('resolves wrapped functions with callbacks as last argument', function () {
+        it('resolves wrapped functions when callback is executed with result', function () {
             var wrappedFunction = promises.wrap(generateFunctionToWrap());
             return wrappedFunction(1, 2).then(function (result) {
                 expect(result).to.deep.equal([1, 2]);
             });
         });
 
-        it('rejects wrapped functions with callbacks as last argument', function () {
+        it('rejects wrapped functions when callback is executed with error', function () {
             var wrappedFunction = promises.wrap(generateFunctionToWrap('error'));
             return wrappedFunction(1, 2).catch(function (error) {
                 expect(error).to.equal('error');
             });
+        });
+
+        it('rejects promise when exception is thrown from wrapped function', function () {
+            var wrappedFunction = promises.wrap(function () { throw 'test error'; });
+            return wrappedFunction()
+                .then(function () {
+                    expect.fail('Promise resolved when it should have been rejected');
+                })
+                .catch(function (error) {
+                    expect(error).to.equal('test error');
+                });
         });
 
         function generateFunctionToWrap(error) {
