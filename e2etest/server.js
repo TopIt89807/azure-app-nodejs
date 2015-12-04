@@ -17,6 +17,7 @@ mobileApp = mobileApps(config);
 
 // tables
 mobileApp.tables.add('authenticated', { authorize: true });
+mobileApp.tables.add('public');
 mobileApp.tables.add('blog_comments', { columns: { postId: 'string', commentText: 'string', name: 'string', test: 'number' } });
 mobileApp.tables.add('blog_posts', { columns: { title: 'string', commentCount: 'number', showComments: 'boolean', data: 'string' } });
 mobileApp.tables.add('dates', { columns: { date: 'date', dateOffset: 'date' } });
