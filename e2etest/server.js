@@ -26,6 +26,7 @@ mobileApp.tables.add('IntIdRoundTripTable', { autoIncrement: true, columns: { na
 mobileApp.tables.add('intIdMovies', { autoIncrement: true, columns: { title: 'string', duration: 'number', mpaaRating: 'string', releaseDate: 'date', bestPictureWinner: 'boolean' } });
 mobileApp.tables.add('OfflineReady');
 mobileApp.tables.add('OfflineReadyNoVersionAuthenticated', { authorize: true });
+mobileApp.tables.add('StringIdRoundTripTableSoftDelete', { softDelete: true });
 mobileApp.tables.import('tables');
 
 app.use(mobileApp);

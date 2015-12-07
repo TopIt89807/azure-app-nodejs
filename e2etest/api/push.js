@@ -51,7 +51,7 @@ function getVerifyRegisterInstallationResult(req, res, next) {
             verifyTemplates();
             verifySecondaryTiles();
             return verifyTags().then(function () {
-                res.status(200).end();
+                res.status(200).json(true);
             });
             //.catch(function (error) {
             //    res.status(500).send(error);
@@ -97,11 +97,12 @@ function getVerifyUnregisterInstallationResult(req, res, next) {
 
     retry(function () {
         return promises.wrap(push.getInstallation, push)(installationId).catch(function () {
-            res.status(200).end();
+            res.status(200).json(true);
         });
     })
     .then(function () {
-        res.status(500).send("Found deleted installation with id " + installationId);
+        res.status(200).json(false);
+        // res.status(500).send("Found deleted installation with id " + installationId);
     });
 }
 

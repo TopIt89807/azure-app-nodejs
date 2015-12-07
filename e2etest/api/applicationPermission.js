@@ -10,6 +10,7 @@ module.exports = {
         app.use('/api/applicationPermission', [bodyParser.json(), rawBodyParser(), handleRequest]);
         app.use('/api/publicPermission', [bodyParser.json(), rawBodyParser(), handleRequest]);
         app.use('/api/userPermission', [authorize, rawBodyParser(), handleRequest]);
+        app.use('/api/adminPermission', [bodyParser.json(), rawBodyParser(), handleRequest]);
     }
 }
 
