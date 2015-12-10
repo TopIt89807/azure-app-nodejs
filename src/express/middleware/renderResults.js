@@ -16,15 +16,15 @@ module.exports = function (req, res, next) {
                 if(res.results.recordsAffected === undefined || res.results.recordsAffected > 0)
                     res.status(200).json(res.results);
                 else
-                    res.status(404).end();
+                    next({ notFound: true });
             } else if(res.results.length > 0) {
                 res.status(200).json(res.results[0]);
             } else {
-                res.status(404).end();
+                next({ notFound: true });
             }
         } else {
             if(res.recordsAffected === 0)
-                res.status(404).end();
+                next({ notFound: true });
             else {
                 res.status(200).json(res.results);
             }
