@@ -39,7 +39,10 @@ function handleRequest(req, res, next) {
     }
 
     //output.user = JSON.parse(JSON.stringify(req.user)); // remove functions
-    output.user = { level: 'anonymous' };
+    if(req.azureMobile.user) 
+        output.user = { level: 'authenticated', userid: req.azureMobile.user.id };
+    else
+        output.user = { level: 'anonymous' };
 
     switch (format) {
         case 'json':
