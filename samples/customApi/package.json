@@ -1,10 +1,13 @@
 {
     "name": "azure-mobile-apps.samples.customApi",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "An Azure Mobile Apps backend demonstrating a custom API",
+    "main": "app.js",
+    "private": true,
     "author": "Microsoft",
+    "license": "MIT",
     "dependencies": {
-        "express": "^4.13.0",
-        "azure-mobile-apps": "^2.0.0-alpha6"
+        "azure-mobile-apps": "^2.0.0-beta1",
+        "express": "^4.13.3"
     }
 }

@@ -1,10 +1,13 @@
 {
     "name": "azure-mobile-apps.samples.todo",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Canonical Sample App for the Azure Mobile Apps QuickStart",
+    "main": "app.js",
     "author": "Microsoft",
+    "license": "MIT",
     "dependencies": {
-        "express": "^4.13.0",
-        "azure-mobile-apps": "^2.0.0-alpha6"
+        "azure-mobile-apps": "^2.0.0-beta1",
+        "express": "^4.13.3",
+        "winston": "^2.1.1"
     }
 }

@@ -6,9 +6,7 @@
 // only need to include the differences between the defaults and your
 // settings.  You can see all the settings at http://azure.github.io/azure-mobile-apps-node/global.html#configuration
 
-// If you set debug, then use that.  If you are using Azure, then don't set
-// DEBUG - use the MS_DebugMode app setting.
-var debugValue = environment.debug || false;
+var winston = require('winston');
 
 module.exports = {
     // Use this to disable the version header that is sent out
@@ -20,21 +18,22 @@ module.exports = {
     logging: {
         // Override for the Winston transports
         // for more info, see https://github.com/winstonjs/winston/blob/master/docs/transports.md
-        // transports: {
-        // Place any Winston compatible transport here
-        //},
+        transports: [
+            new winston.transports.Console({ colorize: true, timestamp: true })
+        ],
 
         // The debug level can be one of 'debug, 'info', 'verbose' and defines
         // the minimum level to be logged.  By default, it is set to 'info' or
         // 'debug' depending on the setting of the MS_DebugMode app settings or
         // the debug switch (when running locally)
-        //level: 'verbose'
+        level: 'verbose'
     },
 
+    // CORS is configured in the Azure App Service normally.  This setting is only for
+    // local development outside of Azure App Service
     cors: {
         origins: [
-            'localhost',
-            'contoso-website.azurewebsites.net'
+            'localhost'
         ]
     },
 
@@ -42,7 +41,7 @@ module.exports = {
     // Normally this is not required for Azure hosted environments - we pick it up
     // from the ConnectionString for SQL Azure in the App Settings of the Azure Portal
     //data: {
-    //  provider: 'sql',
+    //  provider: 'mssql',
     //  server: 'localhost',
     //  database: 'my-mobile-app',
     //  user: 'db-username',
