@@ -14,3 +14,4 @@ roundTrip.update(function (context) {
         });
 });
 roundTrip.columns = { name: 'string', date1: 'date', bool: 'boolean', integer: 'number', number: 'number' };
+roundTrip.dynamicSchema = false;
