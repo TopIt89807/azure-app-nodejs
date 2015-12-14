@@ -14,6 +14,7 @@ var loadConfiguration = require('./configuration'),
     promises = require('./utilities/promises'),
     merge = require('deeply'),
     path = require('path'),
+    winston = require('winston'),
 
     platforms = {
         express: require('./express'),
@@ -33,13 +34,13 @@ var loadConfiguration = require('./configuration'),
         pageSize: 50,
         logging: {
             level: environment.debug ? 'debug' : 'info',
-            transports: {
-                Console: {
+            transports: [
+                new (winston.transports.Console)({
                     colorize: true,
                     timestamp: true,
                     showLevel: true
-                }
-            }
+                })
+            ]
         },
         cors: {
             maxAge: 300,
