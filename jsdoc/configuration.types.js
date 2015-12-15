@@ -23,11 +23,10 @@ The top level configuration object.
 */
 
 /**
-Logging configuration
+Logging configuration. See {@link https://github.com/winstonjs/winston#instantiating-your-own-logger} 
 @typedef loggingConfiguration
 @property {string} level=info - Minimum level of messages to log
-@property {Object} transports=Console - Hash of winston transports to log messages to
-@see {@link https://github.com/winstonjs/winston}
+@property {transports[]} transports=Console - Array of winston transports to log messages to
 */
 
 /**
