@@ -22,65 +22,43 @@ module.exports = function (configuration) {
     var tableAccess = function (table) {
         assert(table, 'A table was not specified');
 
-        // default is on...
-        if (table.dynamicSchema !== false)
-            return {
-                read: function (query) {
-                    query = query || queries.create(table.name);
-                    return dynamicSchema(configuration).read(table, statements.read(query, table)).then(handleReadResult);
-                },
-                update: function (item) {
-                    assert(item, 'An item to update was not provided');
-                    return dynamicSchema(configuration).execute(table, statements.update(table, item), item).then(returnSingleResultWithConcurrencyCheck);
-                },
-                insert: function (item) {
-                    assert(item, 'An item to insert was not provided');
-                    return dynamicSchema(configuration).execute(table, statements.insert(table, item), item).then(returnSingleResult);
-                },
-                delete: function (id, version) {
-                    assert(id, 'The ID of an item to delete was not provided');
-                    return execute(configuration, statements.delete(table, id, version)).then(returnDeleteResults);
-                },
-                undelete: function (id, version) {
-                    assert(id, 'The ID of an item to undelete was not provided');
-                    return execute(configuration, statements.undelete(table, id, version)).then(returnSingleResultWithConcurrencyCheck);
-                },
-                truncate: function () {
-                    return execute(configuration, statements.truncate(table));
-                },
-                initialize: function () {
-                    return schema(configuration).initialize(table);
-                }
-            };
-        else
-            return {
-                read: function (query) {
-                    query = query || queries.create(table.name);
-                    return execute(configuration, statements.read(query, table)).then(handleReadResult);
-                },
-                update: function (item) {
-                    assert(item, 'An item to update was not provided');
-                    return execute(configuration, statements.update(table, item)).then(returnSingleResultWithConcurrencyCheck);
-                },
-                insert: function (item) {
-                    assert(item, 'An item to insert was not provided');
-                    return execute(configuration, statements.insert(table, item)).then(returnSingleResult);
-                },
-                delete: function (id, version) {
-                    assert(id, 'The ID of an item to delete was not provided');
-                    return execute(configuration, statements.delete(table, id, version)).then(returnDeleteResults);
-                },
-                undelete: function (id, version) {
-                    assert(id, 'The ID of an item to undelete was not provided');
-                    return execute(configuration, statements.undelete(table, id, version)).then(returnSingleResultWithConcurrencyCheck);
-                },
-                truncate: function () {
-                    return execute(configuration, statements.truncate(table));
-                },
-                initialize: function () {
-                    return schema(configuration).initialize(table);
-                }
-            };
+        // set execute functions based on dynamic schema and operation
+        var read, update, insert;
+        if (table.dynamicSchema !== false) {
+            read = dynamicSchema(table).read;
+            update = insert = dynamicSchema(table).execute;
+        } else {
+            read = update = insert = execute;
+        }
+
+        return {
+            read: function (query) {
+                query = query || queries.create(table.name);
+                return read(configuration, statements.read(query, table)).then(handleReadResult);
+            },
+            update: function (item) {
+                assert(item, 'An item to update was not provided');
+                return update(configuration, statements.update(table, item), item).then(returnSingleResultWithConcurrencyCheck);
+            },
+            insert: function (item) {
+                assert(item, 'An item to insert was not provided');
+                return insert(configuration, statements.insert(table, item), item).then(returnSingleResult);
+            },
+            delete: function (id, version) {
+                assert(id, 'The ID of an item to delete was not provided');
+                return execute(configuration, statements.delete(table, id, version)).then(returnDeleteResults);
+            },
+            undelete: function (id, version) {
+                assert(id, 'The ID of an item to undelete was not provided');
+                return execute(configuration, statements.undelete(table, id, version)).then(returnSingleResultWithConcurrencyCheck);
+            },
+            truncate: function () {
+                return execute(configuration, statements.truncate(table));
+            },
+            initialize: function () {
+                return schema(configuration).initialize(table);
+            }
+        };
     };
 
     // expose a method to allow direct execution if SQL queries
