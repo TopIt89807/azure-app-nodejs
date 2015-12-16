@@ -46,7 +46,7 @@ module.exports = function (configuration) {
             },
             delete: function (id, version) {
                 assert(id, 'The ID of an item to delete was not provided');
-                return execute(configuration, statements.delete(table, id, version)).then(returnDeleteResults);
+                return execute(configuration, statements.delete(table, id, version)).then(returnDeleteResults(table));
             },
             undelete: function (id, version) {
                 assert(id, 'The ID of an item to undelete was not provided');
@@ -107,14 +107,13 @@ module.exports = function (configuration) {
         }
     }
 
-    function returnDeleteResults(results) {
-        if(results && results[0][0].recordsAffected === 0 && results[1].length > 0) {
-            var error = new Error('No records were updated');
-            error.concurrency = true;
-            error.item = translateVersion(results.length > 1 && results[1] && results[1].length > 0 && results[1][0]);
-            throw error;
+    function returnDeleteResults(table) {
+        return function (results) {
+            if(!table.softDelete && results && results.length === 2) {
+                results = [results[1], results[0]];
+            }
+            return returnSingleResultWithConcurrencyCheck(results);
         }
-        return results[0][0];
     }
 
     function setEncryption() {

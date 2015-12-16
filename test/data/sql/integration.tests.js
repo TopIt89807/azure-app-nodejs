@@ -7,6 +7,7 @@ var index = require('../../../src/data/mssql'),
     config = require('./infrastructure/config'),
     expect = require('chai')
         .use(require('chai-subset'))
+        .use(require('chai-as-promised'))
         .expect,
     operations;
 
@@ -65,18 +66,36 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             });
     });
 
-    it("returns number of records deleted", function () {
-        return insert({ id: '1', string: 'test', bool: true, number: 1.1 })
+    it("returns deleted record", function () {
+        var item = { id: '1', string: 'test', bool: true, number: 1.1 };
+        return insert(item)
             .then(function () {
                 return del('1');
             })
             .then(function (results) {
-                expect(results.recordsAffected).to.equal(1);
-                return del('1');
-            })
-            .then(function (results) {
-                expect(results.recordsAffected).to.equal(0);
+                expect(results).to.containSubset(item);
+                return expect(del('1')).to.be.rejectedWith('No records were updated');
             });
+    });
+
+    it("returns softDeleted record", function () {
+        operations = index(config)({ 
+            name: 'integration', 
+            softDelete: true,
+            columns: { string: 'string', number: 'number', bool: 'boolean' }
+        });
+
+        return operations.initialize().then(function () {
+            var item = { id: '1', string: 'test', bool: true, number: 1.1 };
+            return insert(item)
+                .then(function () {
+                    return del('1');
+                })
+                .then(function (results) {
+                    expect(results).to.containSubset(item);
+                    return expect(del('1')).to.be.rejectedWith('No records were updated');
+                });
+        });
     });
 
     it("handles large numeric values", function () {

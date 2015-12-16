@@ -87,7 +87,13 @@ describe('azure-mobile-apps.data.sql.statements', function () {
 
         it('generates simple statement and parameters', function () {
             var statement = del({ name: 'table' }, 'id');
-            expect(statement.sql).to.equal('DELETE FROM [dbo].[table] WHERE [id] = @id; SELECT @@rowcount AS recordsAffected; SELECT * FROM [dbo].[table] WHERE [id] = @id');
+            expect(statement.sql).to.equal('SELECT * FROM [dbo].[table] WHERE [id] = @id;DELETE FROM [dbo].[table] WHERE [id] = @id;SELECT @@rowcount AS recordsAffected;');
+            expect(statement.parameters).to.deep.equal([{ name: 'id', value: 'id' }]);
+        });
+
+        it('generates soft delete statement and params', function () {
+            var statement = del({ name: 'table', softDelete: true }, 'id');
+            expect(statement.sql).to.equal('UPDATE TOP (1) [dbo].[table] SET [deleted] = 1 WHERE [id] = @id AND [deleted] = 0;SELECT @@rowcount AS recordsAffected;SELECT * FROM [dbo].[table] WHERE [id] = @id;');
             expect(statement.parameters).to.deep.equal([{ name: 'id', value: 'id' }]);
         });
     });
