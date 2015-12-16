@@ -70,7 +70,7 @@ module.exports = function (configuration) {
             return promises.series(table.seed, insert);
 
             function insert(item) {
-                return dynamicSchema(configuration).execute(table, statements.insert(table, item), item);
+                return dynamicSchema(table).execute(configuration, statements.insert(table, item), item);
             }
         }
     };

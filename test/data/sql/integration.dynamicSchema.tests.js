@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var config = require('./infrastructure/config'),
-    dynamicSchema = require('../../../src/data/mssql/dynamicSchema')(config),
+    dynamicSchema = require('../../../src/data/mssql/dynamicSchema'),
     statements = require('../../../src/data/mssql/statements'),
     execute = require('../../../src/data/mssql/execute'),
     queries = require('../../../src/query'),
@@ -21,7 +21,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
 
     it("creates basic table schema", function () {
         var item = { id: '1' };
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function () {
                 return execute(config, statements.getColumns(table));
             })
@@ -38,7 +38,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
 
     it("creates table and schema", function () {
         var item = { id: '1', string: 'test', number: 1, boolean: true };
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function () {
                 return execute(config, statements.getColumns(table));
             })
@@ -58,9 +58,9 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
 
     it("updates schema", function () {
         var item = { id: '1', string: 'test', number: 1, boolean: true };
-        return dynamicSchema.execute(table, statements.insert(table, { id: '1' }), { id: '1' })
+        return dynamicSchema(table).execute(config, statements.insert(table, { id: '1' }), { id: '1' })
             .then(function () {
-                return dynamicSchema.execute(table, statements.update(table, item), item);
+                return dynamicSchema(table).execute(config, statements.update(table, item), item);
             })
             .then(function () {
                 return execute(config, statements.getColumns(table));
@@ -81,7 +81,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
 
     it("creates primary key constraint", function () {
         var item = { id: '1' };
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function () {
                 return execute(config, { sql: "SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'dynamicSchema'" });
             })
@@ -93,7 +93,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
 
     it("creates table and schema with numeric id", function () {
         var item = { id: 1, string: 'test', number: 1, boolean: true };
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function () {
                 return execute(config, statements.getColumns(table));
             })
@@ -114,7 +114,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
     it("creates table with autoIncrement identity if specified", function () {
         var item = { value: 'test' },
             autoIncrementTable = { name: 'dynamicSchema', autoIncrement: true };
-        return dynamicSchema.execute(autoIncrementTable, statements.insert(autoIncrementTable, item), item)
+        return dynamicSchema(autoIncrementTable).execute(config, statements.insert(autoIncrementTable, item), item)
             .then(function () {
                 return execute(config, statements.read(queries.create('dynamicSchema')));
             })
@@ -125,7 +125,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
 
     it("creates insert/update/delete trigger", function () {
         var item = { id: '1' };
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function () {
                 return execute(config, { sql: "SELECT * FROM sys.triggers WHERE name = 'TR_dynamicSchema_InsertUpdateDelete'" });
             })
@@ -138,14 +138,14 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
         var item = { id: '1', string: 'test', number: 1, boolean: true },
             updatedAt;
 
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function (inserted) {
                 updatedAt = inserted[0].updatedAt;
                 // I don't quite understand why the test is occasionally flaky. Suspect datetimeoffset resolution in SQL Server.
                 return promises.sleep();
             })
             .then(function () {
-                return dynamicSchema.execute(table, statements.update(table, item), item);
+                return dynamicSchema(table).execute(config, statements.update(table, item), item);
             })
             .then(function (updated) {
                 expect(updated[1][0].updatedAt).to.be.greaterThan(updatedAt);
@@ -161,7 +161,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
             } },
             item = { id: '1' };
 
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function () {
                 return execute(config, statements.getColumns(table));
             })
@@ -184,7 +184,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
         var table = { name: 'dynamicSchema', columns: { string: 'string' } },
             item = { id: '1', String: 1 };
 
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function () {
                 return execute(config, statements.getColumns(table));
             })
@@ -217,7 +217,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
         },
             item = { id: '1'};
 
-        return dynamicSchema.execute(table, statements.insert(table, item), item)
+        return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function() {
                 return execute(config, statements.getIndexes(table));
             })
@@ -238,7 +238,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
         },
             item = { id: '1'};
 
-        return expect(dynamicSchema.execute(table, statements.insert(table, item), item))
+        return expect(dynamicSchema(table).execute(config, statements.insert(table, item), item))
             .to.be.rejectedWith('Column \'string\' in table \'dbo.dynamicSchema\' is of a type that is invalid for use as a key column in an index.');
     });
 
@@ -254,7 +254,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
         },
             item = { id: '1'};
 
-        return expect(dynamicSchema.execute(table, statements.insert(table, item), item))
+        return expect(dynamicSchema(table).execute(config, statements.insert(table, item), item))
             .to.be.rejectedWith('Column name \'foo\' does not exist in the target table or view.');
     });
 
@@ -270,7 +270,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
         },
             item = { id: '1'};
 
-        return expect(dynamicSchema.execute(table, statements.insert(table, item), item))
+        return expect(dynamicSchema(table).execute(config, statements.insert(table, item), item))
             .to.be.rejectedWith('Index configuration of table \'' + table.name + '\' should be an array containing either strings or arrays of strings.');
 
     });
@@ -285,7 +285,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
         },
             item = { id: '1'};
 
-        return expect(dynamicSchema.execute(table, statements.insert(table, item), item))
+        return expect(dynamicSchema(table).execute(config, statements.insert(table, item), item))
             .to.be.rejectedWith('Index configuration of table \'' + table.name + '\' should be an array containing either strings or arrays of strings.');
     });
 });
