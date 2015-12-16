@@ -31,7 +31,7 @@ If the includeTotalCount option was set on the query, the second element is the 
 @function update
 @description Update a row in the table.
 @param {object} item The item to update
-@returns A promise that yields an array. The first element is the number of records affected. The second element is the updated object.
+@returns A promise that yields the updated object
 */
 /**
 @function insert
@@ -44,14 +44,14 @@ If the includeTotalCount option was set on the query, the second element is the 
 @description Delete an item from the table
 @param {string|number} id The id of the item to delete
 @param {string} version Base64 encoded row version
-@returns A promise that yields an array. The first element is the number of records affected. The second element is the deleted object.
+@returns A promise that yields the deleted object
 */
 /**
 @function undelete
 @description Undelete an item from the table
 @param {string|number} id The id of the item to delete
 @param {string} version Base64 encoded row version
-@returns A promise that yields an array. The first element is the number of records affected. The second element is the undeleted object.
+@returns A promise that yields the undeleted object
 */
 /**
 @function truncate

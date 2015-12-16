@@ -110,6 +110,7 @@ module.exports = function (configuration) {
     function returnDeleteResults(table) {
         return function (results) {
             if(!table.softDelete && results && results.length === 2) {
+                // non-soft delete returns results in opposite order due to select -> delete ordering
                 results = [results[1], results[0]];
             }
             return returnSingleResultWithConcurrencyCheck(results);
