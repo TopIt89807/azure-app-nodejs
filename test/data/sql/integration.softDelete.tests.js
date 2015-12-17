@@ -10,7 +10,6 @@ var config = require('./infrastructure/config'),
 
 describe('azure-mobile-apps.data.sql.integration.softDelete', function () {
     before(function () {
-        require('../../../src/logger').configure();
         operations = index(config)({ name: 'softDelete', softDelete: true });
     });
 

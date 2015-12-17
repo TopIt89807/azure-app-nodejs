@@ -9,7 +9,6 @@ var config = require('./infrastructure/config'),
 
 describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
     before(function () {
-        require('../../../src/logger').configure();
         operations = index(config)({ name: 'concurrency' });
     });
 

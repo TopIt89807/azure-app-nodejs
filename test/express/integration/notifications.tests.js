@@ -8,23 +8,20 @@ var sinon = require('sinon'),
         .expect,
     request = require('supertest-as-promised'),
     express = require('express'),
+    config = require('../infrastructure/config'),
     nhStub, notifFactoryStub, app, installation;
 
 
 var notificationMiddleware = require('../../../src/express/middleware/notifications');
 
-describe('azure-mobile-apps.express.integration.notifications', function () {
-    before(function () {
-        require('../../../src/logger').configure();
-    });
-    
+describe('azure-mobile-apps.express.integration.notifications', function () {    
     beforeEach(function () {
         installation = createInstallation();
 
         nhStub = createNHClientStub();
 
         app = express();
-        app.use('/push/installations', notificationMiddleware({ notifications: { client: nhStub }}));
+        app.use('/push/installations', notificationMiddleware(config.memory({ notifications: { client: nhStub }})));
     });
 
     it('returns 204 on successful creation', function () {

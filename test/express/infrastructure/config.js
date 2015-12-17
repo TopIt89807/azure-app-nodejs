@@ -5,18 +5,29 @@
 // we can expand this to provide different configurations for different environments
 var configuration = require('../../../src/configuration'),
     path = require('path'),
+    merge = require('deeply'),
     winston = require('winston');
     q = require('q');
 
-var api = module.exports = function () {
-    var config = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')), process.env);
-    config.basePath = __dirname;
-    applyCommandLineArguments(config);
-    return config;
+// initialize configuration for testing
+var config = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')), process.env);
+// default to skipping version check
+config.skipVersionCheck = true;
+// default to no logging
+config.logging = {};
+config.basePath = __dirname;
+applyCommandLineArguments(config);
+
+var api = module.exports = function (userSuppliedConfig) {
+    return merge(config, userSuppliedConfig);
 }
 
-api.data = function () {
-    return api().data;
+api.memory = function (userSuppliedConfig) {
+    return merge(config, { data: { provider: 'memory' }}, userSuppliedConfig);
+}
+
+api.data = function (userSuppliedDataConfig) {
+    return merge(config.data, userSuppliedDataConfig);
 };
 
 function applyCommandLineArguments(config) {

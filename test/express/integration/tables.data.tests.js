@@ -8,26 +8,26 @@ var expect = require('chai')
     express = require('express'),
     mobileApps = require('../../../src'),
     data = require('../../../src/data/mssql'),
-    config = require('../infrastructure/config').data(),
+    config = require('../infrastructure/config'),
 
     app, mobileApp;
 
 describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
     before(function (done) {
-        data(config)({ 
+        data(config.data())({ 
             name: 'integration', 
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         }).initialize().then(done);
     });
 
     after(function (done) {
-        data(config).execute({ sql: 'DROP TABLE integration' }).then(done);
+        data(config.data()).execute({ sql: 'DROP TABLE integration' }).then(done);
     });
 
     beforeEach(function (done) {
         app = express();
-        mobileApp = mobileApps({ data: config, skipVersionCheck: true, logging: false });
-        data(config)({ name: 'integration' }).truncate().then(done);
+        mobileApp = mobileApps(config());
+        data(config.data())({ name: 'integration' }).truncate().then(done);
     });
 
     it('returns inserted records', function () {

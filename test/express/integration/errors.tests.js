@@ -5,6 +5,7 @@ var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../..'),
+    config = require('../infrastructure/config'),
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.errors', function () {
@@ -32,7 +33,7 @@ describe('azure-mobile-apps.express.integration.errors', function () {
 
     function setup(debug) {
         app = express();
-        mobileApp = mobileApps({ debug: debug, logging: false, skipVersionCheck: true });
+        mobileApp = mobileApps(config.memory({ debug: debug, logging: false }));
         var table = mobileApp.table();
         table.read.use(function (req, res, next) { throw new Error('test'); });
         mobileApp.tables.add('todoitem', table);

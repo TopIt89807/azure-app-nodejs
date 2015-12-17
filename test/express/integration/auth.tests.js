@@ -8,6 +8,7 @@ var expect = require('chai').expect,
     auth = require('../../../src/auth')({ secret: 'secret' }),
     secret = 'secret',
     token = auth.sign({ "sub": "Facebook:someuserid@hotmail.com" }),
+    config = require('../infrastructure/config'),
 
     app, mobileApp;
 
@@ -15,7 +16,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.auth', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ auth: { secret: secret, getIdentity: getIdentity }, skipVersionCheck: true });
+        mobileApp = mobileApps(config.memory({ auth: { secret: secret, getIdentity: getIdentity } }));
     });
 
     it('returns 200 for table requests with valid auth token', function () {

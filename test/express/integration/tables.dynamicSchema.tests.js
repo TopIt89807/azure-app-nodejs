@@ -6,7 +6,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
     express = require('express'),
     mobileApps = require('../../../src/express'),
     data = require('../../../src/data/mssql'),
-    config = require('../infrastructure/config').data(),
+    config = require('../infrastructure/config'),
     promises = require('../../../src/utilities/promises'),
 
     app, mobileApp;
@@ -14,11 +14,11 @@ var expect = require('chai').use(require('chai-subset')).expect,
 describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ data: config, skipVersionCheck: true });
+        mobileApp = mobileApps(config());
     });
 
     afterEach(function (done) {
-        data(config).execute({ sql: 'drop table dynamic' }).then(done, done);
+        data(config.data()).execute({ sql: 'drop table dynamic' }).then(done, done);
     });
 
     it('creates table and returns inserted records', function () {
