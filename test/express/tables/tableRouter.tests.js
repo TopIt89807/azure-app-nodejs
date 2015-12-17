@@ -18,7 +18,8 @@ describe('azure-mobile-apps.express.tables.tableRouter', function () {
     it('returns router if no execution middleware was specified', function () {
         var table = tableFactory();
         var results = factory(table);
-
+        
+        var router = table.execute;
         expect(results.length).to.equal(1);
         expect(results[0]).to.equal(router);
     })

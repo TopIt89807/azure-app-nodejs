@@ -9,7 +9,7 @@ The returned table object exposes functions for attaching middleware and operati
 These functions populate the middleware and operations properties of the table object, which are then consumed by the attachRoutes module.
 The router function calls the attachRoutes module and returns a configured router - this is consumed by mobileApp.tables.add.
 */
-var executeOperation = require('../middleware/executeOperation')
+var executeOperation = require('../middleware/executeOperation'),
     express = require('express');
 
 /**
