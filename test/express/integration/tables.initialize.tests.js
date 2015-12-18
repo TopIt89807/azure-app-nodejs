@@ -5,7 +5,7 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../src/express'),
-    config = require('../infrastructure/config').data(),
+    config = require('../infrastructure/config'),
     data = require('../../../src/data/mssql'),
     promises = require('../../../src/utilities/promises'),
 
@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         });
 
         afterEach(function (done) {
-            data(config).execute({ sql: 'drop table initialize' }).then(done, done);
+            data(config.data()).execute({ sql: 'drop table initialize' }).then(done, done);
         });
 
         it('creates non-dynamic tables', function () {
@@ -69,7 +69,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
 
         function setup(columns) {
             app = express();
-            mobileApp = mobileApps({ skipVersionCheck: true, data: config });
+            mobileApp = mobileApps(config());
             mobileApp.tables.add('initialize', { dynamicSchema: false, columns: columns });
             app.use(mobileApp);
         }
@@ -78,7 +78,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
     describe('concurrent initialization', function () {
         it('successfully initializes multiple tables concurrently', function () {
             app = express();
-            mobileApp = mobileApps({ skipVersionCheck: true, data: config });
+            mobileApp = mobileApps(config());
 
             var tables = [];
             for (var i = 0; i < 10; i++)
@@ -97,7 +97,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         }
 
         function drop(id) {
-            return data(config).execute({ sql: 'drop table table' + id });
+            return data(config.data()).execute({ sql: 'drop table table' + id });
         }
     })
 });

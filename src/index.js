@@ -68,10 +68,16 @@ module.exports = function (configuration, environment) {
     configuration = merge({ logging: {}, data: {}, auth: {} }, defaults, loadConfiguration.fromFile(configFile), configuration);
     loadConfiguration.fromEnvironment(configuration, environment || process.env);
     loadConfiguration.fromSettingsJson(configuration);
-    
-    promises.setConstructor(configuration.promiseConstructor);
 
+    module.exports.configureGlobals(configuration);
+    
     return platforms[configuration.platform](configuration);
 };
+
+// encapsulates configuration of global modules to simplify test configuration
+module.exports.configureGlobals = function (configuration) {
+    logger.configure(configuration.logging);
+    promises.setConstructor(configuration.promiseConstructor);
+}
 
 module.exports.table = table;

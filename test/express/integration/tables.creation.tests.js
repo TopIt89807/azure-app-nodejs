@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').use(require('chai-subset')).expect,
     request = require('supertest-as-promised'),
-    config = require('../infrastructure/config').data(),
+    config = require('../infrastructure/config'),
     express = require('express'),
     mobileApps = require('../../../src/express'),
     data = require('../../../src/data/mssql'),
@@ -17,11 +17,11 @@ var expect = require('chai').use(require('chai-subset')).expect,
 describe('azure-mobile-apps.express.sql.integration.tables.creation', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ data: config, skipVersionCheck: true });
+        mobileApp = mobileApps(config());
     });
 
     afterEach(function (done) {
-        data(config).execute({ sql: 'drop table dbo.' + tableName }).then(done, done);
+        data(config().data).execute({ sql: 'drop table dbo.' + tableName }).then(done, done);
     });
 
     it('properly configures tables created via mobileApp.table', function () {

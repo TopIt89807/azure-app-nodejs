@@ -5,7 +5,8 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     bodyParser = require('body-parser'),
-    mobileApps = require('../../../src'),
+    config = require('../infrastructure/config'),
+    mobileApps = require('../../..'),
 
     app, mobileApp;
 
@@ -13,7 +14,7 @@
 describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ skipVersionCheck: true, logging: false }, {});
+        mobileApp = mobileApps(config.memory());
     });
 
     it('returns 200 for table route', function () {
@@ -46,7 +47,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     it('returns 500 with error details when exception is thrown', function (done) {
         var table = mobileApp.table();
         table.read.use(function (req, res, next) { throw 'test'; });
-        mobileApp = mobileApps({ debug: true, skipVersionCheck: true, logging: false });
+        mobileApp = mobileApps(config.memory({ debug: true, logging: false }));
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
@@ -60,7 +61,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 400 when request size limit is exceeded', function () {
-        mobileApp = mobileApps({ maxTop: 1000, logging: false });
+        mobileApp = mobileApps(config.memory({ maxTop: 1000}));
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -70,7 +71,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 200 when request size limit is set to 0', function () {
-        mobileApp = mobileApps({ maxTop: 0, skipVersionCheck: true });
+        mobileApp = mobileApps(config.memory({ maxTop: 0 }));
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -87,7 +88,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             query = context.query.toOData();
         });
 
-        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true });
+        mobileApp = mobileApps(config.memory({ pageSize: 40, skipVersionCheck: true }));
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 
