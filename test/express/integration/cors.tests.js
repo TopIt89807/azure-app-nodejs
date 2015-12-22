@@ -12,20 +12,19 @@ var expect = require('chai').expect,
     accessControlExposeHeadersHeader = 'Access-Control-Expose-Headers',
     accessControlMaxAgeHeader = 'Access-Control-Max-Age',
     expectedAllowedMethods = 'GET, PUT, PATCH, POST, DELETE, OPTIONS',
+    config = require('../infrastructure/config'),
 
-    config, app, mobileApp;
+    app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.cors', function () {
     beforeEach(function () {
-        config = {
+        app = express();
+        mobileApp = mobileApps(config.memory({
             cors: {
                 maxAge: 6000,
                 origins: ['localhost', { host: '*.v1.com' }, 'test.*.net']
-            },
-            skipVersionCheck: true
-        };
-        app = express();
-        mobileApp = mobileApps(config);
+            }
+        }));
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
     });

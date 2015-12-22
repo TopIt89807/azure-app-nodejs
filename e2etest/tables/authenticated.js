@@ -7,6 +7,7 @@ table.read(function (context) {
 	context.query = context.query.where({userId: context.user.id});
 	return context.execute().then(function (items) {
 		return context.user.getIdentity().then(function (identities) {
+			identities = extractClientTokens(identities);
 			items.forEach(function (item) {
 				item.identities = identities;
 			});
@@ -37,4 +38,16 @@ function matchUserId(id) {
 		}
 		return item;
 	}
+}
+
+function extractClientTokens(identities) {
+	return Object.keys(identities).reduce(function (tokens, provider) {
+		tokens[provider] = {
+			access_token: identities[provider].access_token;
+		};
+		if (provider === 'twitter') {
+			tokens[provider].access_token_secret = identities[provider].access_token_secret;
+		}
+		return tokens;
+	}, {});
 }

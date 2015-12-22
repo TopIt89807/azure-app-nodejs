@@ -39,4 +39,6 @@ require('./api/applicationPermission').register(app);
 require('./api/movieFinder').register(app);
 require('./api/push').register(app);
 
-app.listen(process.env.PORT || 3000);
+mobileApp.initialize().then(function () {
+    app.listen(process.env.PORT || 3000);    
+});

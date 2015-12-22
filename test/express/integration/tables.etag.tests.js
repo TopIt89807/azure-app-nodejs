@@ -5,6 +5,7 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../src'),
+    config = require('../infrastructure/config'),
 
     app, mobileApp;
 
@@ -12,7 +13,7 @@
 describe('azure-mobile-apps.express.integration.tables.etag', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true }, {});
+        mobileApp = mobileApps(config.memory({ pageSize: 2 }));
         var table = mobileApps.table();
         table.read(function (context) {
             return [{

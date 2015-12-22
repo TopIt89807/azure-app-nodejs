@@ -7,15 +7,13 @@ module.exports = function (configuration) {
             "sub": "Facebook:someuserid@hotmail.com",
             "iss": "urn:microsoft:windows-azure:zumo",
             "aud": "urn:microsoft:windows-azure:zumo",
-            "exp": 1440009424,
-            "nbf": 1437417424
+            "exp": 9999999999,
+            "nbf": 9999999999
         };
 
         res.status(200).json({
-            token: {
-                payload: payload,
-                rawData: auth.sign(payload)
-            }
+            "userId": "Facebook:someuserid@hotmail.com",
+            "authenticationToken": auth.sign(payload)
         });
     }
 };

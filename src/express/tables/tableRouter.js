@@ -13,7 +13,7 @@ var parseQuery = require('../middleware/parseQuery'),
     authorize = require('../middleware/authorize'),
     notAllowed = require('../middleware/notAllowed'),
     nextLink = require('../middleware/nextLink'),
-    eTag = require('../middleware/eTag')
+    eTag = require('../middleware/eTag'),
     importDefinition = require('../../configuration/importDefinition');
 
 /* Creates an express router with appropriate routes configures for each HTTP verb.
@@ -22,7 +22,7 @@ var parseQuery = require('../middleware/parseQuery'),
 */
 module.exports = function (table) {
     var defaultRoute = '/',
-        idRoute = '/:id'
+        idRoute = '/:id',
         router = table.execute;
 
     configureOperation('read', 'get', [defaultRoute], [parseQuery(table)], [nextLink]);

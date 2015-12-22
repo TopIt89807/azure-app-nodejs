@@ -5,6 +5,7 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../src'),
+    config = require('../infrastructure/config'),
 
     app, mobileApp;
 
@@ -12,11 +13,11 @@
 describe('azure-mobile-apps.express.integration.tables.link', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ pageSize: 2, skipVersionCheck: true }, {});
+        mobileApp = mobileApps(config.memory({ pageSize: 2 }));
     });
 
     it('adds Link header when top > pageSize & results.length === pageSize', function () {
-        mobileApp = mobileApps({ pageSize: 1, skipVersionCheck: true }, {});
+        mobileApp = mobileApps(config.memory({ pageSize: 1 }));
         mobileApp.tables.add('headers');
         app.use(mobileApp);
         return supertest(app)
