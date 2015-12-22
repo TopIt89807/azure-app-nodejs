@@ -3,13 +3,14 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').expect,
     request = require('supertest-as-promised'),
-    config = require('../infrastructure/config'),
     auth = require('../../../src/auth')({ secret: 'secret' }),
     token = auth.sign({ "uid": "Facebook:someuserid@hotmail.com" }),
     app, mobileApp;
 
     app = require('express')();
-    mobileApp = require('../../../src/express')(config.memory({ auth: { secret: 'secret', getIdentity: getIdentity }}));
+    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
+
+    mobileApp = mobileApps({ auth: { secret: 'secret', getIdentity: getIdentity }});
 
     mobileApp.api.import('../files/api/customapi');
     mobileApp.api.import('../files/api/authapi');

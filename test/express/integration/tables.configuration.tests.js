@@ -4,7 +4,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest'),
     express = require('express'),
-    mobileApps = require('../../../src/express'),
+    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
     config = require('../infrastructure/config'),
 
     app, mobileApp;
@@ -13,7 +13,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.tables.configuration', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps(config.memory());
+        mobileApp = mobileApps();
     });
 
     it('executes user code when provided', function (done) {
@@ -53,7 +53,7 @@ describe('azure-mobile-apps.express.integration.tables.configuration', function 
     });
 
     it('uses custom root path', function (done) {
-        mobileApp = mobileApps(config.memory({ tableRootPath: '/test' }));
+        mobileApp = mobileApps({ tableRootPath: '/test' });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 

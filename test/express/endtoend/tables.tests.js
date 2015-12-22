@@ -3,9 +3,8 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').expect,
     request = require('supertest-as-promised'),
-    config = require('../infrastructure/config')(),
     app = require('express')(),
-    mobileApp = require('../../../src/express')(config),
+    mobileApp = require('../infrastructure/mobileApps')()
     data = require('../../../src/data/mssql'),
     config = require('../infrastructure/config').data();
 

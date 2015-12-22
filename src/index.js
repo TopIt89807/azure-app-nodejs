@@ -62,22 +62,31 @@ Express 4.x is currently the only supported platform.
 @param {object} environment=process.env An object containing the environment to load configuration from
 @returns {module:azure-mobile-apps/express}
 */
-module.exports = function (configuration, environment) {
+var api = module.exports = function (configuration, environment) {
     configuration = configuration || {};
     var configFile = path.resolve(configuration.basePath || defaults.basePath, configuration.configFile || defaults.configFile);
     configuration = merge({ logging: {}, data: {}, auth: {} }, defaults, loadConfiguration.fromFile(configFile), configuration);
     loadConfiguration.fromEnvironment(configuration, environment || process.env);
     loadConfiguration.fromSettingsJson(configuration);
 
-    module.exports.configureGlobals(configuration);
+    api.configureGlobals(configuration);
     
-    return platforms[configuration.platform](configuration);
+    return api.buildApp(configuration);
 };
 
 // encapsulates configuration of global modules to simplify test configuration
-module.exports.configureGlobals = function (configuration) {
+api.configureGlobals = function (configuration) {
     logger.configure(configuration.logging);
     promises.setConstructor(configuration.promiseConstructor);
-}
+};
 
-module.exports.table = table;
+
+api.buildApp = function (configuration) {
+    return platforms[configuration.platform](configuration);
+};
+
+api.defaultConfig = function () {
+    return merge(defaults);
+};
+
+api.table = table;
