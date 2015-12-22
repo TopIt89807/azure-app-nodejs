@@ -126,4 +126,19 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
                     .expect(409);
             });
     });
+
+    it('does not check concurrency on delete if version is not specified', function () {
+        mobileApp.tables.add('concurrency');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/concurrency')
+            .send({ id: '1', value: 'test' })
+            .expect(200)
+            .then(function (res) {
+                return supertest(app)
+                    .delete('/tables/concurrency/1')
+                    .expect(200);
+            });
+    });
 });
