@@ -16,7 +16,6 @@ module.exports = function (configuration) {
     assert(configuration.user, 'A database user was not specified.');
     assert(configuration.password, 'A password for the database user was not specified');
 
-    log.verbose('Using MSSQL Server data source, server: ' + configuration.server + ':' + (configuration.port || 'default') + ', user: ' + configuration.user);
     setEncryption();
 
     var tableAccess = function (table) {
