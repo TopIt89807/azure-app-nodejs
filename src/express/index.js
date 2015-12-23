@@ -39,6 +39,9 @@ var express = require('express'),
  */
 module.exports = function (configuration) {
     configuration = configuration || {};
+
+    log.silly("Configured with the following values:\n" + JSON.stringify(configuration, null, 2));
+
     var tableMiddleware = tables(configuration),
         apiMiddleware = customApi(configuration),
         customMiddlewareRouter = express.Router(),
