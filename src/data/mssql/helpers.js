@@ -74,7 +74,7 @@ var helpers = module.exports = {
             case Boolean:
                 return "BIT";
             case Date:
-                return "DATETIMEOFFSET(3)";
+                return "DATETIMEOFFSET(7)";
             default:
                 throw new Error("Unable to map value " + value.toString() + " to a SQL type.");
         }
@@ -111,7 +111,7 @@ var helpers = module.exports = {
                 return 'BIT';
             case 'datetime':
             case 'date':
-                return 'DATETIMEOFFSET(3)';
+                return 'DATETIMEOFFSET(7)';
         }
 
         throw new Error('Unrecognised column type: ' + value);
@@ -135,8 +135,8 @@ var helpers = module.exports = {
     getSystemPropertiesDDL: function () {
         return {
             version: 'version ROWVERSION NOT NULL',
-            createdAt: 'createdAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0)',
-            updatedAt: 'updatedAt DATETIMEOFFSET(3) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(3),SYSUTCDATETIME(),0)',
+            createdAt: 'createdAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0)',
+            updatedAt: 'updatedAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0)',
             deleted: 'deleted bit NOT NULL DEFAULT 0'
         }
     },
