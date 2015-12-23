@@ -30,6 +30,7 @@ var loadConfiguration = require('./configuration'),
         notificationRootPath: '/push/installations',
         debug: environment.debug,
         version: 'node-' + require('../package.json').version,
+        homePage: false,
         maxTop: 1000,
         pageSize: 50,
         logging: {
@@ -70,7 +71,7 @@ var api = module.exports = function (configuration, environment) {
     loadConfiguration.fromSettingsJson(configuration);
 
     api.configureGlobals(configuration);
-    
+
     return api.buildApp(configuration);
 };
 
