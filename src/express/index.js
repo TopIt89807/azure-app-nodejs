@@ -57,6 +57,9 @@ module.exports = function (configuration) {
         .use(configuration.tableRootPath || '/tables', apiVersionCheck(configuration), tableMiddleware, renderResults)
         .use(handleError(configuration));
 
+    if(configuration.homePage)
+        mobileApp.use('/', express.static(__dirname + '/../static'));
+
     var api = function (req, res, next) {
         mobileApp(req, res, next);
     };
