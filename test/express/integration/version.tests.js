@@ -4,15 +4,14 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../..'),
-    config = require('../infrastructure/config'),
+    mobileApps = require('../infrastructure/mobileApps'),
 
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.version', function () {
     it('attaches server version header', function () {
         app = express();
-        mobileApp = mobileApps(config.memory());
+        mobileApp = mobileApps.ignoreEnv();
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -23,7 +22,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('does not attach version header if version is set to undefined', function() {
         app = express();
-        mobileApp = mobileApps(config.memory({ version: undefined }));
+        mobileApp = mobileApps.ignoreEnv({ version: undefined });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -36,7 +35,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('does not attach version header if MS_DisableVersionHeader is specified', function() {
         app = express();
-        mobileApp = mobileApps(config.memory(), { MS_DisableVersionHeader: 'true' });
+        mobileApp = mobileApps({}, { MS_DisableVersionHeader: 'true' });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -49,7 +48,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('returns 400 when appropriate api version is not specified', function () {
         app = express();
-        mobileApp = mobileApps(config.memory({ skipVersionCheck: false }));
+        mobileApp = mobileApps.ignoreEnv({ skipVersionCheck: false });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -60,7 +59,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('succeeds when appropriate api version is specified in a header', function () {
         app = express();
-        mobileApp = mobileApps(config.memory({ skipVersionCheck: false }));
+        mobileApp = mobileApps.ignoreEnv({ skipVersionCheck: false });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -72,7 +71,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('succeeds when appropriate api version is specified in a querystring', function () {
         app = express();
-        mobileApp = mobileApps(config.memory({ skipVersionCheck: false }));
+        mobileApp = mobileApps.ignoreEnv({ skipVersionCheck: false });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -83,7 +82,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('ignores api version when skipVersionCheck is set in configuration', function () {
         app = express();
-        mobileApp = mobileApps(config.memory());
+        mobileApp = mobileApps.ignoreEnv();
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -94,7 +93,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it('ignores api version when MS_SkipVersionCheck environment setting is specified', function () {
         app = express();
-        mobileApp = mobileApps(config.memory(), { MS_SkipVersionCheck: 'true' });
+        mobileApp = mobileApps({}, { MS_SkipVersionCheck: 'true' });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -105,7 +104,7 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
     it("ignores api version when doing CORS preflight", function () {
         app = express();
-        mobileApp = mobileApps(config.memory({ skipVersionCheck: false }));
+        mobileApp = mobileApps.ignoreEnv({ skipVersionCheck: false });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 

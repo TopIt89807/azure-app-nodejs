@@ -6,7 +6,7 @@ var expect = require('chai')
         .expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../../src'),
+    mobileApps = require('../infrastructure/mobileApps'),
     data = require('../../../src/data/mssql'),
     config = require('../infrastructure/config'),
 
@@ -26,7 +26,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
 
     beforeEach(function (done) {
         app = express();
-        mobileApp = mobileApps(config());
+        mobileApp = mobileApps();
         data(config.data())({ name: 'integration' }).truncate().then(done);
     });
 

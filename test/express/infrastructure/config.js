@@ -4,30 +4,41 @@
 
 // we can expand this to provide different configurations for different environments
 var configuration = require('../../../src/configuration'),
-    path = require('path'),
+    mobileApp = require('../../..'),
     merge = require('deeply'),
+    path = require('path'),
     winston = require('winston');
-    q = require('q');
+    q = require('q'),
+    environmentConfig = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')), process.env);
 
 // initialize configuration for testing
-var config = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')), process.env);
-// default to skipping version check
-config.skipVersionCheck = true;
-// default to no logging
-config.logging = {};
-config.basePath = __dirname;
-applyCommandLineArguments(config);
-
-var api = module.exports = function (userSuppliedConfig) {
-    return merge(config, userSuppliedConfig);
+var testDefaults = {
+    skipVersionCheck: true,
+    logging: false,
+    basePath: __dirname,
+    configFile: '../../config.js',
+    data: {
+        provider: 'memory'
+    }
 }
 
-api.memory = function (userSuppliedConfig) {
-    return merge(config, { data: { provider: 'memory' }}, userSuppliedConfig);
+applyCommandLineArguments(testDefaults);
+
+var api = module.exports = function (userConfig, environment) {
+    var config = api.ignoreEnv(userConfig);
+    var configFile = path.resolve(config.basePath, config.configFile);
+    config = merge(config, configuration.fromFile(configFile));
+    configuration.fromEnvironment(config, environment || process.env);
+    configuration.fromSettingsJson(config);
+    return config;
 }
 
-api.data = function (userSuppliedDataConfig) {
-    return merge(config.data, userSuppliedDataConfig);
+api.ignoreEnv = function (userConfig) {
+    return merge(mobileApp.defaultConfig(), testDefaults, userConfig);
+}
+
+api.data = function () {
+    return environmentConfig.data;
 };
 
 function applyCommandLineArguments(config) {
