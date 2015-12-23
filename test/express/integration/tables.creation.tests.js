@@ -5,7 +5,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
     request = require('supertest-as-promised'),
     config = require('../infrastructure/config'),
     express = require('express'),
-    mobileApps = require('../../../src/express'),
+    mobileApps = require('../infrastructure/mobileApps'),
     data = require('../../../src/data/mssql'),
     statements = require('../../../src/data/mssql/statements'),
     queries = require('../../../src/query'),
@@ -17,7 +17,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
 describe('azure-mobile-apps.express.sql.integration.tables.creation', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps(config());
+        mobileApp = mobileApps();
     });
 
     afterEach(function (done) {

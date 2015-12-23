@@ -8,7 +8,7 @@ var sinon = require('sinon'),
         .expect,
     request = require('supertest-as-promised'),
     express = require('express'),
-    config = require('../infrastructure/config'),
+    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
     nhStub, notifFactoryStub, app, installation;
 
 
@@ -21,7 +21,7 @@ describe('azure-mobile-apps.express.integration.notifications', function () {
         nhStub = createNHClientStub();
 
         app = express();
-        app.use('/push/installations', notificationMiddleware(config.memory({ notifications: { client: nhStub }})));
+        app.use('/push/installations', notificationMiddleware(mobileApps({ notifications: { client: nhStub }}).configuration));
     });
 
     it('returns 204 on successful creation', function () {

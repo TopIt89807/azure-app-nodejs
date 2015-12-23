@@ -4,7 +4,7 @@
 ﻿var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../../src/express'),
+    mobileApps = require('../infrastructure/mobileApps'),
     config = require('../infrastructure/config'),
     data = require('../../../src/data/mssql'),
     promises = require('../../../src/utilities/promises'),
@@ -69,7 +69,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
 
         function setup(columns) {
             app = express();
-            mobileApp = mobileApps(config());
+            mobileApp = mobileApps();
             mobileApp.tables.add('initialize', { dynamicSchema: false, columns: columns });
             app.use(mobileApp);
         }
@@ -78,7 +78,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
     describe('concurrent initialization', function () {
         it('successfully initializes multiple tables concurrently', function () {
             app = express();
-            mobileApp = mobileApps(config());
+            mobileApp = mobileApps();
 
             var tables = [];
             for (var i = 0; i < 10; i++)

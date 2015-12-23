@@ -3,13 +3,13 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
-    config = require('../infrastructure/config'),
+    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
     app = require('express')(),
     mobileApp;
 
 describe('azure-mobile-apps.express.integration.middleware', function () {
     before(function () {
-        mobileApp = require('../../..')(config.memory())
+        mobileApp = mobileApps();
     });
 
     it('read middleware is mounted in the correct order', function () {
