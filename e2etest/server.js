@@ -17,6 +17,7 @@ mobileApp = mobileApps(config);
 
 // tables
 mobileApp.tables.add('application', { softDelete: true });
+mobileApp.tables.add('authorized', { authorize: true });
 mobileApp.tables.add('admin', { authorize: true, softDelete: true });
 mobileApp.tables.add('public');
 mobileApp.tables.add('blog_comments', { columns: { postId: 'string', commentText: 'string', name: 'string', test: 'number' } });
@@ -40,5 +41,5 @@ require('./api/movieFinder').register(app);
 require('./api/push').register(app);
 
 mobileApp.initialize().then(function () {
-    app.listen(process.env.PORT || 3000);    
+    app.listen(process.env.PORT || 3000);
 });
