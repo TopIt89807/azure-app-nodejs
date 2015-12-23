@@ -13,14 +13,16 @@ module.exports = function (configuration) {
 
     var api = {
         initialize: function (table) {
-            return api.createTable(table)
-                .catch(function (error) {
-                    if(error.number === errorCodes.ObjectAlreadyExists)
+            return execute(configuration, statements.getColumns(table))
+                .then(function (columns) {
+                    if(columns.length === 0)
+                        return api.createTable(table)
+                            .catch(function (error) {
+                                log.error("Error occurred creating table " + table.name + ":", error);
+                                throw error;
+                            });
+                    else
                         return api.updateSchema(table);
-                    else {
-                        log.error("Error occurred creating table " + table.name + ":", error);
-                        throw error;
-                    }
                 });
         },
 
