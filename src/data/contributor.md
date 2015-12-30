@@ -16,8 +16,8 @@ All functions should return a promise, as constructed by the `create` function i
 
 ## read
 
-The query parameter is a object representation of OData with corresponding property names
-without the $ prefix.
+The query parameter is an object representation of OData with corresponding property names
+without the $ prefix. See https://github.com/Azure/queryjs/blob/dev/src/ODataProvider.coffee#L42 for more details.
 
 The read function should resolve to a result set that the Mobile Apps client SDK expects.
 - For normal queries, this should be an array of results.

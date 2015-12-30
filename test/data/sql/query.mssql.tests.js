@@ -826,6 +826,13 @@ describe('azure-mobile-apps.data.sql.query.mssql', function () {
         equal(result.parameters[0].value, 'test')
     });
 
+    it("formats filters with custom parameter prefixes", function () {
+        var query = { filters : "p1 eq 'test'" },
+            result = formatSql.filter(query, 'z');
+        equal(result.sql, "([p1] = @z1)");
+        equal(result.parameters[0].name, 'z1')
+    });
+
     function verifySqlFormatting(query, expectedSql, metadata) {
         if(metadata) metadata.schema = 'testapp';
         var statements = formatSql(query, metadata || { idType: "number", binaryColumns: [], schema: 'testapp' });
