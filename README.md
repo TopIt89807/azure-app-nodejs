@@ -38,11 +38,12 @@ app.listen(process.env.PORT || 3000);
 
 0. Create a new directory, initialize git, and initialize npm
 
-  `mkdir quickstart`
-
-  `git init`
-
-  `npm init`
+  ```
+  mkdir quickstart
+  cd quickstart
+  git init
+  npm init --yes
+  ```
 
 0. Install (with npm) the azure-mobile-apps and express packages
 
@@ -51,7 +52,7 @@ app.listen(process.env.PORT || 3000);
 0. Create a suitable .gitignore file.  You can generate a suitable .gitignore
 file using the generator at [gitignore.io](https://www.gitignore.io)
 
-0. Create a server.js file and add the following code to the file:
+0. Create a server.js file and add the following code to the file (or use the code from one of our samples):
 
   ```js
   var app = require('express')(); // Create an instance of an Express app
@@ -67,13 +68,12 @@ file using the generator at [gitignore.io](https://www.gitignore.io)
 
 0. Publish your project to an existing Azure Mobile App by adding it as a remote and pushing your changes.
 
-  `git remote add azure https://{user}@{sitename}.scm.azurewebsites.net:443/{sitename}.git`
-
-  `git add package.json server.js`
-
-  `git commit -m 'Quickstart created'`
-
-  `git push azure master`
+  ```
+  git remote add azure https://{user}@{sitename}.scm.azurewebsites.net:443/{sitename}.git
+  git add package.json server.js
+  git commit -m 'Quickstart created'
+  git push azure master
+  ```
 
 For steps 4-5, you can use any of the clients found in the [Client & Server Quickstarts](https://github.com/Azure/azure-mobile-services-quickstarts) to test.
 
@@ -89,7 +89,7 @@ beta library release may not pass end to end tests yet.  A GA release passes all
 tests and is recommended for production code.
 
 We use [GitHub Issues](https://github.com/Azure/azure-mobile-apps-node/issues) to track all work
-with this library.  We use Milestones to track the work going into a particular release.  
+with this library.  We use Milestones to track the work going into a particular release.
 
 ## Contributing
 
