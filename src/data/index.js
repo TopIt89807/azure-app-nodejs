@@ -24,9 +24,10 @@ module.exports = function (configuration) {
 @function read
 @description Execute a query against the table.
 @param {module:queryjs/Query} query The query to execute
-@returns A promise that yields an array. The first element is the results of the query.
-If the includeTotalCount option was set on the query, the second element is the total number of records.
-*/
+@returns A promise that yields the results of the query, as expected by the Mobile Apps client.
+If the query has a single property specified, the result should be a single object.
+If the query has a includeTotalCount property specified, the result should be an object
+containing a results property and a count property. */
 /**
 @function update
 @description Update a row in the table.
