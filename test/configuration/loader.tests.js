@@ -61,7 +61,17 @@ describe('azure-mobile-apps.configuration.loader', function () {
         expect(configuration).to.deep.equal({
             conflictDefinition: { source: '.json', deep: { object: { conflict: 2 } }}
         });
-    })
+    });
+
+    it('merges correctly when loading directories', function () {
+        var configuration = loader.loadPath('./files/jsontables');
+        expect(configuration.conflictDefinition).to.deep.equal({ source: '.json', deep: { object: { conflict: 2 } } });
+        var table = configuration.table1;
+        expect(table).to.have.property('json', true);
+        expect(table).to.have.property('authenticate', true);
+        expect(table.func).to.have.property('json', true);
+        expect(table.func.toString()).to.equal('function () { }');
+    });
 });
 
 function requireWithRefresh(path) {
