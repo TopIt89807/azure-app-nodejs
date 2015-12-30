@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var bodyParser = require('body-parser'),
+    errors = require('../../utilities/errors'),
     strings = require('../../utilities/strings'),
     types = require('../../utilities/types'),
     uuid = require('node-uuid');
@@ -25,9 +26,8 @@ module.exports = function (table) {
 
         if (!req.body && req.headers['content-type'].indexOf('application/json') > -1) {
             bodyParser.json()(req, res, function (error) {
-                if (error) {
+                if(error)
                     error.badRequest = true;
-                }
                 next(error);
             });
         } else {
@@ -40,7 +40,7 @@ module.exports = function (table) {
 
         if (types.isObject(item)) {
             if(!idsMatch(item)) {
-                next(badRequest('The item ID and querystring ID did not match'));
+                next(errors.badRequest('The item ID and querystring ID did not match'));
             } else {
                 // for PATCH operations, the ID can come from the querystring
                 // if no id was specified by the client, set one here. This will be overwritten by autoIncrement if set
@@ -60,11 +60,5 @@ module.exports = function (table) {
         function idsMatch(item) {
             return item.id === undefined || req.params.id === undefined || item.id.toString() === req.params.id.toString();
         }
-    }
-
-    function badRequest(message) {
-        var error = new Error(message);
-        error.badRequest = true;
-        return error;
     }
 };

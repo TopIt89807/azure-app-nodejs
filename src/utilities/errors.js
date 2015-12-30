@@ -9,4 +9,4 @@ function addFactory(target, type) {
     return target;
 }
 
-module.exports = ['badRequest', 'conflict', 'concurrency', 'duplicate', 'notFound'].reduce(addFactory, {});
+module.exports = ['badRequest', 'concurrency', 'duplicate', 'notFound'].reduce(addFactory, {});

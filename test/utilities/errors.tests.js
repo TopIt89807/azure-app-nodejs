@@ -6,7 +6,7 @@
 
 describe('azure-mobile-apps.utilities.errors', function () {
     it('creates error objects', function () {
-        expect(errors.conflict()).to.be.an.instanceof(Error);
+        expect(errors.concurrency()).to.be.an.instanceof(Error);
     });
 
     it('formats messages', function () {
