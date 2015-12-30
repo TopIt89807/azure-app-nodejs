@@ -18,6 +18,7 @@ module.exports = function (table, id, version) {
     return {
         sql: sql,
         parameters: parameters,
-        multiple: true
+        multiple: true,
+        transform: helpers.statements.checkConcurrencyAndTranslate
     };
 };

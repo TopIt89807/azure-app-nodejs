@@ -28,9 +28,18 @@ module.exports = function (table, id, version) {
         deleteStmt = selectStmt + deleteStmt;
     }
 
+    function transformResults(results) {
+        if(!table.softDelete && results && results.length === 2) {
+            // non-soft delete returns results in opposite order due to select -> delete ordering
+            results = [results[1], results[0]];
+        }
+        return helpers.statements.checkConcurrencyAndTranslate(results);
+    }
+
     return {
         sql: deleteStmt,
         parameters: parameters,
-        multiple: true
+        multiple: true,
+        transform: transformResults
     };
 };

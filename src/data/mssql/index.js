@@ -8,6 +8,7 @@ var statements = require('./statements'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     promises = require('../../utilities/promises'),
+    errors = require('../../utilities/errors'),
     queries = require('../../query');
 
 module.exports = function (configuration) {
@@ -37,19 +38,19 @@ module.exports = function (configuration) {
             },
             update: function (item) {
                 assert(item, 'An item to update was not provided');
-                return update(configuration, statements.update(table, item), item).then(returnSingleResultWithConcurrencyCheck);
+                return update(configuration, statements.update(table, item), item);
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');
-                return insert(configuration, statements.insert(table, item), item).then(returnSingleResult);
+                return insert(configuration, statements.insert(table, item), item);
             },
             delete: function (id, version) {
                 assert(id, 'The ID of an item to delete was not provided');
-                return execute(configuration, statements.delete(table, id, version)).then(returnDeleteResults(table));
+                return execute(configuration, statements.delete(table, id, version));
             },
             undelete: function (id, version) {
                 assert(id, 'The ID of an item to undelete was not provided');
-                return execute(configuration, statements.undelete(table, id, version)).then(returnSingleResultWithConcurrencyCheck);
+                return execute(configuration, statements.undelete(table, id, version));
             },
             truncate: function () {
                 return execute(configuration, statements.truncate(table));
@@ -67,42 +68,6 @@ module.exports = function (configuration) {
     };
 
     return tableAccess;
-
-    function returnSingleResult(results) {
-        return translateVersion(results && results[0]);
-    }
-
-    function returnSingleResultWithConcurrencyCheck(results) {
-        if(results && results[0][0].recordsAffected === 0) {
-            var error = new Error('No records were updated');
-            error.concurrency = true;
-            error.item = translateVersion(results.length > 1 && results[1] && results[1].length > 0 && results[1][0]);
-            throw error;
-        }
-        return translateVersion(results && results[1] && results[1][0]);
-    }
-
-    function translateVersion(items) {
-        if(items) {
-            if(items.constructor === Array)
-                return items.map(translateVersion);
-
-            if(items.version)
-                items.version = items.version.toString('base64');
-
-            return items;
-        }
-    }
-
-    function returnDeleteResults(table) {
-        return function (results) {
-            if(!table.softDelete && results && results.length === 2) {
-                // non-soft delete returns results in opposite order due to select -> delete ordering
-                results = [results[1], results[0]];
-            }
-            return returnSingleResultWithConcurrencyCheck(results);
-        }
-    }
 
     function setEncryption() {
         configuration.options = configuration.options || {};

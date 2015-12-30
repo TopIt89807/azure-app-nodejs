@@ -140,7 +140,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
 
         return dynamicSchema(table).execute(config, statements.insert(table, item), item)
             .then(function (inserted) {
-                updatedAt = inserted[0].updatedAt;
+                updatedAt = inserted.updatedAt;
                 // I don't quite understand why the test is occasionally flaky. Suspect datetimeoffset resolution in SQL Server.
                 return promises.sleep();
             })
@@ -148,7 +148,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
                 return dynamicSchema(table).execute(config, statements.update(table, item), item);
             })
             .then(function (updated) {
-                expect(updated[1][0].updatedAt).to.be.greaterThan(updatedAt);
+                expect(updated.updatedAt).to.be.greaterThan(updatedAt);
             });
     });
 

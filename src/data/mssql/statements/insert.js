@@ -32,8 +32,13 @@ module.exports = function (table, item) {
     else
         sql += _.sprintf('SELECT * FROM %s WHERE [id] = @id', tableName);
 
+    function transformResult(results) {
+        return helpers.statements.translateVersion(results[0]);
+    }
+
     return {
         sql: sql,
-        parameters: parameters
+        parameters: parameters,
+        transform: transformResult
     };
 }
