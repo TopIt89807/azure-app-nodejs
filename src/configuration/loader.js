@@ -19,13 +19,12 @@ module.exports = {
             var filesPath = fullPath;
             if(path.extname(fullPath))
                 filesPath = fullPath.slice(0, -path.extname(fullPath).length)
-            
+
             // get all files with supported extensions
             var filePaths = getFilePaths(filesPath);
 
-            if (filePaths.length) {
+            if (filePaths.length)
                 return loadFiles({}, filePaths);
-            }
             else
                 throw new Error('Requested configuration path (' + fullPath + ') does not exist');
         }
@@ -35,23 +34,27 @@ module.exports = {
 }
 
 function loadModule(target, targetPath) {
-    var moduleName = path.basename(targetPath, path.extname(targetPath)),
+    var extension = path.extname(targetPath),
+        moduleName = path.basename(targetPath, extension),
         targetModule = target[moduleName] || {},
         loadedModule;
 
-    try {
-        loadedModule = require(targetPath);
-    } catch (err) {
-        logger.error('Unable to load ' + targetPath, err);
-        throw err;
-    }
-    logger.silly('Loaded ' + targetPath);
+    if(supportedExtensions.indexOf(extension) > -1) {
+        try {
+            loadedModule = require(targetPath);
+        } catch (err) {
+            logger.error('Unable to load ' + targetPath, err);
+            throw err;
+        }
+        logger.silly('Loaded ' + targetPath);
 
-    merge.getConflictingProperties(targetModule, loadedModule).forEach(function (conflict) {
-        logger.warn('Property \'' + conflict + '\' in module ' + moduleName + ' overwritten by JSON configuration');
-    });
-    // due to lexicographic ordering, .js is loaded before .json
-    target[moduleName] = merge.mergeObjects(targetModule, loadedModule);
+        merge.getConflictingProperties(targetModule, loadedModule).forEach(function (conflict) {
+            logger.warn('Property \'' + conflict + '\' in module ' + moduleName + ' overwritten by JSON configuration');
+        });
+        // due to lexicographic ordering, .js is loaded before .json
+        target[moduleName] = merge.mergeObjects(targetModule, loadedModule);
+    }
+
     return target;
 }
 
