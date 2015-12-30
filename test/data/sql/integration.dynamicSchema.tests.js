@@ -119,7 +119,7 @@ describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
                 return execute(config, statements.read(queries.create('dynamicSchema')));
             })
             .then(function (results) {
-                expect(results).to.containSubset([[{ id: 1, value: 'test' }]]);
+                expect(results).to.containSubset([{ id: 1, value: 'test' }]);
             });
     });
 

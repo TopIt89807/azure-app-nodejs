@@ -38,16 +38,20 @@ module.exports = function (config, statement) {
 
         log.silly('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
 
-        return request.query(statement.sql).catch(function (err) {
-            log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
+        return request.query(statement.sql)
+            .then(function (results) {
+                return statement.transform ? statement.transform(results) : results;
+            })
+            .catch(function (err) {
+                log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
 
-            if(err.number === 2627)
-                throw errors.duplicate('An item with the same ID already exists');
+                if(err.number === 2627)
+                    throw errors.duplicate('An item with the same ID already exists');
 
-            if(err.number === 245)
-                throw errors.badRequest('Invalid data type provided');
+                if(err.number === 245)
+                    throw errors.badRequest('Invalid data type provided');
 
-            return promises.rejected(err);
-        });
+                return promises.rejected(err);
+            });
     }
 };

@@ -33,7 +33,7 @@ module.exports = function (configuration) {
         return {
             read: function (query) {
                 query = query || queries.create(table.name);
-                return read(configuration, statements.read(query, table)).then(handleReadResult);
+                return read(configuration, statements.read(query, table));
             },
             update: function (item) {
                 assert(item, 'An item to update was not provided');
@@ -67,18 +67,6 @@ module.exports = function (configuration) {
     };
 
     return tableAccess;
-
-    function handleReadResult(results) {
-        log.verbose('Read query returned ' + results[0].length + ' results');
-        // reads are multiple result sets to allow for total count as the second query
-        if(results.length === 1)
-            return translateVersion(results[0]);
-        else
-            return {
-                results: translateVersion(results[0]),
-                count: results[1][0].count
-            };
-    }
 
     function returnSingleResult(results) {
         return translateVersion(results && results[0]);
