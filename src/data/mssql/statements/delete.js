@@ -1,24 +1,21 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var helpers = require('../helpers');
+var helpers = require('../helpers'),
+    format = require('../query/format'),
+    queries = require('../../../query');
 
-module.exports = function (table, id, version) {
+module.exports = function (table, query) {
     var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
-        deleteStmt = "DELETE FROM " + tableName + " WHERE [id] = @id",
-        selectStmt = "SELECT * FROM " + tableName + " WHERE [id] = @id;",
-        parameters = [{ name: 'id', value: id }];
+        filterClause = format.filter(queries.toOData(query)),
+        deleteStmt = "DELETE FROM " + tableName + " WHERE " + filterClause.sql + ";",
+        selectStmt = "SELECT * FROM " + tableName + " WHERE " + filterClause.sql + ";";
 
     if (table.softDelete) {
-        deleteStmt = "UPDATE TOP (1) " + tableName + " SET [deleted] = 1 WHERE [id] = @id AND [deleted] = 0";
+        deleteStmt = "UPDATE TOP (1) " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0;";
     }
 
-    if (version) {
-        deleteStmt += " AND [version] = @version ";
-        parameters.push({ name: 'version', value: new Buffer(version, 'base64') });
-    }
-
-    deleteStmt += ";SELECT @@rowcount AS recordsAffected;";
+    deleteStmt += "SELECT @@rowcount AS recordsAffected;";
 
     if (table.softDelete) {
         // if soft delete, select after delete
@@ -29,16 +26,16 @@ module.exports = function (table, id, version) {
     }
 
     function transformResults(results) {
-        if(!table.softDelete && results && results.length === 2) {
-            // non-soft delete returns results in opposite order due to select -> delete ordering
+        // non-soft delete returns results in opposite order due to select -> delete ordering
+        if(!table.softDelete && results && results.length === 2)
             results = [results[1], results[0]];
-        }
+
         return helpers.statements.checkConcurrencyAndTranslate(results);
     }
 
     return {
         sql: deleteStmt,
-        parameters: parameters,
+        parameters: filterClause.parameters,
         multiple: true,
         transform: transformResults
     };

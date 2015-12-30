@@ -21,6 +21,6 @@ module.exports = {
     },
     delete: function (req, res) {
         var context = req.azureMobile;
-        return context.data(context.table).delete(context.id, context.version);
+        return context.data(context.table).delete(context.query);
     }
 }

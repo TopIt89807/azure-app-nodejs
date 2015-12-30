@@ -152,6 +152,6 @@ describe('azure-mobile-apps.data.sql.integration', function () {
     }
 
     function del(id) {
-        return operations.delete(id);
+        return operations.delete(queries.create('integration').where({ id: id }));
     }
 });
