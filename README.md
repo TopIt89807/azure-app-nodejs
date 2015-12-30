@@ -38,12 +38,12 @@ app.listen(process.env.PORT || 3000);
 
 0. Create a new directory, initialize git, and initialize npm
 
-```
-mkdir quickstart
-cd quickstart
-git init
-npm init --yes
-```
+  ```
+  mkdir quickstart
+  cd quickstart
+  git init
+  npm init --yes
+  ```
 
 0. Install (with npm) the azure-mobile-apps and express packages
 
@@ -68,12 +68,12 @@ file using the generator at [gitignore.io](https://www.gitignore.io)
 
 0. Publish your project to an existing Azure Mobile App by adding it as a remote and pushing your changes.
 
-```
-git remote add azure https://{user}@{sitename}.scm.azurewebsites.net:443/{sitename}.git
-git add package.json server.js
-git commit -m 'Quickstart created'
-git push azure master
-```
+  ```
+  git remote add azure https://{user}@{sitename}.scm.azurewebsites.net:443/{sitename}.git
+  git add package.json server.js
+  git commit -m 'Quickstart created'
+  git push azure master
+  ```
 
 For steps 4-5, you can use any of the clients found in the [Client & Server Quickstarts](https://github.com/Azure/azure-mobile-services-quickstarts) to test.
 
