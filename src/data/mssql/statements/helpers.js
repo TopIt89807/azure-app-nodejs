@@ -23,8 +23,8 @@ var helpers = module.exports = {
         }, { sql: '', parameters: [], multiple: true, transform: transform });
     },
     checkConcurrencyAndTranslate: function (results) {
-        var item = helpers.translateVersion(results[1][0]),
-            recordsAffected = results[0][0].recordsAffected;
+        var recordsAffected = results[0][0].recordsAffected,
+            item = helpers.translateVersion(results[1][0]);
 
         if(recordsAffected === 0) {
             var error = errors.concurrency('No records were updated');

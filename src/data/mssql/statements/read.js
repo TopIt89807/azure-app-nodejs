@@ -17,8 +17,9 @@ module.exports = function (source, tableConfig) {
 };
 
 function transformResult(results) {
-    log.verbose('Read query returned ' + results[0].length + ' results');
-    // reads are multiple result sets to allow for total count as the second query
+    log.silly('Read query returned ' + results[0].length + ' results');
+
+    // if there is more than one result set, total count is the second query
     if(results.length === 1)
         return helpers.translateVersion(results[0]);
     else

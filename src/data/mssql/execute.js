@@ -5,6 +5,7 @@ var mssql = require('mssql'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
     errors = require('../../utilities/errors'),
+    errorCodes = require('./errorCodes'),
     log = require('../../logger'),
     connection, connectionPromise;
 
@@ -45,10 +46,10 @@ module.exports = function (config, statement) {
             .catch(function (err) {
                 log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
 
-                if(err.number === 2627)
+                if(err.number === errorCodes.UniqueConstraintViolation)
                     throw errors.duplicate('An item with the same ID already exists');
 
-                if(err.number === 245)
+                if(err.number === errorCodes.InvalidDataType)
                     throw errors.badRequest('Invalid data type provided');
 
                 return promises.rejected(err);
