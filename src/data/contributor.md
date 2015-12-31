@@ -74,15 +74,15 @@ The delete function should delete records matching the provided query.
 - If a single item is deleted, it should resolve to the deleted item. This is the behavior
   that is exposed to the client.
 - If multiple items are deleted, it should resolve to an array of those items.
-- If the `version` parameter is specified, it should only delete the record if the `version`
+- If the `version` parameter is specified, it should only delete records if the `version`
   property matches.
-- If the `version` property does not match, an `Error` should be thrown with the `concurrency`
-  property set to true.
+- If the `version` property is specified and no records are deleted, an `Error` should be
+  thrown with the `concurrency` property set to true.
 - If the `softDelete` option is specified on the table configuration, the record should be
   recoverable by calling undelete, and should be queryable by specifying the `includeDeleted`
   option on read queries.
 
-The query object is in the format described in the read section. For simple data provider scenarios, the query object has an `id` property corresponding with the value passed in the querystring.
+The query object is in the format described in the read section. For simple data provider scenarios, the query object has an `id` property corresponding with the value passed in the querystring of delete requests.
 
 ### undelete
 
@@ -93,14 +93,14 @@ The undelete function should restore records matching the provided query.
 - If a single item is undeleted, it should resolve to the restored item. This is the behavior
   that is exposed to the client.
 - If multiple items are undeleted, it should resolve to an array of those items.
-- If the `version` parameter is specified, it should only restore the record if the `version`
+- If the `version` parameter is specified, it should only restore records if the `version`
   property matches.
-- If the `version` property does not match, an `Error` should be thrown with the `concurrency`
-  property set to true.
+- If the `version` property is specified and no records are restored, an `Error` should be
+  thrown with the `concurrency` property set to true.
 - If the `softDelete` option is not specified on the table configuration, this function
-  should have no effect.
+  should have no effect and resolve to undefined.
 
-The query object is in the format described in the read section. For simple data provider scenarios, the query object has an `id` property corresponding with the value passed in the querystring.
+The query object is in the format described in the read section. For simple data provider scenarios, the query object has an `id` property corresponding with the value passed in the querystring of undelete requests.
 
 ### truncate
 
