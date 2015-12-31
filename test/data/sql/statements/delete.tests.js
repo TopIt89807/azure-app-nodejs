@@ -21,7 +21,7 @@ describe('azure-mobile-apps.data.sql.statements', function () {
 
         it('generates soft delete statement and params', function () {
             var statement = del({ name: 'table', softDelete: true }, queries.create('table').where({ id: 'id' }));
-            expect(statement.sql).to.equal('UPDATE TOP (1) [dbo].[table] SET [deleted] = 1 WHERE ([id] = @p1) AND [deleted] = 0;SELECT @@rowcount AS recordsAffected;SELECT * FROM [dbo].[table] WHERE ([id] = @p1);');
+            expect(statement.sql).to.equal('UPDATE [dbo].[table] SET [deleted] = 1 WHERE ([id] = @p1) AND [deleted] = 0;SELECT @@rowcount AS recordsAffected;SELECT * FROM [dbo].[table] WHERE ([id] = @p1);');
             expect(statement.parameters).to.containSubset([{ name: 'p1', value: 'id' }]);
         });
     });

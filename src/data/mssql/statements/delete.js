@@ -14,7 +14,7 @@ module.exports = function (table, query, version) {
         parameters = Array.prototype.slice.apply(filterClause.parameters);
 
     if (table.softDelete)
-        deleteStmt = "UPDATE TOP (1) " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0";
+        deleteStmt = "UPDATE " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0";
 
     if (version) {
         deleteStmt += " AND [version] = @version";

@@ -24,7 +24,17 @@ var helpers = module.exports = {
     },
     checkConcurrencyAndTranslate: function (results) {
         var recordsAffected = results[0][0].recordsAffected,
-            item = helpers.translateVersion(results[1][0]);
+            records = results[1],
+            item;
+
+        if (records.length === 0)
+            item = undefined;
+        else if (records.length === 1)
+            item = records[0];
+        else
+            item = records;
+            
+        item = helpers.translateVersion(item);
 
         if(recordsAffected === 0) {
             var error = errors.concurrency('No records were updated');

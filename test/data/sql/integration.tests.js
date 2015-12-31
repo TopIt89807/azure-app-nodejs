@@ -167,6 +167,22 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             });
     });
 
+    it("handles deletes of multiple records", function () {
+        return insert({ id: '1', p1: 1 })
+            .then(function () {
+                return insert({ id: '2', p1: 1 })
+            })
+            .then(function () {
+                return insert({ id: '3', p1: 2 })
+            })
+            .then(function () {
+                return operations.delete(queries.create('integration').where({ p1: 1 }));
+            })
+            .then(function (deleted) {
+                expect(deleted.length).to.equal(2);
+            });
+    });
+
     function read() {
         return operations.read(queries.create('integration'));
     }
