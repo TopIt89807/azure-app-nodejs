@@ -36,9 +36,9 @@ module.exports = function (configuration) {
                 query = query || queries.create(table.name);
                 return read(configuration, statements.read(query, table));
             },
-            update: function (item) {
+            update: function (item, query) {
                 assert(item, 'An item to update was not provided');
-                return update(configuration, statements.update(table, item), item);
+                return update(configuration, statements.update(table, item, query), item);
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');

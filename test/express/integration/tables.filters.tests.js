@@ -46,6 +46,20 @@ describe('azure-mobile-apps.express.integration.tables.filters', function () {
             .expect(200);
     });
 
+    it('allows filters on updates and returns a 404 when filtered', function () {
+        return supertest(app)
+            .patch('/tables/filters/3')
+            .send({ userId: '1' })
+            .expect(404);
+    });
+
+    it('allows filters on updates and behaves as normal when not filtered', function () {
+        return supertest(app)
+            .patch('/tables/filters/1')
+            .send({ userId: '1' })
+            .expect(200);
+    });
+
     function filter(context) {
         context.query.where({ userId: '1' });
         return context.execute();

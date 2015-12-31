@@ -3,14 +3,17 @@
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
     errors = require('../../../utilities/errors'),
+    format = require('../query/format'),
+    queries = require('../../../query'),
     mssql = require('mssql'),
     _ = require('underscore.string');
 
-module.exports = function (table, item) {
+module.exports = function (table, item, query) {
     var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
         setStatements = [],
         versionValue,
-        parameters = [];
+        parameters = [],
+        filter = filterClause();
 
     for (var prop in item) {
         if(item.hasOwnProperty(prop)) {
@@ -27,15 +30,16 @@ module.exports = function (table, item) {
         }
     }
 
-    var sql = _.sprintf("UPDATE %s SET %s WHERE [id] = @id ", tableName, setStatements.join(','));
+    var sql = _.sprintf("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql);
     parameters.push({ name: 'id', type: helpers.getMssqlType(item.id, true), value: item.id });
+    parameters.push.apply(parameters, filter.parameters);
 
     if (versionValue) {
-        sql += "AND [version] = @version ";
+        sql += " AND [version] = @version";
         parameters.push({ name: 'version', type: mssql.VarBinary, value: new Buffer(versionValue, 'base64') });
     }
 
-    sql += _.sprintf("; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM %s WHERE [id] = @id", tableName);
+    sql += _.sprintf("; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql);
 
     return {
         sql: sql,
@@ -43,4 +47,15 @@ module.exports = function (table, item) {
         multiple: true,
         transform: helpers.statements.checkConcurrencyAndTranslate
     };
+
+    function filterClause() {
+        if(!query)
+            return { sql: '', parameters: [] };
+
+        var filter = format.filter(queries.toOData(query), 'q');
+        if(filter.sql)
+            filter.sql = ' AND ' + filter.sql;
+
+        return filter;
+    }
 };

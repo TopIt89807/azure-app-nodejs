@@ -10,6 +10,7 @@ and adds appropriate routes for each HTTP verb to a provided express router.
 
 var parseQuery = require('../middleware/parseQuery'),
     parseItem = require('../middleware/parseItem'),
+    createQuery = require('../middleware/createQuery'),
     authorize = require('../middleware/authorize'),
     notAllowed = require('../middleware/notAllowed'),
     nextLink = require('../middleware/nextLink'),
@@ -29,7 +30,7 @@ module.exports = function (table) {
     configureOperation('read', 'get', [idRoute], [parseQuery(table)], [eTag]);
     configureOperation('insert', 'post', [defaultRoute], [parseItem(table)], [eTag]);
     configureOperation('undelete', 'post', [idRoute], [parseQuery(table)], [eTag]);
-    configureOperation('update', 'patch', [defaultRoute, idRoute], [parseItem(table)], [eTag]);
+    configureOperation('update', 'patch', [defaultRoute, idRoute], [parseItem(table), createQuery(table)], [eTag]);
     configureOperation('delete', 'delete', [defaultRoute, idRoute], [parseQuery(table)], [eTag]);
 
     // Return table middleware configured by the user (set on the middleware.execute property by the table module).

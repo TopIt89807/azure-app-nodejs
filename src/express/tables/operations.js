@@ -17,7 +17,7 @@ module.exports = {
     },
     patch: function (req, res) {
         var context = req.azureMobile;
-        return context.data(context.table).update(context.item);
+        return context.data(context.table).update(context.item, context.query);
     },
     delete: function (req, res) {
         var context = req.azureMobile;
