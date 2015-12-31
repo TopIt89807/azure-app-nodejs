@@ -25,11 +25,8 @@ module.exports = function (table) {
             context.query.includeDeleted = true;
 
         var etag = req.get('if-match');
-        if(etag) {
+        if(etag)
             context.version = etag;
-            context.query.where({ version: etag });
-            context.query.version = etag;
-        }
 
         // set take to the min of $top and pageSize, can be overridden in server middleware
         context.query = context.query.take(Math.min(table.pageSize, req.query.$top));

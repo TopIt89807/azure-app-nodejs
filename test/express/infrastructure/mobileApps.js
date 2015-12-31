@@ -3,8 +3,7 @@
 // ----------------------------------------------------------------------------
 
 var mobileApp = require('../../..'),
-    config = require('./config'),
-    merge = require('deeply');
+    config = require('./config');
 
 var api = module.exports = function (userSuppliedConfig, environment) {
     return mobileApp.buildApp(config(userSuppliedConfig, environment));

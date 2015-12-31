@@ -46,7 +46,7 @@ function applyCommandLineArguments(config) {
         customArgs = {};
 
     // filter for custom arguments
-    args.forEach(function (arg, index) { 
+    args.forEach(function (arg, index) {
         if (arg.slice(0, 3) === '---') {
             customArgs[arg.slice(3)] = args[index + 1];
         }

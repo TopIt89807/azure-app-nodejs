@@ -44,9 +44,9 @@ module.exports = function (configuration) {
                 assert(item, 'An item to insert was not provided');
                 return insert(configuration, statements.insert(table, item), item);
             },
-            delete: function (query) {
+            delete: function (query, version) {
                 assert(query, 'The delete query was not provided');
-                return execute(configuration, statements.delete(table, query));
+                return execute(configuration, statements.delete(table, query, version));
             },
             undelete: function (id, version) {
                 assert(id, 'The ID of an item to undelete was not provided');

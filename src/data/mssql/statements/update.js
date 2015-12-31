@@ -32,7 +32,7 @@ module.exports = function (table, item) {
 
     if (versionValue) {
         sql += "AND [version] = @version ";
-        parameters.push({ name: 'version', type: mssql.VarBinary, value: new Buffer(versionValue, 'base64') })
+        parameters.push({ name: 'version', type: mssql.VarBinary, value: new Buffer(versionValue, 'base64') });
     }
 
     sql += _.sprintf("; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM %s WHERE [id] = @id", tableName);
