@@ -1,19 +1,22 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var helpers = require('../helpers');
+var helpers = require('../helpers'),
+    format = require('../query/format'),
+    queries = require('../../../query');
 
-module.exports = function (table, id, version) {
+module.exports = function (table, query, version) {
     var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
-        sql = "UPDATE " + tableName + " SET deleted = 0 WHERE [id] = @id",
-        parameters = [{ name: 'id', value: id }];
+        filterClause = format.filter(queries.toOData(query)),
+        sql = "UPDATE " + tableName + " SET deleted = 0 WHERE " + filterClause.sql,
+        parameters = Array.prototype.slice.apply(filterClause.parameters);
 
     if (version) {
         sql += " AND [version] = @version ";
         parameters.push({ name: 'version', value: new Buffer(version, 'base64') });
     }
 
-    sql += "; SELECT @@rowcount AS recordsAffected; SELECT * FROM " + tableName + " WHERE [id] = @id";
+    sql += "; SELECT @@rowcount AS recordsAffected; SELECT * FROM " + tableName + " WHERE " + filterClause.sql;
 
     return {
         sql: sql,

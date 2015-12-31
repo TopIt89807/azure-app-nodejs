@@ -60,6 +60,36 @@ describe('azure-mobile-apps.express.integration.tables.filters', function () {
             .expect(200);
     });
 
+    it('allows filters on deletes and returns a 404 when filtered', function () {
+        return supertest(app)
+            .delete('/tables/filters/1')
+            .expect(200)
+            .then(function () {
+                return supertest(app)
+                    .patch('/tables/filters/1')
+                    .send({ userId: '2' })
+                    // this 404s because the updated record isn't selected back out after the userId is changed
+                    .expect(404)
+            })
+            .then(function () {
+                // this succeeds in the test below, so we know the above update actually succeeded
+                return supertest(app)
+                    .post('/tables/filters/1')
+                    .expect(404)
+            });
+    });
+
+    it('allows filters on deletes and behaves as normal when not filtered', function () {
+        return supertest(app)
+            .delete('/tables/filters/1')
+            .expect(200)
+            .then(function () {
+                return supertest(app)
+                    .post('/tables/filters/1')
+                    .expect(200)
+            });
+    });
+
     function filter(context) {
         context.query.where({ userId: '1' });
         return context.execute();
@@ -72,11 +102,13 @@ describe('azure-mobile-apps.express.integration.tables.filters', function () {
         table.read(filter);
         table.update(filter);
         table.delete(filter);
+        table.undelete(filter);
         table.seed = [
             { id: '1', userId: '1' },
             { id: '2', userId: '1' },
             { id: '3', userId: '2' }
         ];
+        table.softDelete = true;
 
         mobileApp.tables.add('filters', table);
         app.use(mobileApp);
