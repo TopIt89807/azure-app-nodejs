@@ -32,6 +32,7 @@ containing a results property and a count property. */
 @function update
 @description Update a row in the table.
 @param {object} item The item to update
+@param {module:queryjs/Query} query An optional query to filter updates
 @returns A promise that yields the updated object
 */
 /**
@@ -43,14 +44,14 @@ containing a results property and a count property. */
 /**
 @function delete
 @description Delete an item from the table
-@param {string|number} id The id of the item to delete
+@param {module:queryjs/Query} query A query for a record to delete
 @param {string} version Base64 encoded row version
 @returns A promise that yields the deleted object
 */
 /**
 @function undelete
 @description Undelete an item from the table
-@param {string|number} id The id of the item to delete
+@param {module:queryjs/Query} query A query for a record to undelete
 @param {string} version Base64 encoded row version
 @returns A promise that yields the undeleted object
 */
