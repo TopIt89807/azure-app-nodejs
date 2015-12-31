@@ -92,8 +92,8 @@ The truncate function should clear all items from the table and resolve when com
 
 ### initialize
 The initialize function should
-- create the columns specified in the `columns` property of the table configuration,
-- insert items into the table specified in the `seed` property of the table configuration,
+- create appropriate schema as specified by the `columns` property of the table configuration,
+- insert items into the table specified by the `seed` property of the table configuration,
 - perform any other table initialization, such as index creation
 
 ## Consuming the Data Provider
