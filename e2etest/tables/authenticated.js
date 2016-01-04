@@ -43,7 +43,7 @@ function matchUserId(id) {
 function extractClientTokens(identities) {
 	return Object.keys(identities).reduce(function (tokens, provider) {
 		tokens[provider] = {
-			access_token: identities[provider].access_token;
+			access_token: identities[provider].access_token
 		};
 		if (provider === 'twitter') {
 			tokens[provider].access_token_secret = identities[provider].access_token_secret;
