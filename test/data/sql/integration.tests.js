@@ -139,6 +139,50 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             });
     });
 
+    it("handles updates with queries", function () {
+        return insert({ id: '1', p1: 1 })
+            .then(function () {
+                return operations.update({ id: '1', p1: 2 }, queries.create('integration').where({ p1: 1 }));
+            })
+            .then(function (result) {
+                expect(result).to.containSubset({ id: '1', p1: 2 });
+                return operations.update({ id: '1', p1: 3 }, queries.create('integration').where({ p1: 1 }));
+            })
+            .then(function () {
+                throw new Error('Update succeeded when it should have failed');
+            })
+            .catch(function () { });
+    });
+
+    it("handles deletes with queries", function () {
+        return insert({ id: '1', p1: 1 })
+            .then(function () {
+                return operations.delete(queries.create('integration').where({ id: 1, p1: 2 }));
+            })
+            .then(function () {
+                throw new Error('Update succeeded when it should have failed');
+            })
+            .catch(function () {
+                return operations.delete(queries.create('integration').where({ id: 1, p1: 1 }));
+            });
+    });
+
+    it("handles deletes of multiple records", function () {
+        return insert({ id: '1', p1: 1 })
+            .then(function () {
+                return insert({ id: '2', p1: 1 })
+            })
+            .then(function () {
+                return insert({ id: '3', p1: 2 })
+            })
+            .then(function () {
+                return operations.delete(queries.create('integration').where({ p1: 1 }));
+            })
+            .then(function (deleted) {
+                expect(deleted.length).to.equal(2);
+            });
+    });
+
     function read() {
         return operations.read(queries.create('integration'));
     }
@@ -152,6 +196,6 @@ describe('azure-mobile-apps.data.sql.integration', function () {
     }
 
     function del(id) {
-        return operations.delete(id);
+        return operations.delete(queries.create('integration').where({ id: id }));
     }
 });

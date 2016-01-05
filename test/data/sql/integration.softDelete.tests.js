@@ -77,10 +77,16 @@ describe('azure-mobile-apps.data.sql.integration.softDelete', function () {
     }
 
     function del(id, version) {
-        return operations.delete(id, version);
+        var query = queries.create('integration').where({ id: id });
+        if(version)
+            query.where({ version: version });
+        return operations.delete(query);
     }
 
     function undelete(id, version) {
-        return operations.undelete(id, version);
+        var query = queries.create('integration').where({ id: id });
+        if(version)
+            query.where({ version: version });
+        return operations.undelete(query, version);
     }
 });

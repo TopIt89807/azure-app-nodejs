@@ -20,9 +20,9 @@ module.exports = function (table) {
     }
 
     function parseItem (req, res, next) {
-        if (!req.headers['content-type']) {
+        // by default, we are going to parse json
+        if (!req.headers['content-type'])
             req.headers['content-type'] = 'application/json';
-        }
 
         if (!req.body && req.headers['content-type'].indexOf('application/json') > -1) {
             bodyParser.json()(req, res, function (error) {
@@ -31,6 +31,7 @@ module.exports = function (table) {
                 next(error);
             });
         } else {
+            // if the request specified something other than json, assume another parser middleware is going to handle it
             next();
         }
     }

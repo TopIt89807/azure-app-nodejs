@@ -19,8 +19,9 @@ module.exports = function (query, tableConfig) {
     return formatter.format(query);
 };
 
-module.exports.filter = function (query, tableConfig) {
+module.exports.filter = function (query, parameterPrefix, tableConfig) {
     var formatter = new SqlFormatter(tableConfig);
+    formatter.parameterPrefix = parameterPrefix || 'p';
     formatter._formatFilter(query);
     return formatter.statement;
 }
@@ -30,6 +31,7 @@ function ctor(tableConfig) {
     this.flavor = this.tableConfig.flavor || 'mssql';
     this.statement = { sql: '', parameters: [], multiple: true };
     this.paramNumber = 0;
+    this.parameterPrefix = 'p';
 
     if (this.flavor !== 'sqlite') {
         this.schemaName = this.tableConfig.schema || 'dbo';
@@ -365,7 +367,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
 
     _createParameter: function (value, type) {
         var parameter = {
-            name: 'p' + (++this.paramNumber).toString(),
+            name: this.parameterPrefix + (++this.paramNumber).toString(),
             pos: this.paramNumber,
             value: value,
             type: type
@@ -373,7 +375,7 @@ var SqlFormatter = types.deriveClass(ExpressionVisitor, ctor, {
 
         this.statement.parameters.push(parameter);
 
-        return '@p' + this.paramNumber.toString();
+        return '@' + this.parameterPrefix + this.paramNumber.toString();
     },
 
     visitMember: function (expr) {

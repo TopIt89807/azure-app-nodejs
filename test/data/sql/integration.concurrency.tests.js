@@ -4,6 +4,7 @@
 var config = require('./infrastructure/config'),
     execute = require('../../../src/data/mssql/execute'),
     index = require('../../../src/data/mssql'),
+    queries = require('../../../src/query'),
     expect = require('chai').expect,
     operations;
 
@@ -53,7 +54,7 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
             }, function () { });
     });
 
-    it('updates items with correct version', function () {
+    it('deletes items with correct version', function () {
         return insert({ id: '1', value: 'test' })
             .then(function (inserted) {
                 return del('1', inserted.version);
@@ -86,6 +87,9 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
     }
 
     function del(id, version) {
-        return operations.delete(id, version);
+        var query = queries.create('integration').where({ id: id });
+        if(version)
+            query.where({ version: version });
+        return operations.delete(query);
     }
 });
