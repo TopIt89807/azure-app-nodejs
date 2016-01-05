@@ -9,7 +9,7 @@ var execute = require('./execute'),
 module.exports = function (table) {
     var api = {
         execute: function (config, statement, item, attempt) {
-            var schema = schemas(config),            
+            var schema = schemas(config),
             attempt = attempt || 1;
 
             return execute(config, statement)
@@ -37,7 +37,7 @@ module.exports = function (table) {
                     // if dynamic schema is enabled and the error is invalid column, it is likely that the schema has not been
                     // updated to include the column. V1 behavior is to return an empty array, maintain this behavior.
                     if((err.number === errorCodes.InvalidColumnName || err.number === errorCodes.InvalidObjectName)) {
-                        var result = [[]];
+                        var result = [];
                         return result;
                     }
                     throw err;

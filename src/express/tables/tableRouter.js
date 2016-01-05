@@ -26,11 +26,11 @@ module.exports = function (table) {
         router = table.execute;
 
     configureOperation('read', 'get', [defaultRoute], [parseQuery(table)], [nextLink]);
-    configureOperation('read', 'get', [idRoute], [parseQuery(table)], [eTag.readIdResult]);
-    configureOperation('insert', 'post', [defaultRoute], [parseItem(table)], [eTag.singleResult]);
-    configureOperation('undelete', 'post', [idRoute], [parseQuery(table)], [eTag.singleResult]);
-    configureOperation('update', 'patch', [defaultRoute, idRoute], [parseItem(table)], [eTag.singleResult]);
-    configureOperation('delete', 'delete', [defaultRoute, idRoute], [parseQuery(table)], [eTag.singleResult]);
+    configureOperation('read', 'get', [idRoute], [parseQuery(table)], [eTag]);
+    configureOperation('insert', 'post', [defaultRoute], [parseItem(table)], [eTag]);
+    configureOperation('undelete', 'post', [idRoute], [parseQuery(table)], [eTag]);
+    configureOperation('update', 'patch', [defaultRoute, idRoute], [parseItem(table)], [eTag]);
+    configureOperation('delete', 'delete', [defaultRoute, idRoute], [parseQuery(table)], [eTag]);
 
     // Return table middleware configured by the user (set on the middleware.execute property by the table module).
     // If none has been provided, just return the router we configured

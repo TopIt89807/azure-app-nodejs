@@ -4,9 +4,12 @@
 
 var types = require('../../utilities/types'),
     strings = require('../../utilities/strings'),
+    statementHelpers = require('./statements/helpers'),
     mssql = require('mssql');
 
 var helpers = module.exports = {
+    statements: statementHelpers,
+
     // Performs the following validations on the specified identifier:
     // - first char is alphabetic or an underscore
     // - all other characters are alphanumeric or underscore
@@ -39,7 +42,7 @@ var helpers = module.exports = {
     },
 
     formatTableName: function (schemaName, tableName) {
-        
+
         this.validateIdentifier(tableName);
 
         if (schemaName !== undefined) {
@@ -47,7 +50,7 @@ var helpers = module.exports = {
             this.validateIdentifier(schemaName);
             return '[' + schemaName + '].[' + tableName + ']';
         }
-        
+
         return '[' + tableName + ']';
     },
 

@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var queries = require('../../query');
+var queries = require('../../query'),
+    errors = require('../../utilities/errors');
 
 // parse OData query from querystring into queryjs query object and attach to request object
 module.exports = function (table) {
@@ -34,11 +35,10 @@ module.exports = function (table) {
         function enforceMaxTop() {
             if(table.maxTop) {
                 var top = req.query.$top;
-                if(top > table.maxTop) {
-                    var error = new Error("You cannot request more than " + table.maxTop + " records");
-                    error.badRequest = true;
-                    next(error);
-                }
+
+                if(top > table.maxTop)
+                    throw errors.badRequest("You cannot request more than " + table.maxTop + " records");
+
                 if(!top)
                     req.query.$top = table.maxTop
             }

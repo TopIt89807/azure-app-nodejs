@@ -13,20 +13,20 @@ var index = require('../../../src/data/mssql'),
 
 describe('azure-mobile-apps.data.sql.integration', function () {
     before(function (done) {
-        operations = index(config)({ 
-            name: 'integration', 
+        operations = index(config)({
+            name: 'integration',
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         });
 
-        operations.initialize().then(done);
+        operations.initialize().then(done).catch(done);
     });
 
     beforeEach(function (done) {
-        return operations.truncate().then(done);
+        return operations.truncate().then(done).catch(done);
     });
 
     after(function (done) {
-        index(config).execute({ sql: 'DROP TABLE integration' }).then(done);
+        index(config).execute({ sql: 'DROP TABLE integration' }).then(done).catch(done);
     });
 
     it("basic connection test", function () {
@@ -79,8 +79,8 @@ describe('azure-mobile-apps.data.sql.integration', function () {
     });
 
     it("returns softDeleted record", function () {
-        operations = index(config)({ 
-            name: 'integration', 
+        operations = index(config)({
+            name: 'integration',
             softDelete: true,
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         });

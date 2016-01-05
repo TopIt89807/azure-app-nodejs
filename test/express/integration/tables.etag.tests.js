@@ -15,9 +15,9 @@ describe('azure-mobile-apps.express.integration.tables.etag', function () {
         mobileApp = mobileApps({ pageSize: 2 });
         var table = mobileApps.table();
         table.read(function (context) {
-            return [{
+            return {
                 id: '1', version: 'ver'
-            }];
+            };
         });
         mobileApp.tables.add('headers', table);
         app.use(mobileApp);

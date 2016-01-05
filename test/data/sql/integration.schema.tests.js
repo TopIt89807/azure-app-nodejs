@@ -24,7 +24,7 @@ describe('azure-mobile-apps.data.sql.integration.schema', function () {
                 return execute(config, statements.read(queries.create('schemaTest')));
             })
             .then(function (results) {
-                expect(results[0].length).to.equal(2);
+                expect(results.length).to.equal(2);
             })
     });
 
@@ -37,7 +37,7 @@ describe('azure-mobile-apps.data.sql.integration.schema', function () {
                 return execute(config, statements.read(queries.create('schemaTest')));
             })
             .then(function (results) {
-                expect(results[0].length).to.equal(2);
+                expect(results.length).to.equal(2);
             })
     });
 });

@@ -818,15 +818,23 @@ describe('azure-mobile-apps.data.sql.query.mssql', function () {
         }
     });
 
+    it("formats filters", function () {
+        var query = { filters : "p1 eq 'test'" },
+            result = formatSql.filter(query);
+        equal(result.sql, "([p1] = @p1)");
+        equal(result.parameters[0].name, 'p1')
+        equal(result.parameters[0].value, 'test')
+    });
+
     function verifySqlFormatting(query, expectedSql, metadata) {
         if(metadata) metadata.schema = 'testapp';
         var statements = formatSql(query, metadata || { idType: "number", binaryColumns: [], schema: 'testapp' });
-        
+
         var expectedStatements = expectedSql;
         if (expectedSql.constructor !== Array) {
             expectedStatements = [expectedSql];
         }
-        
+
         for (var i = 0; i < statements.length; i++) {
             equal(statements[i].sql, expectedStatements[i]);
         }
