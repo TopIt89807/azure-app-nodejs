@@ -63,4 +63,7 @@ module.exports = {
     //  secret: 'my-zumo-secret',
     //  expires: 1440 // in seconds
     //}
+
+    // Provide a home page for the project
+    homePage: true
 };
