@@ -75,8 +75,8 @@ The delete function should delete records matching the provided query.
   that is exposed to the client.
 - If multiple items are deleted, it should resolve to an array of those items.
 - If the `version` parameter is specified, it should only delete records if the `version`
-  property matches.
-- If the `version` property is specified and no records are deleted, an `Error` should be
+  property matches. If it is not, concurrency is ignored.
+- If the `version` parameter is specified and no records are deleted, an `Error` should be
   thrown with the `concurrency` property set to true.
 - If the `softDelete` option is specified on the table configuration, the record should be
   recoverable by calling undelete, and should be queryable by specifying the `includeDeleted`
@@ -94,8 +94,8 @@ The undelete function should restore records matching the provided query.
   that is exposed to the client.
 - If multiple items are undeleted, it should resolve to an array of those items.
 - If the `version` parameter is specified, it should only restore records if the `version`
-  property matches.
-- If the `version` property is specified and no records are restored, an `Error` should be
+  property matches. If it is not, concurrency is ignored.
+- If the `version` parameter is specified and no records are restored, an `Error` should be
   thrown with the `concurrency` property set to true.
 - If the `softDelete` option is not specified on the table configuration, this function
   should have no effect and resolve to undefined.
