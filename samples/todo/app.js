@@ -15,9 +15,9 @@ var app = express();
 // Configuration of the Azure Mobile Apps can be done via an object, the
 // environment or an auxiliary file.  You can check out the default object
 // within node_modules/azure-mobile-apps/index.js (look for defaults).  You
-// can also export an object using azureMobile.js (it is required).  In this
-// sample, check out the example azureMobile.js file
-var mobile = azureMobileApps();
+// can also export an object using azureMobile.js.  In this sample, check 
+// out the example azureMobile.js file
+var mobile = azureMobileApps({ homePage: true });
 
 // Import the files from the tables directory to configure the /tables API
 mobile.tables.import('./tables');
