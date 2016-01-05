@@ -34,7 +34,7 @@ mobileApp.tables.import('tables');
 app.use(mobileApp);
 
 // custom APIs
-app.get('/api/jwtTokenGenerator', require('./api/jwtTokenGenerator')(config));
+app.get('/api/jwtTokenGenerator', require('./api/jwtTokenGenerator')(mobileApp.configuration));
 app.get('/api/runtimeInfo', require('./api/runtimeInfo'));
 require('./api/applicationPermission').register(app);
 require('./api/movieFinder').register(app);
