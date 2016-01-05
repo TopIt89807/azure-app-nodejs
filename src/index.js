@@ -70,8 +70,6 @@ var api = module.exports = function (configuration, environment) {
     loadConfiguration.fromEnvironment(configuration, environment || process.env);
     loadConfiguration.fromSettingsJson(configuration);
 
-    api.configureGlobals(configuration);
-
     return api.buildApp(configuration);
 };
 
@@ -81,8 +79,8 @@ api.configureGlobals = function (configuration) {
     promises.setConstructor(configuration.promiseConstructor);
 };
 
-
 api.buildApp = function (configuration) {
+    api.configureGlobals(configuration);
     return platforms[configuration.platform](configuration);
 };
 
