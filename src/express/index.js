@@ -48,20 +48,20 @@ module.exports = function (configuration) {
         customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();
 
+    if(!configuration.hosted)
+        mobileApp
+            .use(crossOrigin(configuration))
+            .use(configuration.authStubRoute, authStub(configuration));
+
     mobileApp
         .use(version(configuration))
         .use(createContext(configuration))
+        .use(authenticate(configuration))
         .use(customMiddlewareRouter)
         .use(configuration.notificationRootPath || '/push/installations', notifications(configuration))
         .use(configuration.apiRootPath || '/api', apiMiddleware)
         .use(configuration.tableRootPath || '/tables', apiVersionCheck(configuration), tableMiddleware, renderResults)
         .use(handleError(configuration));
-
-    if(!configuration.hosted)
-        mobileApp
-            .use(authenticate(configuration))
-            .use(crossOrigin(configuration))
-            .use(configuration.authStubRoute, authStub(configuration));
 
     if(configuration.homePage)
         mobileApp.use('/', express.static(__dirname + '/../templates/static'));
