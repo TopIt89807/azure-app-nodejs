@@ -53,7 +53,7 @@ var loadConfiguration = require('./configuration'),
             schema: 'dbo',
             dynamicSchema: true
         },
-        auth: { secret: '0000' },
+        auth: { secret: '0000', validateTokens: false },
         notifications: { }
     };
 
