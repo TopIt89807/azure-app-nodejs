@@ -58,7 +58,7 @@ module.exports = function (configuration) {
         .use(handleError(configuration));
 
     if(configuration.homePage)
-        mobileApp.use('/', express.static(__dirname + '/../static'));
+        mobileApp.use('/', express.static(__dirname + '/../templates/static'));
 
     var api = function (req, res, next) {
         mobileApp(req, res, next);

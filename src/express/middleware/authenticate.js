@@ -6,12 +6,12 @@ var auth = require('../../auth'),
 
 module.exports = function (configuration) {
     if(configuration && configuration.auth && Object.keys(configuration.auth).length > 0) {
+        var authUtils = auth(configuration.auth);
+
         return function (req, res, next) {
             var token = req.get('x-zumo-auth');
 
             if(token) {
-                var authUtils = auth(configuration.auth);
-
                 req.azureMobile = req.azureMobile || {};
                 req.azureMobile.auth = authUtils;
 
