@@ -59,9 +59,9 @@ module.exports = function (configuration) {
 
     if(!configuration.hosted)
         mobileApp
-            .use(configuration.authStubRoute, authStub(configuration))
             .use(authenticate(configuration))
-            .use(crossOrigin(configuration));
+            .use(crossOrigin(configuration))
+            .use(configuration.authStubRoute, authStub(configuration));
 
     if(configuration.homePage)
         mobileApp.use('/', express.static(__dirname + '/../templates/static'));
