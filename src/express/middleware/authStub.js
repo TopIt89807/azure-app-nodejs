@@ -37,7 +37,7 @@ module.exports = function (configuration) {
                     };
                 //res.send('<html><body>Hello!</body></html>');
                 //res.redirect('/.auth/login/done#token=' + encodeURIComponent(JSON.stringify(envelope.oauth)));
-                res.send("<script>window.onload = function () { if (window.opener) window.opener.postMessage('" + JSON.stringify(envelope) + "', '*') }</script>");
+                res.send("<script>window.onload = function () { if (window.opener) window.opener.postMessage('" + JSON.stringify(envelope) + "', '*'); window.location.href = '/.auth/login/done#token=" + encodeURIComponent(JSON.stringify(envelope.oauth)) + "' }</script>");
 
                 function expiry() {
                     // expire local tokens after a day
