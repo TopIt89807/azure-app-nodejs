@@ -12,14 +12,15 @@ var express = require('express'),
     customApi = require('./api'),
     tables = require('./tables'),
     table = require('./tables/table'),
-    notifications = require('./middleware/notifications'),
-    createContext = require('./middleware/createContext'),
+    apiVersionCheck = require('./middleware/apiVersionCheck'),
     authenticate = require('./middleware/authenticate'),
-    handleError = require('./middleware/handleError'),
+    authStub = require('./middleware/authStub'),
+    createContext = require('./middleware/createContext'),
     crossOrigin = require('./middleware/crossOrigin'),
+    handleError = require('./middleware/handleError'),
+    notifications = require('./middleware/notifications'),
     renderResults = require('./middleware/renderResults'),
     version = require('./middleware/version'),
-    apiVersionCheck = require('./middleware/apiVersionCheck'),
     log = require('../logger'),
     assert = require('../utilities/assert').argument;
 
@@ -47,15 +48,20 @@ module.exports = function (configuration) {
         customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();
 
-    mobileApp.use(version(configuration))
+    mobileApp
+        .use(version(configuration))
         .use(createContext(configuration))
-        .use(authenticate(configuration))
-        .use(crossOrigin(configuration))
         .use(customMiddlewareRouter)
         .use(configuration.notificationRootPath || '/push/installations', notifications(configuration))
         .use(configuration.apiRootPath || '/api', apiMiddleware)
         .use(configuration.tableRootPath || '/tables', apiVersionCheck(configuration), tableMiddleware, renderResults)
         .use(handleError(configuration));
+
+    if(!configuration.hosted)
+        mobileApp
+            .use(configuration.authStubRoute, authStub(configuration))
+            .use(authenticate(configuration))
+            .use(crossOrigin(configuration));
 
     if(configuration.homePage)
         mobileApp.use('/', express.static(__dirname + '/../templates/static'));

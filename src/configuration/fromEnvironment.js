@@ -28,7 +28,7 @@ var connectionString = require('./connectionString'),
 // determine various configuration information from environment such as web.config settings, etc.
 module.exports = function (configuration, environment) {
     configuration.data = configuration.data || {};
-    
+
     Object.keys(environment).forEach(function (key) {
         switch(key.toLowerCase()) {
             case 'ms_mobileloglevel':
@@ -91,6 +91,9 @@ module.exports = function (configuration, environment) {
                 break;
 
             case 'website_hostname':
+                // using website_hostname to determine that we are hosted on Azure Web Apps
+                configuration.hosted = true;
+                
                 configuration.auth.audience = 'https://' + environment[key] + '/';
                 configuration.auth.issuer = 'https://' + environment[key] + '/';
                 break;

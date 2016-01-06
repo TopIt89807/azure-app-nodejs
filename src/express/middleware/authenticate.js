@@ -17,11 +17,13 @@ module.exports = function (configuration) {
 
                 authUtils.validate(token)
                     .then(function (user) {
+                        log.silly('Authentication succeeded: ' + user.id);
                         req.azureMobile = req.azureMobile || {};
                         req.azureMobile.user = user;
                         next();
                     })
                     .catch(function (error) {
+                        log.silly('Authentication failed: ' + error.message);
                         res.status(401).send(error);
                     });
             } else {
@@ -29,7 +31,6 @@ module.exports = function (configuration) {
             }
         };
     } else {
-        //log.info('Authentication configuration was not specified. Requests will not be authenticated.');
         return function (req, res, next) {
             next();
         };

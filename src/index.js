@@ -28,6 +28,7 @@ var loadConfiguration = require('./configuration'),
         apiRootPath: '/api',
         tableRootPath: '/tables',
         notificationRootPath: '/push/installations',
+        authStubRoute: '/.auth/login/:provider',
         debug: environment.debug,
         version: 'node-' + require('../package.json').version,
         homePage: false,
@@ -52,8 +53,8 @@ var loadConfiguration = require('./configuration'),
             schema: 'dbo',
             dynamicSchema: true
         },
-        notifications: { },
-        auth: { }
+        auth: { secret: '0000' },
+        notifications: { }
     };
 
 /**
