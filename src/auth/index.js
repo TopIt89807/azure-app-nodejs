@@ -40,6 +40,9 @@ module.exports = function (configuration) {
                 });
             });
         },
+        decode: function (token) {
+            return user(configuration, token, jwt.decode(token));
+        },
         /**
         Create a token from the specified payload
         @param {object} payload The payload to sign

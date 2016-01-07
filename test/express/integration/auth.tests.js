@@ -19,52 +19,109 @@ describe('azure-mobile-apps.express.integration.auth', function () {
         mobileApp = mobileApps({ auth: { secret: secret, getIdentity: getIdentity } });
     });
 
-    it('returns 200 for table requests with valid auth token', function () {
-        mobileApp.tables.add('todoitem');
-        app.use(mobileApp);
+    describe('when validating tokens', function () {
+        it('returns 200 for table requests with valid auth token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
 
-        return supertest(app)
-            .get('/tables/todoitem')
-            .set('x-zumo-auth', token)
-            .expect(200);
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', token)
+                .expect(200);
+        });
+
+        it('returns 200 for table requests with no auth token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(200);
+        });
+
+        it('returns 401 for table requests with invalid auth token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', 'invalid token')
+                .expect(401);
+        });
+
+        it('returns 401 for table requests against authorized table with no token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem', { authorize: true });
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(401);
+        });
+
+        it('returns 200 for table requests against authorized table with valid token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem', { authorize: true });
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', token)
+                .expect(200);
+        });
     });
 
-    it('returns 200 for table requests with no auth token', function () {
-        mobileApp.tables.add('todoitem');
-        app.use(mobileApp);
+    describe('when decoding tokens', function () {
+        it('returns 200 for table requests with valid auth token', function () {
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
 
-        return supertest(app)
-            .get('/tables/todoitem')
-            .expect(200);
-    });
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', token)
+                .expect(200);
+        });
 
-    it('returns 401 for table requests with invalid auth token', function () {
-        mobileApp.tables.add('todoitem');
-        app.use(mobileApp);
+        it('returns 200 for table requests with no auth token', function () {
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
 
-        return supertest(app)
-            .get('/tables/todoitem')
-            .set('x-zumo-auth', 'invalid token')
-            .expect(401);
-    });
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(200);
+        });
 
-    it('returns 401 for table requests against authorized table with no token', function () {
-        mobileApp.tables.add('todoitem', { authorize: true });
-        app.use(mobileApp);
+        it('returns 401 for table requests with invalid auth token', function () {
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
 
-        return supertest(app)
-            .get('/tables/todoitem')
-            .expect(401);
-    });
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', 'invalid token')
+                .expect(401);
+        });
 
-    it('returns 200 for table requests against authorized table with valid token', function () {
-        mobileApp.tables.add('todoitem', { authorize: true });
-        app.use(mobileApp);
+        it('returns 401 for table requests against authorized table with no token', function () {
+            mobileApp.tables.add('todoitem', { authorize: true });
+            app.use(mobileApp);
 
-        return supertest(app)
-            .get('/tables/todoitem')
-            .set('x-zumo-auth', token)
-            .expect(200);
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(401);
+        });
+
+        it('returns 200 for table requests against authorized table with valid token', function () {
+            mobileApp.tables.add('todoitem', { authorize: true });
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', token)
+                .expect(200);
+        });
     });
 
     it('attaches user object to context object', function () {
