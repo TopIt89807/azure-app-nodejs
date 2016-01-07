@@ -72,6 +72,27 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .set('x-zumo-auth', token)
                 .expect(200);
         });
+
+        it('validates tokens when not hosted', function () {
+            mobileApp.configuration.hosted = false;
+            mobileApp.tables.add('todoitem', { authorize: true });
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(401);
+        });
+
+        it('returns 401 for well formed but invalid token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ')
+                .expect(401);
+        });
     });
 
     describe('when decoding tokens', function () {
@@ -121,6 +142,17 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .get('/tables/todoitem')
                 .set('x-zumo-auth', token)
                 .expect(200);
+        });
+
+        it('returns 200 for well formed but invalid token', function () {
+            mobileApp.configuration.auth.validateTokens = true;
+            mobileApp.tables.add('todoitem');
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .set('x-zumo-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ')
+                .expect(401);
         });
     });
 
