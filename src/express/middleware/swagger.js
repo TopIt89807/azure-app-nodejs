@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var swaggerui = require('./swagger-ui'),
     swagger = require('../../swagger'),
-    promises = require('../../utilities/promises')
+    promises = require('../../utilities/promises'),
     express = require('express');
 
 module.exports = function(configuration) {

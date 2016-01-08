@@ -36,7 +36,7 @@ describe('azure-mobile-apps.express.integration.swagger', function () {
         app.use(mobileApp);
 
         return supertest(app)
-            .get('/swagger/ui')
+            .get('/swagger/ui/?url=http://localhost/swagger')
             .expect(200);
     });
 
