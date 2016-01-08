@@ -26,6 +26,7 @@ describe('azure-mobile-apps.swagger', function () {
         expect(swagger(configuration)('/', [schema])).to.containSubset({
             "swagger": "2.0",
             "basePath": "/",
+            "info": {},
             "tags": {},
             "paths": {},
             "definitions": { errorType: {} }

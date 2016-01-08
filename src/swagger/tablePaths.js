@@ -37,7 +37,7 @@ module.exports = function (configuration) {
 
         paths['/tables/' + schema.name + '/{id}'] = {
             get: createOperation({
-                summary: 'Query the ' + schema.name + ' table',
+                summary: 'Find a specific record in the ' + schema.name + ' table',
                 description: 'Return the ' + schema.name + ' object is returned that corresponds with the provided id.',
                 parameters: ['id'],
                 responses: {
@@ -107,6 +107,7 @@ module.exports = function (configuration) {
                     in: "path"
                 },
                 'body': {
+                    name: "body",
                     description: "The item",
                     required: true,
                     schema: {
@@ -127,7 +128,7 @@ module.exports = function (configuration) {
                 return ({
                     'item': { $ref: '#/definitions/' + schema.name },
                     'array': { type: 'array', items: { $ref: '#/definitions/' + schema.name } },
-                    'error': { $ref: '#/definitions/errorType' }
+                    'error': undefined //{ $ref: '#/definitions/errorType' }
                 })[type];
             }
         }
