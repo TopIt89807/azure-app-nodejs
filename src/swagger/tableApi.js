@@ -16,15 +16,11 @@ module.exports = function (configuration) {
                         {
                             name: "id",
                             description: "The record identifier",
-                            required: true,
+                            required: false,
                             type: "string",
                             paramType: "path"
                         }
                     ]
-                }, {
-                    method: 'GET',
-                    summary: 'Query the ' + table.name + ' table',
-                    type: 'object'
                 }, {
                     method: 'POST',
                     summary: 'Insert a record into the ' + table.name + ' table',
