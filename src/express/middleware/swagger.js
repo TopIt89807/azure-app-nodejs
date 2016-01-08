@@ -19,13 +19,9 @@ module.exports = function(configuration) {
 
         getTableSchemas()
             .then(function (schemas) {
-                res.json(swagger(configuration)(baseUrl(), schemas));
+                res.json(swagger(configuration)('/', schemas));
             })
             .catch(next);
-
-        function baseUrl() {
-            return req.protocol + '://' + req.hostname + '/' + req.baseUrl;
-        }
 
         function getTableSchemas() {
             var tables = configuration.tables;

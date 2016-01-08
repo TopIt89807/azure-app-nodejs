@@ -3,8 +3,8 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').use(require('chai-subset')).expect,
     swagger = require('../../src/swagger'),
-    api = require('../../src/swagger/tableApi'),
-    model = require('../../src/swagger/tableModel'),
+    path = require('../../src/swagger/tablePath'),
+    definition = require('../../src/swagger/tableDefinition'),
 
     table = { name: 'todoitem' },
     schema = {
@@ -23,34 +23,30 @@ var expect = require('chai').use(require('chai-subset')).expect,
 
 describe('azure-mobile-apps.swagger', function () {
     it("generates basic swagger structure", function () {
-        expect(swagger(configuration)('http://localhost/', [schema])).to.containSubset({
-            "swaggerVersion": "1.2",
-            "basePath": "http://localhost/",
-            "apis": [],
-            "models": {}
+        expect(swagger(configuration)('/', [schema])).to.containSubset({
+            "swagger": "2.0",
+            "basePath": "/",
+            "tags": {},
+            "paths": {},
+            "definitions": {}
         });
     });
 
-    describe('tables.api', function () {
-        it("generates API definitions for tables", function () {
-            expect(api(configuration)(table)).to.containSubset({
-                path: '\\tables\\todoitem\\{id}', // Backslash... WTF???
-                operations: [
-                    { method: 'GET', parameters: [ { name: "id" } ] },
-                    { method: 'GET', },
-                    { method: 'POST', },
-                    { method: 'PATCH', },
-                    { method: 'DELETE', parameters: [ { name: "id" } ] },
-                    { method: 'POST', parameters: [ { name: "id" } ] }
-                ]
+    describe('tables.path', function () {
+        it("generates path object for tables", function () {
+            expect(path(configuration)(table)).to.containSubset({
+                get: { parameters: [ { name: "id" } ] },
+                post: { parameters: [ { name: "id" }, { in: 'body' } ] },
+                patch: { parameters: [ { in: 'body' } ]},
+                delete: { parameters: [ { name: "id" } ] },
             });
         });
     });
 
-    describe('tables.model', function () {
-        it("generates model definition for tables from columns", function () {
-            expect(model(configuration)(table, schema)).to.containSubset({
-                id: 'todoitem',
+    describe('tables.definition', function () {
+        it("generates definition object for tables from columns", function () {
+            expect(definition(configuration)(table, schema)).to.containSubset({
+                type: 'object',
                 properties: {
                     'number': { type: 'number', format: 'float' },
                     'boolean': { type: 'boolean' },

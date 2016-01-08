@@ -5,7 +5,7 @@
 module.exports = function (configuration) {
     return function (table, schema) {
         return {
-            id: table.name,
+            type: 'object',
             properties: properties()
         };
 

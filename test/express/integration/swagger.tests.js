@@ -31,6 +31,15 @@ describe('azure-mobile-apps.express.integration.swagger', function () {
             });
     });
 
+    it("redirects to swagger-ui with url", function () {
+        mobileApp = mobileApps({ swagger: true });
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/swagger/ui')
+            .expect(302);
+    });
+
     it("exposes swagger-ui", function () {
         mobileApp = mobileApps({ swagger: true });
         app.use(mobileApp);
@@ -41,20 +50,17 @@ describe('azure-mobile-apps.express.integration.swagger', function () {
     });
 
     var metadataSubset = {
-        apis: [{
-            path: '\\tables\\todoitem\\{id}',
-            operations: [
-                { method: 'GET', parameters: [ { name: "id" } ] },
-                { method: 'GET', },
-                { method: 'POST', },
-                { method: 'PATCH', },
-                { method: 'DELETE', parameters: [ { name: "id" } ] },
-                { method: 'POST', parameters: [ { name: "id" } ] }
-            ]
-        }],
-        models: {
+        paths: {
+            '/tables/todoitem': {
+                get: { parameters: [ { name: 'id', in: 'path' } ] },
+                post: { parameters: [ { name: 'id', in: 'path' }, { in: 'body' } ] },
+                patch: { parameters: [ { in: 'body' } ]},
+                delete: { parameters: [ { name: "id", in: 'path' } ] },
+            }
+        },
+        definitions: {
             todoitem: {
-                id: 'todoitem',
+                type: 'object',
                 properties: {
                     id: { type: 'string' },
                     createdAt: { type: 'string', format: 'date-time' },
