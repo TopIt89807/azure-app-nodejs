@@ -12,15 +12,6 @@ var express = require('express'),
     customApi = require('./api'),
     tables = require('./tables'),
     table = require('./tables/table'),
-    apiVersionCheck = require('./middleware/apiVersionCheck'),
-    authenticate = require('./middleware/authenticate'),
-    authStub = require('./middleware/authStub'),
-    createContext = require('./middleware/createContext'),
-    crossOrigin = require('./middleware/crossOrigin'),
-    handleError = require('./middleware/handleError'),
-    notifications = require('./middleware/notifications'),
-    renderResults = require('./middleware/renderResults'),
-    version = require('./middleware/version'),
     log = require('../logger'),
     assert = require('../utilities/assert').argument;
 
@@ -50,21 +41,24 @@ module.exports = function (configuration) {
 
     if(!configuration.hosted)
         mobileApp
-            .use(crossOrigin(configuration))
-            .use(configuration.authStubRoute, authStub(configuration));
+            .use(middleware('crossOrigin'))
+            .use(configuration.authStubRoute, middleware('authStub'));
 
     mobileApp
-        .use(version(configuration))
-        .use(createContext(configuration))
-        .use(authenticate(configuration))
+        .use(middleware('version'))
+        .use(middleware('createContext'))
+        .use(middleware('authenticate'))
         .use(customMiddlewareRouter)
-        .use(configuration.notificationRootPath || '/push/installations', notifications(configuration))
+        .use(configuration.notificationRootPath || '/push/installations', middleware('notifications'))
         .use(configuration.apiRootPath || '/api', apiMiddleware)
-        .use(configuration.tableRootPath || '/tables', apiVersionCheck(configuration), tableMiddleware, renderResults)
-        .use(handleError(configuration));
+        .use(configuration.tableRootPath || '/tables', middleware('apiVersionCheck'), tableMiddleware, middleware('renderResults'))
+        .use(middleware('handleError'));
 
     if(configuration.homePage)
         mobileApp.use('/', express.static(__dirname + '/../templates/static'));
+
+    if(configuration.swagger)
+        mobileApp.use(configuration.swaggerPath, middleware('swagger'));
 
     var api = function (req, res, next) {
         mobileApp(req, res, next);
@@ -79,6 +73,10 @@ module.exports = function (configuration) {
     }
 
     return api;
+
+    function middleware(name) {
+        return require('./middleware/' + name)(configuration);
+    }
 };
 
 /**
