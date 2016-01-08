@@ -20,7 +20,7 @@ describe('azure-mobile-apps.express.integration.swagger', function () {
             .expect(function (res) {
                 expect(res.body).to.containSubset({
                     apis: [{
-                        path: '\\tables\\todoitem\\{id}', // WTF???
+                        path: '\\tables\\todoitem\\{id}',
                         operations: [
                             { method: 'GET', parameters: [ { name: "id" } ] },
                             { method: 'GET', },

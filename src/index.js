@@ -33,6 +33,7 @@ var loadConfiguration = require('./configuration'),
         debug: environment.debug,
         version: 'node-' + require('../package.json').version,
         homePage: false,
+        swagger: false,
         maxTop: 1000,
         pageSize: 50,
         logging: {

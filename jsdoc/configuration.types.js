@@ -8,9 +8,13 @@ The top level configuration object.
 @property {string} basePath=. - Base path to use for the application
 @property {string} configFile=azureMobile.js - Name of the file that exports configuration objects to load
 @property {Promise} promiseConstructor Promise constructor to use
+@property {bool} homePage Show a welcome page when navigating to the root mobile app path
+@property {bool} swagger Expose swagger metadata at the path set in the swaggerPath configuration setting
 @property {string} apiRootPath=/api - Directory to load api configuration from
 @property {string} tableRootPath=/tables - Directory to load table configuration from
 @property {string} notificationRootPath=/push/installations - Notification installations endpoint
+@property {string} swaggerPath=/swagger - Swagger metadata endpoint
+@property {string} authStubRoute=.auth/login/:provider - Route to use to emulate authentication login requests
 @property {bool} debug=false - Run the server in debug mode. Automatically turned on when node is executed with the --debug option
 @property {string} version - Current version of the Azure Mobile Apps SDK
 @property {integer} maxTop=1000 - Limit the maximum number of rows a client can request
@@ -23,7 +27,7 @@ The top level configuration object.
 */
 
 /**
-Logging configuration. See {@link https://github.com/winstonjs/winston#instantiating-your-own-logger} 
+Logging configuration. See {@link https://github.com/winstonjs/winston#instantiating-your-own-logger}
 @typedef loggingConfiguration
 @property {string} level=info - Minimum level of messages to log
 @property {transports[]} transports=Console - Array of winston transports to log messages to
