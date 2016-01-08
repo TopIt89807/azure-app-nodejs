@@ -27,7 +27,17 @@ module.exports = function (configuration) {
             definitions: tableSchemas.reduce(function (definitions, schema) {
                 definitions[schema.name] = createTableDefinition(configuration.tables[schema.name], schema);
                 return definitions;
-            }, {})
+            }, { errorType: errorDefinition() })
         };
+
+        function errorDefinition() {
+            return {
+                type: 'object',
+                properties: {
+                    error: { type: 'string', description: 'The error message' },
+                    stack: { type: 'string', description: 'If debug mode is enabled, the stack trace for the error' }
+                }
+            };
+        }
     };
 };
