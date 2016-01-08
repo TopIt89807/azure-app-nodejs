@@ -3,22 +3,24 @@
 // ----------------------------------------------------------------------------
 var tableApi = require('./tableApi'),
     tableModel = require('./tableModel'),
-    object = require('../utilities/object');
+    object = require('../utilities/object'),
+    data = require('../data');
 
 module.exports = function (configuration) {
     var tableApiDefinition = tableApi(configuration),
         tableModelDefinition = tableModel(configuration),
-        tables = object.values(configuration.tables);
+        tables = object.values(configuration.tables),
+        dataProvider = data(configuration);
 
-    return function (baseUrl) {
+    return function (baseUrl, tableSchemas) {
         return {
             swaggerVersion: "1.2",
             basePath: baseUrl,
             apis: tables.map(tableApiDefinition),
-            models: tables.reduce(function (models, table) {
-                models[table.name] = tableModelDefinition();
+            models: tableSchemas.reduce(function (models, schema) {
+                models[schema.name] = tableModelDefinition(configuration.tables[schema.name], schema);
                 return models;
-            })
+            }, {})
         };
     };
 };

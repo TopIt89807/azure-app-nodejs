@@ -6,17 +6,22 @@ Data providers should implement and export the following interface:
 
 ````
 module.exports = function (configuration) {
-    return {
-        read: function (query) { },
-        update: function (item, query) { },
-        insert: function (item) { },
-        delete: function (query, version) { },
-        undelete: function (query, version) { },
-        truncate: function () { },
-        initialize: function () { }
-    }
-}
+    return function(table) {
+        return {
+            read: function (query) { },
+            update: function (item, query) { },
+            insert: function (item) { },
+            delete: function (query, version) { },
+            undelete: function (query, version) { },
+            truncate: function () { },
+            initialize: function () { },
+            schema: function () { }
+        };
+    };
+};
 ````
+
+The top level function should accept a dataConfiguration object and return a factory function that accepts a tableConfiguration object and returns a table access object as described.
 
 All functions should return a promise, as constructed by the `create` function in the `azure-mobile-apps/src/utilities/promises` module.
 
@@ -117,6 +122,24 @@ The initialize function should
 - create appropriate schema as specified by the `columns` property of the table configuration,
 - insert items into the table specified by the `seed` property of the table configuration,
 - perform any other table initialization, such as index creation
+
+### schema
+
+    function () { }
+
+The schema function should resolve to an object with the following example structure:
+
+    {
+        name: 'table1',
+        properties: [
+            { name: "stringColumn", type: "string" },
+            { name: "numberColumn", type: "number" },
+            { name: "booleanColumn", type: "boolean" },
+            { name: "datetimeColumn", type: "datetime" }
+        ]
+    }
+
+The schema function is currently only required to support swagger functionality.
 
 ## Consuming the Data Provider
 

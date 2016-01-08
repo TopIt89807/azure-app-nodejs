@@ -3,15 +3,15 @@
 // ----------------------------------------------------------------------------
 
 module.exports = function (configuration) {
-    return function (table, columns) {
+    return function (table, schema) {
         return {
             id: table.name,
             properties: properties()
         };
 
         function properties() {
-            return columns.reduce(function (target, column) {
-                target[column.name] = mapType(column.type);
+            return schema.properties.reduce(function (target, property) {
+                target[property.name] = mapType(property.type);
                 return target;
             }, {});
         }
@@ -34,20 +34,3 @@ function mapType(type) {
         })[type]
     }
 }
-
-/*
-{
-    "Category": {
-      "id": "Category",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    }
-}
-*/

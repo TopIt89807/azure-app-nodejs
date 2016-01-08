@@ -7,20 +7,23 @@ var expect = require('chai').use(require('chai-subset')).expect,
     model = require('../../src/swagger/tableModel'),
 
     table = { name: 'todoitem' },
-    columns = [
-        { name: 'number', type: 'number' },
-        { name: 'boolean', type: 'boolean' },
-        { name: 'string', type: 'string' },
-        { name: 'datetime', type: 'datetime' },
-    ],
+    schema = {
+        name: 'todoitem',
+        properties: [
+            { name: 'number', type: 'number' },
+            { name: 'boolean', type: 'boolean' },
+            { name: 'string', type: 'string' },
+            { name: 'datetime', type: 'datetime' },
+        ]
+    },
     configuration = {
         tableRootPath: '/tables',
-        tables: [table]
+        tables: { todoitem: table }
     };
 
 describe('azure-mobile-apps.swagger', function () {
     it("generates basic swagger structure", function () {
-        expect(swagger(configuration)('http://localhost/')).to.containSubset({
+        expect(swagger(configuration)('http://localhost/', [schema])).to.containSubset({
             "swaggerVersion": "1.2",
             "basePath": "http://localhost/",
             "apis": [],
@@ -46,7 +49,7 @@ describe('azure-mobile-apps.swagger', function () {
 
     describe('tables.model', function () {
         it("generates model definition for tables from columns", function () {
-            expect(model(configuration)(table, columns)).to.containSubset({
+            expect(model(configuration)(table, schema)).to.containSubset({
                 id: 'todoitem',
                 properties: {
                     'number': { type: 'number', format: 'float' },

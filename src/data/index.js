@@ -65,3 +65,8 @@ containing a results property and a count property. */
 @description Create or update the underlying database table with the columns specified in the table configuration.
 @returns A promise that resolves when the table schema has been created or updated.
 */
+/**
+@function schema
+@description Return the underlying schema for the table
+@returns A promise that yields an object that contains the table schema (currently only columns).
+*/
