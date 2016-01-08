@@ -1,17 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var express = require('express'),
+var swaggerui = require('./swagger-ui'),
     swagger = require('../../swagger'),
-    promises = require('../../utilities/promises');
+    promises = require('../../utilities/promises')
+    express = require('express');
 
 module.exports = function(configuration) {
-    var router = express.Router(),
-        uiPath = resolveSwaggerUi();
+    var router = express.Router();
 
+    router.use('/ui', swaggerui(configuration));
     router.use('/', metadata);
-    if(uiPath)
-        router.use('/ui', express.static(uiPath));
 
     return router;
 
@@ -34,11 +33,5 @@ module.exports = function(configuration) {
                 return data(tables[tableName]).schema();
             }));
         }
-    }
-
-    function resolveSwaggerUi() {
-        try {
-            return require.resolve('swagger-ui') + '/dist';
-        } catch(error) { }
     }
 };
