@@ -36,7 +36,7 @@ describe('azure-mobile-apps.swagger', function () {
         it("generates path objects for tables", function () {
             expect(paths(configuration)(table)).to.containSubset({
                 '/tables/todoitem': {
-                    get: { parameters: [ { name: "$filter" } ] },
+                    get: { parameters: [ ] },
                     post: { parameters: [ { in: 'body' } ] },
                     patch: { parameters: [ { in: 'body' } ]},
                 },
