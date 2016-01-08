@@ -52,10 +52,15 @@ describe('azure-mobile-apps.express.integration.swagger', function () {
     var metadataSubset = {
         paths: {
             '/tables/todoitem': {
-                get: { parameters: [ { name: 'id', in: 'path' } ] },
-                post: { parameters: [ { name: 'id', in: 'path' }, { in: 'body' } ] },
+                get: { parameters: [ { name: "$filter" } ] },
+                post: { parameters: [ { in: 'body' } ] },
                 patch: { parameters: [ { in: 'body' } ]},
-                delete: { parameters: [ { name: "id", in: 'path' } ] },
+            },
+            '/tables/todoitem/{id}': {
+                get: { parameters: [ { name: "id" } ] },
+                post: { parameters: [ { name: "id" } ] },
+                patch: { parameters: [ { name: "id" }, { in: 'body' } ]},
+                delete: { parameters: [ { name: "id" } ] }
             }
         },
         definitions: {

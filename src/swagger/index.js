@@ -2,9 +2,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var tableDefinition = require('./tableDefinition'),
-    tablePaths = require('./tablePath'),
+    tablePaths = require('./tablePaths'),
     tableTag = require('./tableTag'),
     object = require('../utilities/object'),
+    merge = require('deeply'),
     data = require('../data');
 
 module.exports = function (configuration) {
@@ -20,7 +21,7 @@ module.exports = function (configuration) {
             basePath: basePath,
             tags: tables.map(createTableTag),
             paths: tableSchemas.reduce(function (paths, schema) {
-                paths['/tables/' + schema.name] = createTablePaths(schema);
+                paths = merge(paths, createTablePaths(schema));
                 return paths;
             }, {}),
             definitions: tableSchemas.reduce(function (definitions, schema) {

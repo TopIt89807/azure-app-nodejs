@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').use(require('chai-subset')).expect,
     swagger = require('../../src/swagger'),
-    path = require('../../src/swagger/tablePath'),
+    paths = require('../../src/swagger/tablePaths'),
     definition = require('../../src/swagger/tableDefinition'),
 
     table = { name: 'todoitem' },
@@ -33,12 +33,19 @@ describe('azure-mobile-apps.swagger', function () {
     });
 
     describe('tables.path', function () {
-        it("generates path object for tables", function () {
-            expect(path(configuration)(table)).to.containSubset({
-                get: { parameters: [ { name: "id" } ] },
-                post: { parameters: [ { name: "id" }, { in: 'body' } ] },
-                patch: { parameters: [ { in: 'body' } ]},
-                delete: { parameters: [ { name: "id" } ] },
+        it("generates path objects for tables", function () {
+            expect(paths(configuration)(table)).to.containSubset({
+                '/tables/todoitem': {
+                    get: { parameters: [ { name: "$filter" } ] },
+                    post: { parameters: [ { in: 'body' } ] },
+                    patch: { parameters: [ { in: 'body' } ]},
+                },
+                '/tables/todoitem/{id}': {
+                    get: { parameters: [ { name: "id" } ] },
+                    post: { parameters: [ { name: "id" } ] },
+                    patch: { parameters: [ { name: "id" }, { in: 'body' } ]},
+                    delete: { parameters: [ { name: "id" } ] }
+                }
             });
         });
     });
