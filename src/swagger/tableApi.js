@@ -11,7 +11,7 @@ module.exports = function (configuration) {
                 {
                     method: 'GET',
                     summary: 'Return the record specified by the id parameter from the ' + table.name + ' table',
-                    type: 'object',
+                    type: table.name,
                     parameters: [
                         {
                             name: "id",
@@ -28,15 +28,15 @@ module.exports = function (configuration) {
                 }, {
                     method: 'POST',
                     summary: 'Insert a record into the ' + table.name + ' table',
-                    type: 'object'
+                    type: table.name
                 }, {
                     method: 'PATCH',
                     summary: 'Update a record in the ' + table.name + ' table',
-                    type: 'object'
+                    type: table.name
                 }, {
                     method: 'DELETE',
                     summary: 'Delete a record from the ' + table.name + ' table',
-                    type: 'object',
+                    type: table.name,
                     parameters: [
                         {
                             name: "id",
@@ -49,7 +49,7 @@ module.exports = function (configuration) {
                 }, {
                     method: 'POST',
                     summary: 'Undelete a record from the ' + table.name + ' table',
-                    type: 'object',
+                    type: table.name,
                     parameters: [
                         {
                             name: "id",
