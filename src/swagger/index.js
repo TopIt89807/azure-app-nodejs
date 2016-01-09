@@ -19,7 +19,10 @@ module.exports = function (configuration) {
         return {
             swagger: "2.0",
             basePath: basePath,
-            info: { title: configuration.name || 'Azure Mobile App' },
+            info: {
+                title: configuration.name || 'Azure Mobile App',
+                version: '1.0.0'
+            },
             tags: tables.map(createTableTag),
             paths: tableSchemas.reduce(function (paths, schema) {
                 paths = merge(paths, createTablePaths(schema));
