@@ -20,6 +20,8 @@ module.exports = function (configuration) {
             swagger: "2.0",
             basePath: basePath,
             host: host,
+            consumes: ['application/json'],
+            produces: ['application/json'],
             info: {
                 title: configuration.name || 'Azure Mobile App',
                 version: configuration.apiVersion

@@ -11,26 +11,28 @@ module.exports = function (configuration) {
 
         function properties() {
             return schema.properties.reduce(function (target, property) {
-                target[property.name] = mapType(property.type);
+                target[property.name] = mapProperty(property);
                 return target;
             }, {});
         }
+
+        function mapProperty(property) {
+            return {
+                type: ({
+                    'number': 'number',
+                    'string': 'string',
+                    'boolean': 'boolean',
+                    'datetime': 'string'
+                })[property.type],
+                format: ({
+                    'number': 'float',
+                    'string': undefined,
+                    'boolean': undefined,
+                    'datetime': 'date-time'
+                })[property.type],
+                required: property.name === 'id',
+                readOnly: ['createdAt', 'updatedAt', 'version'].indexOf(property.name) > -1
+            }
+        }
     };
 };
-
-function mapType(type) {
-    return {
-        type: ({
-            'number': 'number',
-            'string': 'string',
-            'boolean': 'boolean',
-            'datetime': 'string'
-        })[type],
-        format: ({
-            'number': 'float',
-            'string': undefined,
-            'boolean': undefined,
-            'datetime': 'date-time'
-        })[type]
-    }
-}
