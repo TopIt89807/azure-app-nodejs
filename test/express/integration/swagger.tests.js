@@ -4,7 +4,8 @@ var expect = require('chai').use(require('chai-subset')).expect,
     mobileApps = require('../infrastructure/mobileApps'),
     app, mobileApp;
 
-describe('azure-mobile-apps.express.integration.swagger', function () {
+// added the .sql prefix to exclude from travis tests for now. remove when SQLite is done.
+describe('azure-mobile-apps.express.sql.integration.swagger', function () {
     beforeEach(function () {
         app = express();
     });
