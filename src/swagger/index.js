@@ -22,7 +22,7 @@ module.exports = function (configuration) {
             host: host,
             info: {
                 title: configuration.name || 'Azure Mobile App',
-                version: "1.0.0"
+                version: configuration.apiVersion
             },
             tags: tables.map(createTableTag),
             paths: tableSchemas.reduce(function (paths, schema) {
