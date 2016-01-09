@@ -94,6 +94,8 @@ module.exports = function (configuration) {
             if(options.odata)
                 operation.parameters = operation.parameters.concat(ODataParameters);
 
+            operation.parameters = operation.parameters.concat(createParameter('apiVersion'));
+
             return operation;
         }
 
@@ -114,6 +116,14 @@ module.exports = function (configuration) {
                         $ref: "#/definitions/" + schema.name
                     },
                     in: "body"
+                },
+                'apiVersion': {
+                    name: "zumo-api-version",
+                    description: "The Azure Mobile Apps API version",
+                    required: true,
+                    type: "string",
+                    in: "header",
+                    default: configuration.apiVersion
                 }
             })[name];
         }
