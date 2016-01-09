@@ -30,6 +30,7 @@ module.exports = function (configuration) {
                     'boolean': undefined,
                     'datetime': 'date-time'
                 })[property.type],
+                // not sure why this is causing validation failures
                 //required: (property.name === 'id') || undefined,
                 readOnly: (['createdAt', 'updatedAt', 'version'].indexOf(property.name) > -1) || undefined
             }
