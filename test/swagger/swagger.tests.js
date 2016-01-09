@@ -37,15 +37,15 @@ describe('azure-mobile-apps.swagger', function () {
         it("generates path objects for tables", function () {
             expect(paths(configuration)(table)).to.containSubset({
                 '/tables/todoitem': {
-                    get: { parameters: [ { name: "$filter" } ], responses: {} },
-                    post: { parameters: [ { in: 'body' } ], responses: {} },
-                    patch: { parameters: [ { in: 'body' } ], responses: {} },
+                    get: { parameters: [ { name: "$filter" }, { name: "zumo-api-version" } ], responses: {} },
+                    post: { parameters: [ { in: 'body' }, { name: "zumo-api-version" } ], responses: {} },
+                    patch: { parameters: [ { in: 'body' }, { name: "zumo-api-version" } ], responses: {} },
                 },
                 '/tables/todoitem/{id}': {
-                    get: { parameters: [ { name: "id" } ], responses: {} },
-                    post: { parameters: [ { name: "id" } ], responses: {} },
-                    patch: { parameters: [ { name: "id" }, { in: 'body' } ], responses: {}},
-                    delete: { parameters: [ { name: "id" } ], responses: {} }
+                    get: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], responses: {} },
+                    post: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], responses: {} },
+                    patch: { parameters: [ { name: "id" }, { in: 'body' }, { name: "zumo-api-version" } ], responses: {}},
+                    delete: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], responses: {} }
                 }
             });
         });
