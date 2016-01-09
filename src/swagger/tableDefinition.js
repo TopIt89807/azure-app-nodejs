@@ -30,8 +30,8 @@ module.exports = function (configuration) {
                     'boolean': undefined,
                     'datetime': 'date-time'
                 })[property.type],
-                required: property.name === 'id',
-                readOnly: ['createdAt', 'updatedAt', 'version'].indexOf(property.name) > -1
+                required: (property.name === 'id') || undefined,
+                readOnly: (['createdAt', 'updatedAt', 'version'].indexOf(property.name) > -1) || undefined
             }
         }
     };
