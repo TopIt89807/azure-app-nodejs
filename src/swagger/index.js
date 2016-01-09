@@ -15,13 +15,14 @@ module.exports = function (configuration) {
         tables = object.values(configuration.tables),
         dataProvider = data(configuration);
 
-    return function (basePath, tableSchemas) {
+    return function (basePath, host, tableSchemas) {
         return {
             swagger: "2.0",
             basePath: basePath,
+            host: host,
             info: {
                 title: configuration.name || 'Azure Mobile App',
-                version: '1.0.0'
+                version: "1.0.0"
             },
             tags: tables.map(createTableTag),
             paths: tableSchemas.reduce(function (paths, schema) {

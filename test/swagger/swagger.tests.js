@@ -23,8 +23,9 @@ var expect = require('chai').use(require('chai-subset')).expect,
 
 describe('azure-mobile-apps.swagger', function () {
     it("generates basic swagger structure", function () {
-        expect(swagger(configuration)('/', [schema])).to.containSubset({
+        expect(swagger(configuration)('/', 'localhost', [schema])).to.containSubset({
             "swagger": "2.0",
+            "host": "localhost",
             "basePath": "/",
             "info": {},
             "tags": {},

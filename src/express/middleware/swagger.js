@@ -15,11 +15,12 @@ module.exports = function(configuration) {
     return router;
 
     function metadata(req, res, next) {
-        var data = req.azureMobile.data;
+        var data = req.azureMobile.data,
+            host = req.get('host');
 
         getTableSchemas()
             .then(function (schemas) {
-                res.json(swagger(configuration)('/', schemas));
+                res.json(swagger(configuration)('/', host, schemas));
             })
             .catch(next);
 
