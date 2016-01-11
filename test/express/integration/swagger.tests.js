@@ -1,13 +1,19 @@
 var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
+    data = require('../../../src/data/mssql'),
     mobileApps = require('../infrastructure/mobileApps'),
+    config = require('../infrastructure/config'),
     app, mobileApp;
 
 // added the .sql prefix to exclude from travis tests for now. remove when SQLite is done.
 describe('azure-mobile-apps.express.sql.integration.swagger', function () {
     beforeEach(function () {
         app = express();
+    });
+
+    afterEach(function (done) {
+        data(config().data).execute({ sql: 'drop table dbo.swagger' }).then(done, function () { done(); });
     });
 
     it("only exposes metadata if configured", function () {
@@ -21,15 +27,17 @@ describe('azure-mobile-apps.express.sql.integration.swagger', function () {
 
     it("generates basic API definitions for tables", function () {
         mobileApp = mobileApps({ swagger: true });
-        mobileApp.tables.add('todoitem');
+        mobileApp.tables.add('swagger');
         app.use(mobileApp);
 
-        return supertest(app)
-            .get('/swagger')
-            .expect(200)
-            .expect(function (res) {
-                expect(res.body).to.containSubset(metadataSubset);
-            });
+        return mobileApp.tables.initialize().then(function () {
+            return supertest(app)
+                .get('/swagger')
+                .expect(200)
+                .expect(function (res) {
+                    expect(res.body).to.containSubset(metadataSubset);
+                });
+        });
     });
 
     it("redirects to swagger-ui with url", function () {
@@ -52,12 +60,12 @@ describe('azure-mobile-apps.express.sql.integration.swagger', function () {
 
     var metadataSubset = {
         paths: {
-            '/tables/todoitem': {
+            '/tables/swagger': {
                 get: { parameters: [ { name: "$filter" } ] },
                 post: { parameters: [ { in: 'body' } ] },
                 patch: { parameters: [ { in: 'body' } ]},
             },
-            '/tables/todoitem/{id}': {
+            '/tables/swagger/{id}': {
                 get: { parameters: [ { name: "id" } ] },
                 post: { parameters: [ { name: "id" } ] },
                 patch: { parameters: [ { name: "id" }, { in: 'body' } ]},
@@ -65,7 +73,7 @@ describe('azure-mobile-apps.express.sql.integration.swagger', function () {
             }
         },
         definitions: {
-            todoitem: {
+            swagger: {
                 type: 'object',
                 properties: {
                     id: { type: 'string' },
