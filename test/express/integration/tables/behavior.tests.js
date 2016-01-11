@@ -5,7 +5,7 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     bodyParser = require('body-parser'),
-    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
 
     app, mobileApp;
 

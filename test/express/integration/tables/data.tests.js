@@ -6,16 +6,16 @@ var expect = require('chai')
         .expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../infrastructure/mobileApps'),
-    data = require('../../../src/data/mssql'),
-    config = require('../infrastructure/config'),
+    mobileApps = require('../../infrastructure/mobileApps'),
+    data = require('../../../../src/data/mssql'),
+    config = require('../../infrastructure/config'),
 
     app, mobileApp;
 
 describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
     before(function (done) {
-        data(config.data())({ 
-            name: 'integration', 
+        data(config.data())({
+            name: 'integration',
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         }).initialize().then(done);
     });

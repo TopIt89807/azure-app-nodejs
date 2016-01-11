@@ -59,6 +59,7 @@ module.exports = function (configuration, environment) {
 
             case 'ms_mobileappname':
             case 'ms_mobileservicename':
+            case 'website_site_name':
                 configuration.name = environment[key];
                 break;
 
@@ -93,7 +94,7 @@ module.exports = function (configuration, environment) {
             case 'website_hostname':
                 // using website_hostname to determine that we are hosted on Azure Web Apps
                 configuration.hosted = true;
-                
+
                 configuration.auth.audience = 'https://' + environment[key] + '/';
                 configuration.auth.issuer = 'https://' + environment[key] + '/';
                 break;

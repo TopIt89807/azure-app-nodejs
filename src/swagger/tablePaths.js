@@ -1,0 +1,79 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
+var tableOperation = require('./tableOperation');
+
+module.exports = function (configuration) {
+    return function (schema) {
+        var createOperation = tableOperation(configuration, schema),
+            paths = {};
+
+        paths['/tables/' + schema.name] = {
+            get: createOperation({
+                summary: 'Query the ' + schema.name + ' table',
+                description: 'The provided OData query is evaluated and an array of ' + schema.name + ' objects is returned. If no OData query is specified, all items are returned.',
+                odata: true,
+                responses: {
+                    '200': createOperation.response('An array of items matching the provided query', 'array')
+                }
+            }),
+            post: createOperation({
+                summary: 'Insert a record into the ' + schema.name + ' table',
+                parameters: ['body'],
+                responses: {
+                    '200': createOperation.response('The inserted item', 'item'),
+                    '409': createOperation.response('An item with the same ID already exists', 'item')
+                }
+            }),
+            patch: createOperation({
+                summary: 'Update a record in the ' + schema.name + ' table',
+                parameters: ['body'],
+                responses: {
+                    '200': createOperation.response('The updated item', 'item'),
+                    '409': createOperation.response('A concurrency violation occurred', 'item'),
+                    '412': createOperation.response('A concurrency violation occurred', 'item')
+                }
+            })
+        }
+
+        paths['/tables/' + schema.name + '/{id}'] = {
+            get: createOperation({
+                summary: 'Find a specific record in the ' + schema.name + ' table',
+                description: 'Return the ' + schema.name + ' object is returned that corresponds with the provided id.',
+                parameters: ['id'],
+                responses: {
+                    '200': createOperation.response('The request item', 'item')
+                }
+            }),
+            post: createOperation({
+                summary: 'Undelete a record from the ' + schema.name + ' table',
+                parameters: ['id'],
+                responses: {
+                    '200': createOperation.response('The undeleted item', 'item'),
+                    '409': createOperation.response('A concurrency violation occurred', 'item'),
+                    '412': createOperation.response('A concurrency violation occurred', 'item')
+                }
+            }),
+            patch: createOperation({
+                summary: 'Update a record in the ' + schema.name + ' table',
+                parameters: ['id', 'body'],
+                responses: {
+                    '200': createOperation.response('The updated item', 'item'),
+                    '409': createOperation.response('A concurrency violation occurred', 'item'),
+                    '412': createOperation.response('A concurrency violation occurred', 'item')
+                }
+            }),
+            delete: createOperation({
+                summary: 'Delete a record from the ' + schema.name + ' table',
+                parameters: ['id'],
+                responses: {
+                    '200': createOperation.response('The deleted item', 'item'),
+                    '409': createOperation.response('A concurrency violation occurred', 'item'),
+                    '412': createOperation.response('A concurrency violation occurred', 'item')
+                }
+            })
+        };
+
+        return paths;
+    }
+}

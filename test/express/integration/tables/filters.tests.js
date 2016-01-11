@@ -3,10 +3,10 @@
 // ----------------------------------------------------------------------------
 ﻿var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
-    data = require('../../../src/data/mssql'),
+    data = require('../../../../src/data/mssql'),
     express = require('express'),
-    mobileApps = require('../infrastructure/mobileApps'),
-    config = require('../infrastructure/config'),
+    mobileApps = require('../../infrastructure/mobileApps'),
+    config = require('../../infrastructure/config'),
 
     app, mobileApp;
 

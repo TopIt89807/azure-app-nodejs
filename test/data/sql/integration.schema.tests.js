@@ -18,26 +18,45 @@ describe('azure-mobile-apps.data.sql.integration.schema', function () {
         execute(config, { sql: 'drop table dbo.schemaTest' }).then(done, done);
     });
 
-    it("initialize creates table and seeds", function () {
-        return schema.initialize(table)
-            .then(function () {
-                return execute(config, statements.read(queries.create('schemaTest')));
-            })
-            .then(function (results) {
-                expect(results.length).to.equal(2);
-            })
+    describe('initialize', function () {
+        it("initialize creates table and seeds", function () {
+            return schema.initialize(table)
+                .then(function () {
+                    return execute(config, statements.read(queries.create('schemaTest')));
+                })
+                .then(function (results) {
+                    expect(results.length).to.equal(2);
+                })
+        });
+
+        it("initialize handles existing tables", function () {
+            return schema.initialize(table)
+                .then(function () {
+                    return schema.initialize(table);
+                })
+                .then(function () {
+                    return execute(config, statements.read(queries.create('schemaTest')));
+                })
+                .then(function (results) {
+                    expect(results.length).to.equal(2);
+                })
+        });
     });
 
-    it("initialize handles existing tables", function () {
-        return schema.initialize(table)
-            .then(function () {
-                return schema.initialize(table);
-            })
-            .then(function () {
-                return execute(config, statements.read(queries.create('schemaTest')));
-            })
-            .then(function (results) {
-                expect(results.length).to.equal(2);
-            })
+    describe('get', function () {
+        it("returns databse schema for table", function () {
+            return schema.initialize(table)
+                .then(function () {
+                    return schema.get(table);
+                })
+                .then(function (tableSchema) {
+                    expect(tableSchema).to.containSubset({
+                        name: table.name,
+                        properties: [
+                            { name: 'id', type: 'string' }
+                        ]
+                    });
+                });
+        });
     });
 });

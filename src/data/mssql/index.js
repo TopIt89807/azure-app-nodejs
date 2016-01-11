@@ -57,6 +57,9 @@ module.exports = function (configuration) {
             },
             initialize: function () {
                 return schema(configuration).initialize(table);
+            },
+            schema: function () {
+                return schema(configuration).get(table);
             }
         };
     };

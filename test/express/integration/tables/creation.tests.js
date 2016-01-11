@@ -3,14 +3,14 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').use(require('chai-subset')).expect,
     request = require('supertest-as-promised'),
-    config = require('../infrastructure/config'),
+    config = require('../../infrastructure/config'),
     express = require('express'),
-    mobileApps = require('../infrastructure/mobileApps'),
-    data = require('../../../src/data/mssql'),
-    statements = require('../../../src/data/mssql/statements'),
-    queries = require('../../../src/query'),
-    promises = require('../../../src/utilities/promises'),
-    helpers = require('../../../src/data/mssql/helpers'),
+    mobileApps = require('../../infrastructure/mobileApps'),
+    data = require('../../../../src/data/mssql'),
+    statements = require('../../../../src/data/mssql/statements'),
+    queries = require('../../../../src/query'),
+    promises = require('../../../../src/utilities/promises'),
+    helpers = require('../../../../src/data/mssql/helpers'),
     tableName = 'tableCreationTest',
     table, app, mobileApp;
 

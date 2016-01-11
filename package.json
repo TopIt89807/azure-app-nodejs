@@ -33,11 +33,12 @@
     "jshint": "^2.8.0",
     "minami": "devigned/minami",
     "mocha": "^2.2.5",
+    "q": "^1.4.1",
     "sinon": "^1.16.1",
     "sinon-as-promised": "4.0.0",
     "sinon-chai": "^2.8.0",
     "supertest": "^1.1.0",
     "supertest-as-promised": "^2.0.1",
-    "q": "^1.4.1"
+    "swagger-ui": "^2.1.4"
   }
 }

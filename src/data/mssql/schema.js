@@ -9,7 +9,8 @@ module.exports = function (configuration) {
         promises = require('../../utilities/promises'),
         log = require('../../logger'),
         data = require('./index'),
-        errorCodes = require('./errorCodes');
+        errorCodes = require('./errorCodes'),
+        helpers = require('./helpers');
 
     var api = {
         initialize: function (table) {
@@ -74,6 +75,20 @@ module.exports = function (configuration) {
             function insert(item) {
                 return dynamicSchema(table).execute(configuration, statements.insert(table, item), item);
             }
+        },
+
+        get: function (table) {
+            return execute(configuration, statements.getColumns(table)).then(function (columns) {
+                return {
+                    name: table.name,
+                    properties: columns.map(function (column) {
+                        return {
+                            name: column.name,
+                            type: helpers.getPredefinedType(column.type)
+                        };
+                    })
+                };
+            });
         }
     };
     return api;

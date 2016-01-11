@@ -130,6 +130,8 @@ var helpers = module.exports = {
                 return 'boolean';
             case 'datetimeoffset':
                 return 'datetime';
+            case 'timestamp':
+                return 'string';
             default:
                 return value;
         }
