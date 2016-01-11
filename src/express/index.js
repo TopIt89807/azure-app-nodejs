@@ -51,14 +51,15 @@ module.exports = function (configuration) {
         .use(customMiddlewareRouter)
         .use(configuration.notificationRootPath || '/push/installations', middleware('notifications'))
         .use(configuration.apiRootPath || '/api', apiMiddleware)
-        .use(configuration.tableRootPath || '/tables', middleware('apiVersionCheck'), tableMiddleware, middleware('renderResults'))
-        .use(middleware('handleError'));
+        .use(configuration.tableRootPath || '/tables', middleware('apiVersionCheck'), tableMiddleware, middleware('renderResults'));
 
     if(configuration.homePage)
         mobileApp.use('/', express.static(__dirname + '/../templates/static'));
 
     if(configuration.swagger)
         mobileApp.use(configuration.swaggerPath, middleware('swagger'));
+
+    mobileApp.use(middleware('handleError'));
 
     var api = function (req, res, next) {
         mobileApp(req, res, next);
