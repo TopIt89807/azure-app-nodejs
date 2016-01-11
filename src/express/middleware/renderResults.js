@@ -10,19 +10,7 @@ module.exports = function (configuration) {
         preventCaching();
 
         if(res.results) {
-            // // if we were issued a query for a single result (i.e. query by id), return a single result
-            // if(req.azureMobile.query && req.azureMobile.query.single) {
-            //     // user code can say context.execute().then() and return a single object - return that here
-            //     if(res.results.constructor !== Array) {
-            //         res.json(res.results);
-            //     } else if(res.results.length > 0) {
-            //         res.json(res.results[0]);
-            //     } else {
-            //         next(errors.notFound());
-            //     }
-            // } else {
-                res.json(res.results);
-            //}
+            res.json(res.results);
         } else
             next(errors.notFound());
 

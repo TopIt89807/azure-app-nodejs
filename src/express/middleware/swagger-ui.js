@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var express = require('express'),
+var errors = require('../../utilities/errors'),
+    express = require('express'),
     path = require('path');
 
 module.exports = function(configuration) {
@@ -15,7 +16,7 @@ module.exports = function(configuration) {
             else
                 middleware(req, res, next);
         } else {
-            next();
+            next(errors.notFound());
         }
 
         function swaggerUrl() {
