@@ -6,7 +6,7 @@ interface ExpressTables {
 }
 
 declare module "azure-mobile-apps/express/tables" {
-    function api(configuration: Configuration): ExpressTables;
-    module api { }
-    export = api;   
+    function returnedFunction(configuration: Configuration): ExpressTables;
+    module returnedFunction { }
+    export = returnedFunction;   
 }

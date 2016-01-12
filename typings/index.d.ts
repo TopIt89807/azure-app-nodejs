@@ -1,7 +1,7 @@
 declare module "azure-mobile-apps" {
-    function api(configuration: Configuration): Express;
-    module api { }
-    export = api;   
+    function returnedFunction(configuration: Configuration): Express;
+    module returnedFunction { }
+    export = returnedFunction;   
 }
 
 interface Thenable<R> {

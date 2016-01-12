@@ -4,9 +4,9 @@ interface Express {
 }
 
 declare module "azure-mobile-apps/express" {
-    function api(configuration: Configuration): Express;
-    module api { }
-    export = api;   
+    function returnedFunction(configuration: Configuration): Express;
+    module returnedFunction { }
+    export = returnedFunction;   
 }
 
 /*
