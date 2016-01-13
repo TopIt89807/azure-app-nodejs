@@ -2,7 +2,7 @@ interface Configuration {
     platform: string;
     basePath: string;
     configFile: string;
-//    promiseConstructor: Promise;
+    promiseConstructor: (resolve: (result) => void, reject: (error) => void) => Thenable<any>;
     apiRootPath: string;
     tableRootPath: string;
     notificationRootPath: string;
@@ -15,6 +15,11 @@ interface Configuration {
     swagger: boolean;
     maxTop: number;
     pageSize: number;
+    logging: LoggingConfiguration;
+    data: MssqlDataConfiguration;
+    auth: AuthConfiguration;
+    cors: CorsConfiguration;
+    notifications: NotificationsConfiguration;
 }
 
 interface DataConfiguration {
@@ -23,6 +28,13 @@ interface DataConfiguration {
 
 interface MssqlDataConfiguration {
     provider: string;
+    user: string;
+    password: string;
+    server: string;
+    port: number;
+    database: string;
+    connectionTimeout: string;
+    options: { encrypt: boolean };
     schema: string;
     dynamicSchema: boolean;
 }
@@ -34,12 +46,20 @@ interface AuthConfiguration {
 
 interface LoggingConfiguration {
     level: string;
-    transports: [LoggingTransport];
+    transports: LoggingTransport[];
 }
 
 interface LoggingTransport { }
 
 interface CorsConfiguration {
     maxAge: number;
-    origins: [string];
+    origins: string[];
+}
+
+interface NotificationsConfiguration {
+    hubName: string;
+    connectionString: string;
+    endpoint: string;
+    sharedAccessKeyName: string;
+    sharedAccessKeyValue: string;
 }
