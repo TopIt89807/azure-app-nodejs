@@ -4,29 +4,30 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="../express/express.d.ts" />
+/// <reference path="../azure-sb/azure-sb.d.ts" />
 
 declare module "azure-mobile-apps" {
     interface AzureMobileApps {
-        (configuration?: AzureMobileApps.Configuration): AzureMobileApps.Platforms.Express.MobileApp;
-        table(): AzureMobileApps.Platforms.Express.Table;
-        logger: AzureMobileApps.Logger;
-        query: AzureMobileApps.Query;
+        (configuration?: Azure.MobileApps.Configuration): Azure.MobileApps.Platforms.Express.MobileApp;
+        table(): Azure.MobileApps.Platforms.Express.Table;
+        logger: Azure.MobileApps.Logger;
+        query: Azure.MobileApps.Query;
     }
 
     var out: AzureMobileApps;
     export = out;
 }
 declare module "azure-mobile-apps/src/logger" {
-    var logger: AzureMobileApps.Logger;
+    var logger: Azure.MobileApps.Logger;
     export = logger;
 }
 
 declare module "azure-mobile-apps/src/query" {
-    var query: AzureMobileApps.Query;
+    var query: Azure.MobileApps.Query;
     export = query; 
 }
 
-declare module AzureMobileApps {
+declare module Azure.MobileApps {
     // the additional Platforms namespace is required to avoid collisions with the main Express namespace
     export module Platforms {
         export module Express {
@@ -207,6 +208,7 @@ declare module AzureMobileApps {
     }
 
     // general
+    var nh: Azure.ServiceBus.NotificationHubService; 
     interface Context {
         query: QueryJs;
         id: string | number;
@@ -216,7 +218,7 @@ declare module AzureMobileApps {
         data: (table: TableDefinition) => Data.Table;
         tables: (tableName: string) => Data.Table;
         user: User;
-        push: any; // add a stub for notifications
+        push: typeof nh;
         logger: Logger;
         execute(): Thenable<any>;
     }
@@ -268,7 +270,7 @@ declare module AzureMobileApps {
 // additions to the Express modules
 declare module Express {
     interface Request {
-        azureMobile: AzureMobileApps.Context
+        azureMobile: Azure.MobileApps.Context
     }
     
     interface Response {

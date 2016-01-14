@@ -49,7 +49,7 @@ table.use(function (req: Express.Request, res: Express.Response, next: any) {
     next(new Error());
 });
 table.use([function () {}, function () {}]);
-table.read(function (context: AzureMobileApps.Context) {
+table.read(function (context: Azure.MobileApps.Context) {
     context.query.where({ p1: 'test' });
     return context.execute()
         .then(function (result: any) {
@@ -58,11 +58,14 @@ table.read(function (context: AzureMobileApps.Context) {
         .catch(function (error: any) { })
         .then(function () {});
 });
-table.insert(function (context: AzureMobileApps.Context) {
+table.insert(function (context: Azure.MobileApps.Context) {
     context.query.id = 'anotherId';
     context.query.single = true;
     context.item.userId = context.user.id;    
-    context.push.sendBlahBlah(); // add a stub for NH
+    context.push.send('tag', {}, function (error, result) {});
+    context.push.gcm.send('tag', {}, function (error, result) {});
+    context.push.apns.send('tag', { payload: { } }, function (error, result) {});
+    context.push.wns.sendToastText01('tag', '', { headers: { } }, function (error, result) {});
 });
 table.read.use(function () {});
 table.read.use([function () {}, function () {}]);
@@ -72,7 +75,7 @@ table.use(function () {}).use(function () {}).read(function () {}).use(function 
 // Express.Table, instantiated from the static require('azure-mobile-apps').table()
 // This is going to be interesting if we ever support more than one provider
 var table2 = mobileApps.table();
-table2.read(function (context: AzureMobileApps.Context) {})
+table2.read(function (context: Azure.MobileApps.Context) {})
 
 // Logger
 logger.silly('test', 'message');
