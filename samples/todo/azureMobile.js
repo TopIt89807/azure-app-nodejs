@@ -65,5 +65,10 @@ module.exports = {
     //}
 
     // Provide a home page for the project
-    homePage: true
+    homePage: true,
+
+    // Set to true to enable Swagger support
+    //  Swagger Endpoint: /swagger
+    //  Swagger UI: /swagger/ui
+    swagger: true
 };
