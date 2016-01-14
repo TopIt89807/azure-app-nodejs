@@ -11,6 +11,7 @@ var loadConfiguration = require('./configuration'),
     environment = require('./utilities/environment'),
     table = require('./express/tables/table'),
     logger = require('./logger'),
+    query = require('./query'),
     promises = require('./utilities/promises'),
     merge = require('deeply'),
     path = require('path'),
@@ -93,3 +94,5 @@ api.defaultConfig = function () {
 };
 
 api.table = table;
+api.logger = logger;
+api.queries = query;
