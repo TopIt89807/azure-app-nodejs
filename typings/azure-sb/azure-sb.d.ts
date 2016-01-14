@@ -16,7 +16,7 @@ declare module Azure.ServiceBus {
     }
     
     export class NotificationHubService {
-        new(hubName: string, endpointOrConnectionString: string, sharedAccessKeyName?: string, sharedAccessKeyValue?: string);
+        new(hubName: string, endpointOrConnectionString: string, sharedAccessKeyName?: string, sharedAccessKeyValue?: string): NotificationHubService;
         hubName: string;
         wns: Wns.Service;
         apns: Apns.Service;
@@ -52,7 +52,7 @@ declare module Azure.ServiceBus {
         }
         
         interface Service {
-            new(NotificationHubService);
+            new(service: NotificationHubService): Service;
             send(tags: string | string[], payload: Apns.Payload, callback?: Callback): void;
             createNativeRegistration(token: string, tags: string | string[], optionsOrCallback?: Object | Callback, callback?: Callback): void;
             createOrUpdateNativeRegistration(registrationId: string, token: string, tags: string | string[], optionsOrCallback?: Object | Callback, callback?: Callback): void;
@@ -64,11 +64,11 @@ declare module Azure.ServiceBus {
     }
     export module Gcm {
         interface Service {
-            new(NotificationHubService);
+            new(service: NotificationHubService): Service;
             send(tags: string | string[], payload: any, callback?: Callback): void;
             createNativeRegistration(gcmRegistrationId: string, tags: string | string[], optionsOrCallback?: Object | Callback, callback?: Callback): void;
             createOrUpdateNativeRegistration(registrationId: string, gcmRegistrationId: string, tags: string | string[], optionsOrCallback?: Object | Callback, callback?: Callback): void;
-            createTemplateRegistration(gcmRegistrationId: string, tags: string | string[], template, optionsOrCallback?: Object | Callback, callback?: Callback): void;
+            createTemplateRegistration(gcmRegistrationId: string, tags: string | string[], template: any, optionsOrCallback?: Object | Callback, callback?: Callback): void;
             createOrUpdateTemplateRegistration(registrationId: string, gcmRegistrationId: string, tags: string | string[], template: any, optionsOrCallback?: Object | Callback, callback?: Callback): void;
             updateTemplateRegistration(registrationId: string, gcmRegistrationId: string, tags: string | string[], template: any, optionsOrCallback?: Object | Callback, callback?: Callback): void;
             listRegistrationsByGcmRegistrationId(gcmRegistrationId: string, optionsOrCallback?: { top: number, skip: number } | Callback, callback?: Callback): void;
@@ -100,7 +100,7 @@ declare module Azure.ServiceBus {
         }
         
         interface Service {
-            new(NotificationHubService);
+            new(service: NotificationHubService): Service;
             sendTileSquareBlock(tags: string | string[], payload: any, optionsOrCallback?: Options | Callback, callback?: Callback): void;
             sendTileSquareText01(tags: string | string[], payload: any, optionsOrCallback?: Options | Callback, callback?: Callback): void;
             sendTileSquareText02(tags: string | string[], payload: any, optionsOrCallback?: Options | Callback, callback?: Callback): void;
