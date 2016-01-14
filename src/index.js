@@ -95,4 +95,4 @@ api.defaultConfig = function () {
 
 api.table = table;
 api.logger = logger;
-api.queries = query;
+api.query = query;

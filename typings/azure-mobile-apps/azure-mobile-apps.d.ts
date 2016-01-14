@@ -10,7 +10,7 @@ declare module "azure-mobile-apps" {
         (configuration?: AzureMobileApps.Configuration): AzureMobileApps.Platforms.Express.MobileApp;
         table(): AzureMobileApps.Platforms.Express.Table;
         logger: AzureMobileApps.Logger;
-        queries: AzureMobileApps.Query;
+        query: AzureMobileApps.Query;
     }
 
     var out: AzureMobileApps;

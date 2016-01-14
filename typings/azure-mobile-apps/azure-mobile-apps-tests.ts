@@ -67,7 +67,6 @@ table.insert(function (context: AzureMobileApps.Context) {
 table.read.use(function () {});
 table.read.use([function () {}, function () {}]);
 table.read.use(function () {}, function () {});
-// chaining not yet supported
 table.use(function () {}).use(function () {}).read(function () {}).use(function () {})
 
 // Express.Table, instantiated from the static require('azure-mobile-apps').table()
@@ -82,4 +81,4 @@ mobileApps.logger.debug('a debug message')
 
 // Query
 queries.create('table').where({ x: 10 }).select('col1,col2');
-mobileApps.queries.create('table');
+mobileApps.query.create('table');
