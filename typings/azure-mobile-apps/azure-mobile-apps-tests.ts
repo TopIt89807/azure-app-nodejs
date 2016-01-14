@@ -33,6 +33,7 @@ mobileApps({ logging: { level: 'silly', transports: [{}] } })
 mobileApp.use(function (req: any, res: any, next: any) { next(); });
 mobileApp.use([function () {}, function () {}]);
 mobileApp.use(function () {}, function () {});
+mobileApp.use(function () {}).use(function () {});
 
 // basic syntax for tables and api
 mobileApp.tables.add('todoitem');

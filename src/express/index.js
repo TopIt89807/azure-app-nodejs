@@ -71,6 +71,7 @@ module.exports = function (configuration) {
     api.configuration = configuration;
     api.use = function () {
         customMiddlewareRouter.use.apply(customMiddlewareRouter, arguments);
+        return api;
     }
 
     return api;

@@ -35,8 +35,8 @@ declare module AzureMobileApps {
                 tables: Tables;
                 table(): Table;
                 api: Api;
-                use(...middleware: Middleware[]): void;
-                use(middleware: Middleware[]): void;
+                use(...middleware: Middleware[]): MobileApp;
+                use(middleware: Middleware[]): MobileApp;
             }
 
             interface Api {
