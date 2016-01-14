@@ -9,7 +9,8 @@
   "scripts": {
     "test": "npm run lint & mocha",
     "lint": "jshint src",
-    "jsdoc": "jsdoc -c jsdoc/config.json"
+    "jsdoc": "jsdoc -c jsdoc/config.json",
+    "typedoc": "typedoc --out typings/doc typings --module commonjs --theme typings/theme --includeDeclarations"
   },
   "dependencies": {
     "azure-sb": "^0.10.2",
@@ -39,6 +40,7 @@
     "sinon-chai": "^2.8.0",
     "supertest": "^1.1.0",
     "supertest-as-promised": "^2.0.1",
-    "swagger-ui": "^2.1.4"
+    "swagger-ui": "^2.1.4",
+    "typedoc": "^0.3.12"
   }
 }
