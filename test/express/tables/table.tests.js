@@ -48,6 +48,10 @@ describe('azure-mobile-apps.express.tables.table', function () {
         var table = tableFactory({ read: { property: true }});
         expect(table.read).to.have.property('property', true);
     });
+    
+    it('allows chaining of configuration functions', function () {
+        tableFactory().use(function () {}).use(function () {}).read(function () {}).use(function () {});        
+    })
 
     function testMiddleware(req, res, next) { }
 });

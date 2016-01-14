@@ -52,8 +52,8 @@ declare module AzureMobileApps {
                 columns?: any;
                 schema: string;
 
-                use(...middleware: Middleware[]): void;
-                use(middleware: Middleware[]): void;
+                use(...middleware: Middleware[]): Table;
+                use(middleware: Middleware[]): Table;
                 read: TableOperation;
                 update: TableOperation;
                 insert: TableOperation;
@@ -62,9 +62,9 @@ declare module AzureMobileApps {
             }
             
             interface TableOperation {
-                (operationHandler: (context: Context) => void): void;
-                use(...middleware: Middleware[]): void;
-                use(middleware: Middleware[]): void;
+                (operationHandler: (context: Context) => void): Table;
+                use(...middleware: Middleware[]): Table;
+                use(middleware: Middleware[]): Table;
             }
 
             interface Tables {

@@ -103,6 +103,7 @@ table.read(function (context) {
         return function (middleware) {
             table.middleware[operation] = table.middleware[operation] || [];
             Array.prototype.push.apply(table.middleware[operation], arguments);
+            return table; // allow chaining
         };
     }
 
@@ -110,6 +111,7 @@ table.read(function (context) {
     function attachOperation(operation) {
         var api = function (handler) {
             table.operations[operation] = handler;
+            return table; // allow chaining
         };
 
         // copy existing operation properties to attached operation

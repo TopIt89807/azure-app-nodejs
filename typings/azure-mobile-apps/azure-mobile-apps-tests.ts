@@ -67,7 +67,7 @@ table.read.use(function () {});
 table.read.use([function () {}, function () {}]);
 table.read.use(function () {}, function () {});
 // chaining not yet supported
-//table.use(function () {}).use(function () {}).read(function () {}).use(function () {})
+table.use(function () {}).use(function () {}).read(function () {}).use(function () {})
 
 // Express.Table, instantiated from the static require('azure-mobile-apps').table()
 // This is going to be interesting if we ever support more than one provider
