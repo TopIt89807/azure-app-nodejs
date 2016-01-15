@@ -111,6 +111,27 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
             });
     });
 
+    it('returns 412 when undelete is attempted with incorrect version', function () {
+        mobileApp.tables.add('concurrency', { softDelete: true });
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/concurrency')
+            .send({ id: '1', value: 'test' })
+            .expect(200)
+            .then(function (res) {
+                return supertest(app)
+                    .delete('/tables/concurrency/1')
+                    .expect(200);
+            })
+            .then(function (){
+                return supertest(app)
+                    .post('/tables/concurrency/1')
+                    .set('If-Match', 'incorrect version')
+                    .expect(412);
+            });
+    });
+
     it('returns 409 when inserting duplicate record', function () {
         mobileApp.tables.add('concurrency');
         app.use(mobileApp);
