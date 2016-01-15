@@ -38,7 +38,10 @@ module.exports = function (configuration) {
         customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();
 
-    if(!configuration.hosted)
+    if(configuration.hosted)
+        mobileApp
+            .use(middleware('exposeHeaders'));
+    else
         mobileApp
             .use(middleware('crossOrigin'))
             .use(configuration.authStubRoute, middleware('authStub'));

@@ -49,6 +49,7 @@ var loadConfiguration = require('./configuration'),
             ]
         },
         cors: {
+            exposeHeaders: 'Link,Etag',
             maxAge: 300,
             origins: ['localhost']
         },
