@@ -11,8 +11,8 @@ var index = require('../../../src/data/mssql'),
 
 describe('azure-mobile-apps.data.sql.integration.query', function () {
     before(function (done) {
-        operations = index(config)({ 
-            name: 'query', 
+        operations = index(config)({
+            name: 'query',
             columns: { string: 'string', number: 'number', bool: 'boolean' },
             seed: [
                 { id: 1, string: 'one', number: 1, bool: 1 },
@@ -21,7 +21,7 @@ describe('azure-mobile-apps.data.sql.integration.query', function () {
                 { id: 4, string: 'four', number: 4, bool: 0 },
                 { id: 5, string: 'five', number: 5, bool: 1 },
                 { id: 6, string: 'six', number: 6, bool: 0 },
-            ]  
+            ]
         });
 
         operations.initialize()
@@ -64,20 +64,16 @@ describe('azure-mobile-apps.data.sql.integration.query', function () {
     it("returns total count if requested", function () {
         return operations.read(queries.create('query').where('number eq 3').includeTotalCount())
             .then(function (results) {
-                expect(results).to.containSubset({
-                    results: [{ bool: true, id: '3', number: 3, string: 'three' }],
-                    count: 1
-                });
+                expect(results).to.containSubset([{ bool: true, id: '3', number: 3, string: 'three' }]);
+                expect(results.totalCount).to.equal(1);
             });
     });
 
     it("returns total count for filter", function () {
         return operations.read(queries.create('query').take(1).includeTotalCount())
             .then(function (results) {
-                expect(results).to.containSubset({
-                    results: [{ bool: true, id: '1', number: 1, string: 'one' }],
-                    count: 6
-                });
+                expect(results).to.containSubset([{ bool: true, id: '1', number: 1, string: 'one' }]);
+                expect(results.totalCount).to.equal(6);
             });
     });
 });
