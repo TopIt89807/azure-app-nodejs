@@ -73,6 +73,7 @@ Authentication configuration
 /**
 Cross-origin resource sharing configuration
 @typedef corsConfiguration
+@property {string} exposeHeaders=Link,Etag - Response headers to be exposed to the client for CORS requests
 @property {integer} maxAge=300 - How long the results of a preflight request can be cached in a preflight result cache,
 @property {string[]} origins=localhost - Array of allowed origins
 */

@@ -24,7 +24,7 @@ declare module "azure-mobile-apps/src/logger" {
 
 declare module "azure-mobile-apps/src/query" {
     var query: Azure.MobileApps.Query;
-    export = query; 
+    export = query;
 }
 
 declare module Azure.MobileApps {
@@ -61,7 +61,7 @@ declare module Azure.MobileApps {
                 delete: TableOperation;
                 undelete: TableOperation;
             }
-            
+
             interface TableOperation {
                 (operationHandler: (context: Context) => void): Table;
                 use(...middleware: Middleware[]): Table;
@@ -133,7 +133,7 @@ declare module Azure.MobileApps {
         cors?: Configuration.Cors;
         notifications?: Configuration.Notifications;
     }
-    
+
     export module Configuration {
         // it would be nice to have the config for various providers in separate interfaces,
         // but this is the simplest solution to support variations of the current setup
@@ -163,6 +163,7 @@ declare module Azure.MobileApps {
         interface LoggingTransport { }
 
         interface Cors {
+            exposeHeaders: string;
             maxAge?: number;
             origins: string[];
         }
@@ -208,7 +209,7 @@ declare module Azure.MobileApps {
     }
 
     // general
-    var nh: Azure.ServiceBus.NotificationHubService; 
+    var nh: Azure.ServiceBus.NotificationHubService;
     interface Context {
         query: QueryJs;
         id: string | number;
@@ -234,11 +235,11 @@ declare module Azure.MobileApps {
 
     interface ApiDefinition {
         authorize?: boolean;
-        get?: Middleware | Middleware[];    
-        post?: Middleware | Middleware[];    
-        patch?: Middleware | Middleware[];    
-        put?: Middleware | Middleware[];    
-        delete?: Middleware | Middleware[];    
+        get?: Middleware | Middleware[];
+        post?: Middleware | Middleware[];
+        patch?: Middleware | Middleware[];
+        put?: Middleware | Middleware[];
+        delete?: Middleware | Middleware[];
     }
 
     interface Thenable<R> {
@@ -272,7 +273,7 @@ declare module Express {
     interface Request {
         azureMobile: Azure.MobileApps.Context
     }
-    
+
     interface Response {
         results?: any;
     }

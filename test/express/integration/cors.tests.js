@@ -79,7 +79,19 @@ describe('azure-mobile-apps.express.integration.cors', function () {
         return supertest(app)
             .get('/tables/todoitem')
             .set('origin', 'http://test.blah.net')
-            .expect(accessControlExposeHeadersHeader, 'ETag, Link')
+            .expect(accessControlExposeHeadersHeader, 'Link,Etag')
+            .expect(200);
+    });
+
+    it('sets exposed headers when hosted', function () {
+        app = express();
+        mobileApp = mobileApps({ hosted: true });
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+        return supertest(app)
+            .get('/tables/todoitem')
+            .set('origin', 'http://test.blah.net')
+            .expect(accessControlExposeHeadersHeader, 'Link,Etag')
             .expect(200);
     });
 });
