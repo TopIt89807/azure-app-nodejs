@@ -52,12 +52,16 @@ and resolve to the updated item.
 
 - If the `version` property is specified, it should only update the record if the `version`
   property matches.
-- If the `version` property does not match, an `Error` should be thrown with the `concurrency`
+- If the `query` parameter is specified, it should only update the record if the query
+  returns the record being updated.
+- If the `version` property does not match or the `query` does not return the record, an
+  `Error` should be thrown with the `concurrency`
   property set to true.
 - The `updatedAt` property should be updated to the current date and time.
 - The `version` property should be updated to a new unique value.
 
-The `query` parameter is optional and allows filters such as user IDs to be applied to update operations. The query is in the format described in the read section.
+The `query` parameter is optional and allows filters such as user IDs to be applied to update
+operations. The query is in the format described in the read section.
 
 ### insert
 
@@ -80,9 +84,9 @@ The delete function should delete records matching the provided query.
   that is exposed to the client.
 - If multiple items are deleted, it should resolve to an array of those items.
 - If the `version` parameter is specified, it should only delete records if the `version`
-  property matches. If it is not, concurrency is ignored.
-- If the `version` parameter is specified and no records are deleted, an `Error` should be
-  thrown with the `concurrency` property set to true.
+  property matches.
+- If no records are deleted, either because the `version` property does not match or the query
+  returns no records, an `Error` should be thrown with the `concurrency` property set to true.
 - If the `softDelete` option is specified on the table configuration, the record should be
   recoverable by calling undelete, and should be queryable by specifying the `includeDeleted`
   option on read queries.
@@ -99,9 +103,9 @@ The undelete function should restore records matching the provided query.
   that is exposed to the client.
 - If multiple items are undeleted, it should resolve to an array of those items.
 - If the `version` parameter is specified, it should only restore records if the `version`
-  property matches. If it is not, concurrency is ignored.
-- If the `version` parameter is specified and no records are restored, an `Error` should be
-  thrown with the `concurrency` property set to true.
+  property matches.
+- If no records are restored, either because the `version` property does not match or the query
+  returns no records, an `Error` should be thrown with the `concurrency` property set to true.
 - If the `softDelete` option is not specified on the table configuration, this function
   should have no effect and resolve to undefined.
 
