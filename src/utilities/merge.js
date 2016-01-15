@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿module.exports = {
+
+module.exports = {
     mergeObjects: function (target, source) {
         toObject(target);
 
@@ -45,8 +46,9 @@ function assignProperty(target, source, prop) {
 
 function mapProperties(target, source, assignmentCallback, propertiesList) {
     var to = toObject(target),
-        from = source,
-        propertiesList = propertiesList || [];
+        from = source;
+
+    propertiesList = propertiesList || [];
 
     Object.keys(Object(source)).forEach(function (prop) {
         // keep a record of seen properties

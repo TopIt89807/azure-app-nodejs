@@ -3,12 +3,9 @@
 // ----------------------------------------------------------------------------
 
 var types = require('../../../utilities/types'),
+    expressions = require('../../../query/expressions'),
     _ = require('underscore'),
     ExpressionVisitor = require('../../../query/ExpressionVisitor');
-
-module.exports = function (expr, tableMetadata) {
-    return new TypeConverter(tableMetadata).visit(expr);
-};
 
 function ctor(tableMetadata) {
     this.tableMetadata = tableMetadata;
@@ -27,7 +24,7 @@ var TypeConverter = types.deriveClass(ExpressionVisitor, ctor, {
         }
 
         if (left != expr.left || right != expr.right) {
-            return new Binary(left, right, expr.expressionType);
+            return new expressions.Binary(left, right, expr.expressionType);
         }
 
         return expr;
@@ -46,3 +43,7 @@ var TypeConverter = types.deriveClass(ExpressionVisitor, ctor, {
                (_.contains(this.tableMetadata.binaryColumns, expr.member.toLowerCase()) || expr.member.toLowerCase() === 'version');
     }
 });
+
+module.exports = function (expr, tableMetadata) {
+    return new TypeConverter(tableMetadata).visit(expr);
+};

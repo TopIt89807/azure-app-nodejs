@@ -12,7 +12,8 @@ var types = module.exports = {
 
     extend: function (target, members) {
         for (var member in members) {
-            target[member] = members[member];
+            if(members.hasOwnProperty(member))
+                target[member] = members[member];
         }
         return target;
     },
@@ -43,13 +44,13 @@ var types = module.exports = {
             };
         };
 
-        if (instanceMembers) {
-            for (var name in instanceMembers) {
-                // Check if we're overwriting an existing function
-                prototype[name] = typeof instanceMembers[name] === 'function' && typeof basePrototype[name] === 'function' ?
-                    getPrototype(name, instanceMembers[name]) : instanceMembers[name];
-            }
-        }
+        if (instanceMembers)
+            for (var name in instanceMembers)
+                if(instanceMembers.hasOwnProperty(name))
+                    // Check if we're overwriting an existing function
+                    prototype[name] = typeof instanceMembers[name] === 'function' && typeof basePrototype[name] === 'function'
+                        ? getPrototype(name, instanceMembers[name])
+                        : instanceMembers[name];
 
         ctor = ctor ?
             (function (fn) {

@@ -7,14 +7,6 @@ var _ = require('underscore.string'),
     strings = require('../utilities/strings'),
     expressions = require('./expressions');
 
-module.exports = function (predicate) {
-    return new ODataParser(predicate).parse();
-};
-
-module.exports.orderBy = function (ordering) {
-    return new ODataParser(ordering).parseOrdering();
-};
-
 function ctor(expression) {
     this.keywords = this._createKeywords();
 
@@ -810,3 +802,11 @@ var ODataParser = types.defineClass(ctor, {
         return false;
     }
 });
+
+module.exports = function (predicate) {
+    return new ODataParser(predicate).parse();
+};
+
+module.exports.orderBy = function (ordering) {
+    return new ODataParser(ordering).parseOrdering();
+};

@@ -29,7 +29,7 @@ module.exports = function (config, statement) {
 
         request.multiple = statement.multiple;
 
-        statement.parameters && statement.parameters.forEach(function (parameter) {
+        if(statement.parameters) statement.parameters.forEach(function (parameter) {
             var type = parameter.type || helpers.getMssqlType(parameter.value);
             if(type)
                 request.input(parameter.name, type, parameter.value);
