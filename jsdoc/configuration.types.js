@@ -10,6 +10,7 @@ The top level configuration object.
 @property {Promise} promiseConstructor Promise constructor to use
 @property {bool} homePage Show a welcome page when navigating to the root mobile app path
 @property {bool} swagger Expose swagger metadata at the path set in the swaggerPath configuration setting
+@property {bool} skipVersionCheck Allow requests for any API version, i.e. without a zumo-api-version header or querystring parameter
 @property {string} apiRootPath=/api - Directory to load api configuration from
 @property {string} tableRootPath=/tables - Directory to load table configuration from
 @property {string} notificationRootPath=/push/installations - Notification installations endpoint
@@ -61,6 +62,7 @@ SQL Server data configuration.  Can specify a connection with user/password/serv
 Authentication configuration
 @typedef authConfiguration
 @property {string} secret - Key to use to sign and validate JWT tokens
+@property {bool} validateTokens=false - By default, JWT tokens are only decoded as validation is handled by Azure Web Apps
 @property {string} audience=urn:microsoft:windows-azure:zumo - Token audience claim
 @property {string} issuer=urn:microsoft:windows-azure:zumo - Token issuer claim
 @property {integer} expiresInMinutes=1440 - Expiry of signed tokens
