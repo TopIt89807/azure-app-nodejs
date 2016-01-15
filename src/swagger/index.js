@@ -5,15 +5,13 @@ var tableDefinition = require('./tableDefinition'),
     tablePaths = require('./tablePaths'),
     tableTag = require('./tableTag'),
     object = require('../utilities/object'),
-    merge = require('deeply'),
-    data = require('../data');
+    merge = require('deeply');
 
 module.exports = function (configuration) {
     var createTableDefinition = tableDefinition(configuration),
         createTablePaths = tablePaths(configuration),
         createTableTag = tableTag(configuration),
-        tables = object.values(configuration.tables),
-        dataProvider = data(configuration);
+        tables = object.values(configuration.tables);
 
     return function (basePath, host, tableSchemas) {
         return {

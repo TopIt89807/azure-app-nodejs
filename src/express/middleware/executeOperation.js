@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿var promises = require('../../utilities/promises'),
+var promises = require('../../utilities/promises'),
     dataOperations = require('../tables/operations');
 
 // execute the requested operation and attach the results to res
@@ -40,7 +40,7 @@ module.exports = function (operations) {
                 case 'patch': return 'update';
                 case 'delete': return 'delete';
                 case 'post': return req.params.id ? 'undelete' : 'insert';
-            };
+            }
         }
     };
 }

@@ -1,9 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var auth = require('../../auth'),
-    log = require('../../logger'),
-    errors = require('../../utilities/errors');
+var auth = require('../../auth');
 
 module.exports = function (configuration) {
     if(configuration && configuration.auth && Object.keys(configuration.auth).length > 0) {

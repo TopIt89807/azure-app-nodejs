@@ -4,7 +4,7 @@
 var corsModule = require('../../cors');
 
 module.exports = function(configuration) {
-    cors = corsModule(configuration.cors);
+    var cors = corsModule(configuration.cors);
 
     return function(req, res, next) {
         if (configuration && configuration.cors) {

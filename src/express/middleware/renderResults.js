@@ -1,10 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var errors = require('../../utilities/errors'),
-    log = require('../../logger');
+var errors = require('../../utilities/errors');
 
-﻿// render results attached to response object to the client in JSON format
 module.exports = function (configuration) {
     return function (req, res, next) {
         preventCaching();

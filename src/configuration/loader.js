@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿var path = require('path')
+var path = require('path'),
     fs = require('fs'),
-    logger = require('../logger');
+    logger = require('../logger'),
     merge = require('../utilities/merge'),
+
     supportedExtensions = ['.js', '.json'];
 
 module.exports = {

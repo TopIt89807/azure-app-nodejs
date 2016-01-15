@@ -7,7 +7,6 @@
 */
 var user = require('./user'),
     jwt = require('jsonwebtoken'),
-    crypto = require('crypto'),
     promises = require('../utilities/promises');
 
 /**

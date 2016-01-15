@@ -7,34 +7,34 @@
 Provides a wrapper around standard promise libraries along with a number of helper
 functions, allowing substitution of ES6 compliant promise implementations.
 */
-﻿var constructor = typeof Promise === 'undefined'
+var Constructor = typeof Promise === 'undefined'
     ? require('es6-promise').Promise
     : Promise;
 
 var api = module.exports = {
     /** Gets the constructor that is used to create promises */
     getConstructor: function () {
-        return constructor;
+        return Constructor;
     },
 
     /** Sets the constructor to be used for creation of promises */
     setConstructor: function (promiseConstructor) {
         if (typeof promiseConstructor === 'function')
-            constructor = promiseConstructor;
+            Constructor = promiseConstructor;
     },
     /** Creates a new promise from the provided executor */
     create: function (executor) {
-        return new constructor(executor);
+        return new Constructor(executor);
     },
     /** Returns a resolved promise */
     resolved: function (value) {
-        return new constructor(function (resolve, reject) {
+        return new Constructor(function (resolve, reject) {
             resolve(value);
         });
     },
     /** Returns a rejected promise */
     rejected: function (error) {
-        return new constructor(function (resolve, reject) {
+        return new Constructor(function (resolve, reject) {
             reject(error);
         });
     },
@@ -44,7 +44,7 @@ var api = module.exports = {
     },
     /** Returns a promise that resolves after the specified delay */
     sleep: function (delay, result) {
-        return new constructor(function (resolve, reject) {
+        return new Constructor(function (resolve, reject) {
             setTimeout(function () {
                 resolve(result);
             }, delay);
@@ -52,7 +52,7 @@ var api = module.exports = {
     },
     /** Returns a promise that resolves after all provided promises resolve */
     all: function (promises) {
-        return constructor.all(promises);
+        return Constructor.all(promises);
     },
 
     /** Returns a promise that resolves after the promise created for each provided item has resolved in series */

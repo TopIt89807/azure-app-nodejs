@@ -7,8 +7,6 @@ var statements = require('./statements'),
     schema = require('./schema'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
-    promises = require('../../utilities/promises'),
-    errors = require('../../utilities/errors'),
     queries = require('../../query');
 
 module.exports = function (configuration) {

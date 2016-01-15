@@ -12,8 +12,7 @@ var express = require('express'),
     customApi = require('./api'),
     tables = require('./tables'),
     table = require('./tables/table'),
-    log = require('../logger'),
-    assert = require('../utilities/assert').argument;
+    log = require('../logger');
 
 /**
  * An {@link http://expressjs.com/4x/api.html#router express router} extended with the following properties

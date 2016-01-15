@@ -8,8 +8,6 @@ module.exports = function (configuration) {
         dynamicSchema = require('./dynamicSchema'),
         promises = require('../../utilities/promises'),
         log = require('../../logger'),
-        data = require('./index'),
-        errorCodes = require('./errorCodes'),
         helpers = require('./helpers');
 
     var api = {

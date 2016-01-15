@@ -30,8 +30,9 @@ module.exports = {
         }
 
         function resolveProperty(property) {
-            if (definition[method].hasOwnProperty(property)) { 
+            if (definition[method].hasOwnProperty(property)) {
                 // already set on operation, do nothing
+                return;
             } else if (definition.hasOwnProperty(property)) {
                 // use table default if exists
                 definition[method][property] = definition[property]

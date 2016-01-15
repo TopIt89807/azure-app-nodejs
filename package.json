@@ -31,7 +31,7 @@
     "chai-as-promised": "^5.0.0",
     "chai-subset": "^1.0.1",
     "jsdoc": "^3.3.2",
-    "jshint": "^2.8.0",
+    "jshint": "^2.9.1",
     "minami": "devigned/minami",
     "mocha": "^2.2.5",
     "q": "^1.4.1",

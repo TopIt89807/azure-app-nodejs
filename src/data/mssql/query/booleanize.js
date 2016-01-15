@@ -6,15 +6,6 @@ var types = require('../../../utilities/types'),
     ExpressionVisitor = require('../../../query/ExpressionVisitor'),
     expressions = require('../../../query/expressions');
 
-module.exports = function (expr) {
-    var booleanizer = new SqlBooleanizer();
-
-    expr = booleanizer.visit(expr);
-    expr = ensureExpressionIsBoolean(expr);
-
-    return expr;
-};
-
 var SqlBooleanizer = types.deriveClass(ExpressionVisitor, null, {
     visitUnary: function (expr) {
         var operand = this.visit(expr.operand);
@@ -128,3 +119,12 @@ function isBooleanExpression(expr) {
 
     return false;
 }
+
+module.exports = function (expr) {
+    var booleanizer = new SqlBooleanizer();
+
+    expr = booleanizer.visit(expr);
+    expr = ensureExpressionIsBoolean(expr);
+
+    return expr;
+};

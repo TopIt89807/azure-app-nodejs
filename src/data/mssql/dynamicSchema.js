@@ -9,7 +9,7 @@ var execute = require('./execute'),
 module.exports = function (table) {
     var api = {
         execute: function (config, statement, item, attempt) {
-            var schema = schemas(config),
+            var schema = schemas(config);            
             attempt = attempt || 1;
 
             return execute(config, statement)
