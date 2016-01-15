@@ -18,16 +18,12 @@ module.exports = function (source, tableConfig) {
     function transformResult(results) {
         log.silly('Read query returned ' + results[0].length + ' results');
 
+        var finalResults = helpers.translateVersion(results[0]);
+
         // if there is more than one result set, total count is the second query
-        if(results.length === 1) {
-            // if the query was for a single result, return a single result
-            var queryResults = source.single ? results[0][0] : results[0];
-            return helpers.translateVersion(queryResults);
-        } else {
-            return {
-                results: helpers.translateVersion(results[0]),
-                count: results[1][0].count
-            };
-        }
+        if(results.length > 1)
+            finalResults.totalCount = results[1][0].count;
+
+        return finalResults;
     }
 };

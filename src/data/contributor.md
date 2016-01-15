@@ -33,15 +33,24 @@ The `query` parameter is a [queryjs Query object][queryjs]. It exposes a LINQ st
 
 Support for conversion to other formats is currently limited to an OData object representation. This can be done using the `toOData` function exposed by the `azure-mobile-apps/src/query` module. See [the source][toOData].
 
-The read function should resolve to a result set that the Mobile Apps client SDK expects.
+The read function should resolve to an array of results.
 
-- For normal queries, this should be an array of results.
-- When the provided query has the `single` property set, this should be a single object.
-  If the item does not exist, it should resolve to undefined.
-- When the provided query has the `includeTotalCount` property set, this should be an object
-  with results and count properties.
+- When the provided query has the `includeTotalCount` property set, the array should have an
+  additional property `totalCount` set to the total number of records that would be returned
+  without a result size limit.
 - When the provided query has the `includeDeleted` property set, the results should include
   soft deleted items.
+
+### insert
+
+    function (item) { }
+
+The insert function should insert a new record into the database and resolve to the inserted item.
+
+- If an item with the same `id` property already exists, an `Error` should be thrown with
+  the `duplicate` property set.
+- The `createdAt` and `updatedAt` properties should be set to the current date and time.
+- The `version` property should be set to a unique value.
 
 ### update
 
@@ -62,17 +71,6 @@ and resolve to the updated item.
 
 The `query` parameter is optional and allows filters such as user IDs to be applied to update
 operations. The query is in the format described in the read section.
-
-### insert
-
-    function (item) { }
-
-The insert function should insert a new record into the database and resolve to the inserted item.
-
-- If an item with the same `id` property already exists, an `Error` should be thrown with
-  the `duplicate` property set.
-- The `createdAt` and `updatedAt` properties should be set to the current date and time.
-- The `version` property should be set to a unique value.
 
 ### delete
 
