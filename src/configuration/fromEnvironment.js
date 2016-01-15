@@ -64,7 +64,7 @@ module.exports = function (configuration, environment) {
 
             case 'ms_crossdomainwhitelist':
                 environment[key].split(',').forEach(function (origin) {
-                    configuration.cors.origins.push(origin);
+                    configuration.cors.hostnames.push(origin);
                 });
                 break;
 

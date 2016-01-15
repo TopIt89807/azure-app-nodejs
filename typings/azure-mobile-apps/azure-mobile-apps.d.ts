@@ -165,7 +165,7 @@ declare module Azure.MobileApps {
         interface Cors {
             exposeHeaders: string;
             maxAge?: number;
-            origins: string[];
+            hostnames: string[];
         }
 
         interface Notifications {
