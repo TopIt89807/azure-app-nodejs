@@ -15,7 +15,7 @@ Create an instance of a helper based on the supplied configuration.
 module.exports = function (configuration) {
     var isNullAllowed = false,
         headersRegex = /^[a-z0-9\-\,\s]{1,500}$/i,
-        originRegexes = buildOriginRegexes(configuration && configuration.origins);
+        originRegexes = buildOriginRegexes(configuration && configuration.hostnames);
 
     var api = {
         /**
@@ -120,11 +120,11 @@ module.exports = function (configuration) {
         return origin;
     }
 
-    function buildOriginRegexes(origins) {
-        if(!origins)
+    function buildOriginRegexes(hostnames) {
+        if(!hostnames)
             return [];
 
-        return origins.map(function(origin) {
+        return hostnames.map(function(origin) {
             // included for compatibility with V1 { 'host': 'www.example.com' } origins
             origin = parseOrigin(origin);
 
