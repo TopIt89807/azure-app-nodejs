@@ -2,8 +2,7 @@ var parameterTest = module.exports = require('azure-mobile-apps').table();
 
 parameterTest.autoIncrement = true;
 parameterTest.read(function (context) {
-    // read operations expect to return an array... this could be improved
-    return context.query.single ? mapParameters(context) : [mapParameters(context)];
+    return [mapParameters(context)];
 });
 parameterTest.insert(mapParameters);
 parameterTest.update(mapParameters);
