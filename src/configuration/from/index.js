@@ -27,6 +27,7 @@ module.exports = function (configuration) {
         return target;
     }, {});
 
+    // call this to access the generated configuration and apply global configuration
     api.apply = function () {
         module.exports.configureGlobals(configuration);
         return configuration;
