@@ -4,7 +4,6 @@
 
 // we can expand this to provide different configurations for different environments
 var configuration = require('../../src/configuration'),
-    path = require('path'),
     testDefaults = {
         skipVersionCheck: true,
         logging: false,
@@ -29,13 +28,4 @@ api.ignoreEnv = function (suppliedConfig) {
         .object(suppliedConfig)
         .commandLine()
         .configuration;
-};
-
-api.data = function () {
-    return configuration.from(testDefaults)
-        .file()
-        .environment()
-        .commandLine()
-        .configuration
-        .data;
 };

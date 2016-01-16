@@ -18,7 +18,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', funct
     });
 
     afterEach(function (done) {
-        data(config.data()).execute({ sql: 'drop table dynamic' }).then(done, done);
+        data(config().data).execute({ sql: 'drop table dynamic' }).then(done, done);
     });
 
     it('creates table and returns inserted records', function () {

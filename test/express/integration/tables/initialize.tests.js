@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         });
 
         afterEach(function (done) {
-            data(config.data()).execute({ sql: 'drop table initialize' }).then(done, done);
+            data(config().data).execute({ sql: 'drop table initialize' }).then(done, done);
         });
 
         it('creates non-dynamic tables', function () {
@@ -97,7 +97,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         }
 
         function drop(id) {
-            return data(config.data()).execute({ sql: 'drop table table' + id });
+            return data(config().data).execute({ sql: 'drop table table' + id });
         }
     })
 });
