@@ -264,4 +264,12 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
                 })
             });
     });
+
+    it("returns 500 for get when table is defined but not yet created", function () {
+        mobileApp.tables.add('notCreated', { dynamicSchema: false });
+        app.use(mobileApp);
+        return supertest(app)
+            .get('/tables/notCreated')
+            .expect(500);
+    });
 });
