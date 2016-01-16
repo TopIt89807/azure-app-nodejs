@@ -7,8 +7,6 @@ var configuration = require('../../../src/configuration'),
     mobileApp = require('../../..'),
     merge = require('deeply'),
     path = require('path'),
-    winston = require('winston');
-    q = require('q'),
     environmentConfig = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')), process.env);
 
 // initialize configuration for testing
@@ -22,7 +20,7 @@ var testDefaults = {
     }
 }
 
-applyCommandLineArguments(testDefaults);
+configuration.fromCommandLine(testDefaults);
 
 var api = module.exports = function (userConfig, environment) {
     var config = api.ignoreEnv(userConfig);
@@ -40,38 +38,3 @@ api.ignoreEnv = function (userConfig) {
 api.data = function () {
     return environmentConfig.data;
 };
-
-function applyCommandLineArguments(config) {
-    var args = process.argv.slice(2),
-        customArgs = {};
-
-    // filter for custom arguments
-    args.forEach(function (arg, index) {
-        if (arg.slice(0, 3) === '---') {
-            customArgs[arg.slice(3)] = args[index + 1];
-        }
-    });
-
-    Object.keys(customArgs).forEach(function (property) {
-        switch (property) {
-            case 'logging.level':
-                config.logging = {
-                    level: customArgs[property],
-                    transports: [
-                        new (winston.transports.Console)({
-                            colorize: true,
-                            timestamp: true,
-                            showLevel: true
-                        })
-                    ]
-                };
-                break;
-
-            case 'promiseConstructor':
-                if (customArgs[property] === 'q') {
-                    config.promiseConstructor = q.Promise;
-                }
-                break;
-        }
-    });
-}
