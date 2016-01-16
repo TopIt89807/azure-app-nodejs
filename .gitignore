@@ -34,5 +34,4 @@ build/Release
 node_modules
 
 jsdoc/out
-test/config.js
-test/E2E/config.js
+azureMobile.js

@@ -1,40 +1,36 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-
 var mobileApps = require('..'),
-    configuration = require('../src/configuration'),
+    loadConfiguration = require('../src/configuration'),
+
     testDefaults = {
         skipVersionCheck: true,
         logging: false,
-        basePath: __dirname,
-        configFile: 'config.js'
+        basePath: __dirname
     };
 
-
-var api = module.exports = function (suppliedConfiguration, environment) {
-    return mobileApps.create(api.configuration(suppliedConfiguration, environment));
+var api = function (configuration) {
+    return mobileApps.create(api.configuration(configuration));
 };
 
-api.ignoreEnvironment = function (suppliedConfiguration, environment) {
-    return mobileApps.create(api.configuration.ignoreEnvironment(suppliedConfiguration, environment));
-};
-
-// we can expand this to provide different configurations for different environments
-api.configuration = function (suppliedConfig) {
-    return configuration.from()
+// export configuration mainly so tests can create data providers to execute drop table
+api.configuration = function (configuration) {
+    return loadConfiguration.from()
         .defaults(testDefaults)
         .file()
         .environment()
-        .object(suppliedConfig)
+        .object(configuration)
         .commandLine()
         .apply();
 };
 
-api.configuration.ignoreEnvironment = function (suppliedConfig) {
-    return configuration.from()
+api.ignoreEnvironment = function (configuration) {
+    return mobileApps.create(loadConfiguration.from()
         .defaults(testDefaults)
-        .object(suppliedConfig)
+        .object(configuration)
         .commandLine()
-        .apply();
+        .apply());
 };
+
+module.exports = api;
