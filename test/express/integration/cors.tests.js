@@ -12,7 +12,6 @@ var expect = require('chai').expect,
     accessControlExposeHeadersHeader = 'Access-Control-Expose-Headers',
     accessControlMaxAgeHeader = 'Access-Control-Max-Age',
     expectedAllowedMethods = 'GET, PUT, PATCH, POST, DELETE, OPTIONS',
-    config = require('../../infrastructure/configuration'),
 
     app, mobileApp;
 

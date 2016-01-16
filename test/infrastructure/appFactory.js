@@ -12,6 +12,3 @@ var api = module.exports = function (suppliedConfiguration, environment) {
 api.ignoreEnvironment = function (suppliedConfiguration, environment) {
     return mobileApps.create(configuration.ignoreEnvironment(suppliedConfiguration, environment));
 };
-
-api.table = mobileApps.table;
-api.ignoreEnvironment.table = mobileApps.table;

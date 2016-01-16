@@ -35,7 +35,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
     });
 
     it('adds Link header when top > take & results.length === take', function () {
-        var table = mobileApps.table();
+        var table = mobileApp.table();
 
         table.read(function (context) {
             context.query = context.query.take(1);
