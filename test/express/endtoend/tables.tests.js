@@ -72,7 +72,7 @@ describe('azure-mobile-apps.express.sql.integration.endtoend.tables', function (
 });
 
 function insert(item) {
-    return request(app).post('/tables/endtoend').set('zumo-api-version', '2.0.0').send(item).expect(200);
+    return request(app).post('/tables/endtoend').set('zumo-api-version', '2.0.0').send(item).expect(201);
 }
 
 function update(item) {
@@ -84,7 +84,7 @@ function del(id) {
 }
 
 function undelete(id) {
-    return request(app).post('/tables/endtoend/' + id).set('zumo-api-version', '2.0.0').expect(200);
+    return request(app).post('/tables/endtoend/' + id).set('zumo-api-version', '2.0.0').expect(201);
 }
 
 function read() {

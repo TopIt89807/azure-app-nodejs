@@ -37,7 +37,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
         return supertest(app)
             .post('/tables/integration')
             .send({ id: '1', string: "test", bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .get('/tables/integration')
@@ -75,7 +75,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
         return supertest(app)
             .post('/tables/integration')
             .send({ id: '1', string: "test" })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .delete('/tables/integration/1')
@@ -96,7 +96,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
         return supertest(app)
             .post('/tables/integration')
             .send({ id: '1', string: "test", bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 expect(res.body).to.containSubset({ id: '1', string: "test", bool: true, number: 1 });
             });
@@ -138,7 +138,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
         return supertest(app)
             .post('/tables/integration')
             .send({ string: "test", bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .get('/tables/integration')
@@ -157,7 +157,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
         return supertest(app)
             .post('/tables/integration')
             .send({ id: '1', string: "test", bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .get('/tables/integration/1')
@@ -230,7 +230,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
         return supertest(app)
             .post('/tables/integration')
             .send({ id: '1', string: "test", bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .delete('/tables/integration/1')
@@ -245,12 +245,12 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
         return supertest(app)
             .post('/tables/integration')
             .send({ id: '1', string: "test", bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .post('/tables/integration')
                     .send({ id: '2', string: "test2", bool: false, number: 2 })
-                    .expect(200)
+                    .expect(201)
             })
             .then(function () {
                 return supertest(app)

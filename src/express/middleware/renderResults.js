@@ -5,11 +5,13 @@ var errors = require('../../utilities/errors');
 
 module.exports = function (configuration) {
     return function (req, res, next) {
-        var single = req.method === 'GET' && req.azureMobile.query && req.azureMobile.query.single;
+        var single = req.method === 'GET' && req.azureMobile.query && req.azureMobile.query.single,
+            successStatus = req.method === 'POST' ? 201 : 200;
+
         preventCaching();
 
         if(resultFound())
-            res.json(formatResultsForClient());
+            res.status(successStatus).json(formatResultsForClient());
         else
             next(errors.notFound());
 

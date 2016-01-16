@@ -27,7 +27,7 @@ describe('azure-mobile-apps.express.integration.tables.etag', function () {
         return supertest(app)
             .post('/tables/headers')
             .send({ id: '1', version: 'ver' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 // version etag because single result post
                 expect(res.headers.etag).to.equal('"' + res.body.version + '"');
@@ -38,7 +38,7 @@ describe('azure-mobile-apps.express.integration.tables.etag', function () {
         return supertest(app)
             .post('/tables/headers')
             .send({ id: '1', version: 'ver' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .get('/tables/headers/1')
@@ -54,7 +54,7 @@ describe('azure-mobile-apps.express.integration.tables.etag', function () {
         return supertest(app)
             .post('/tables/headers')
             .send({ id: '1', version: 'ver' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .get('/tables/headers')

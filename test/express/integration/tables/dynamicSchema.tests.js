@@ -28,7 +28,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', funct
         return supertest(app)
             .post('/tables/dynamic')
             .send({ id: '1', string: 'test', bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .get('/tables/dynamic')
@@ -69,7 +69,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', funct
         return supertest(app)
             .post('/tables/dynamic')
             .send({ id: 1, string: 'test', bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .get('/tables/dynamic')
@@ -87,7 +87,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', funct
         return supertest(app)
             .post('/tables/dynamic')
             .send({ string: 'test', bool: true, number: 1 })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 expect(res.body).to.containSubset({ id: 1, string: 'test', bool: true, number: 1 });
             });

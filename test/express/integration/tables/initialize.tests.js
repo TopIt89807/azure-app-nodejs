@@ -34,7 +34,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
                     return supertest(app)
                         .post('/tables/initialize')
                         .send({ id: '1' })
-                        .expect(200)
+                        .expect(201)
                         .expect(function (res) {
                             expect(res.body.string).to.be.null;
                             expect(res.body.number).to.be.null;
@@ -48,7 +48,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
                     return supertest(app)
                         .post('/tables/initialize')
                         .send({ id: '1' })
-                        .expect(200)
+                        .expect(201)
                         .expect(function (res) {
                             expect(res.body.boolean).to.be.undefined;
                         });

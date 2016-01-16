@@ -23,7 +23,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
         return supertest(app)
             .post('/tables/headers')
             .send({ id: '1' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .get('/tables/headers?$top=2')
@@ -47,7 +47,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
         return supertest(app)
             .post('/tables/headers')
             .send({ id: '1' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .get('/tables/headers?$top=2')
@@ -64,7 +64,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
         return supertest(app)
             .post('/tables/headers')
             .send({ id: '1' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .get('/tables/headers?$top=1')
@@ -82,7 +82,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
         return supertest(app)
             .post('/tables/headers')
             .send({ id: '1' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .get('/tables/headers?$top=2')

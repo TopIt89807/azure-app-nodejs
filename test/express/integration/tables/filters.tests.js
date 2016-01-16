@@ -86,7 +86,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.filters', function ()
             .then(function () {
                 return supertest(app)
                     .post('/tables/filters/1')
-                    .expect(200)
+                    .expect(201)
             });
     });
 

@@ -27,7 +27,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.softDelete', function
         return supertest(app)
             .post('/tables/softDelete')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .delete('/tables/softDelete/1')
@@ -50,7 +50,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.softDelete', function
         return supertest(app)
             .post('/tables/softDelete')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .delete('/tables/softDelete/1')
@@ -73,7 +73,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.softDelete', function
         return supertest(app)
             .post('/tables/softDelete')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .delete('/tables/softDelete/1')
@@ -82,7 +82,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.softDelete', function
             .then(function () {
                 return supertest(app)
                     .post('/tables/softDelete/1')
-                    .expect(200);
+                    .expect(201);
             })
             .then(function () {
                 return supertest(app)

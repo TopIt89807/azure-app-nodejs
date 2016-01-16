@@ -45,7 +45,7 @@ describe('azure-mobile-apps.express.integration.middleware', function () {
 
         return supertest(app)
             [verb]('/tables/test' + (urlSuffix || ''))
-            .expect(200)
+            .expect(verb === 'post' ? 201 : 200)
             .then(function (res) {
                 expect(results).to.deep.equal([1, 2, 3, 4, 5]);
             });

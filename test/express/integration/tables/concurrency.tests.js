@@ -27,7 +27,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .patch('/tables/concurrency')
@@ -48,7 +48,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .patch('/tables/concurrency')
@@ -70,7 +70,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .patch('/tables/concurrency')
@@ -86,7 +86,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .delete('/tables/concurrency/1')
@@ -102,7 +102,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .delete('/tables/concurrency/1')
@@ -118,7 +118,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .delete('/tables/concurrency/1')
@@ -139,7 +139,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .post('/tables/concurrency')
@@ -155,7 +155,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.concurrency', functio
         return supertest(app)
             .post('/tables/concurrency')
             .send({ id: '1', value: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 return supertest(app)
                     .delete('/tables/concurrency/1')
