@@ -21,7 +21,7 @@ module.exports = function (configuration) {
                 summary: 'Insert a record into the ' + schema.name + ' table',
                 parameters: ['body'],
                 responses: {
-                    '200': createOperation.response('The inserted item', 'item'),
+                    '201': createOperation.response('The inserted item', 'item'),
                     '409': createOperation.response('An item with the same ID already exists', 'item')
                 }
             }),
@@ -49,7 +49,7 @@ module.exports = function (configuration) {
                 summary: 'Undelete a record from the ' + schema.name + ' table',
                 parameters: ['id'],
                 responses: {
-                    '200': createOperation.response('The undeleted item', 'item'),
+                    '201': createOperation.response('The undeleted item', 'item'),
                     '409': createOperation.response('A concurrency violation occurred', 'item'),
                     '412': createOperation.response('A concurrency violation occurred', 'item')
                 }
