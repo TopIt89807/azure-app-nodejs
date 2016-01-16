@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var index = require('../../../src/data/mssql'),
     queries = require('../../../src/query'),
-    config = require('../../infrastructure/config')().data,
+    config = require('../../infrastructure/configuration')().data,
     expect = require('chai')
         .use(require('chai-subset'))
         .expect,

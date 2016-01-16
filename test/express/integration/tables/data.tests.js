@@ -6,8 +6,8 @@ var expect = require('chai')
         .expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../../infrastructure/mobileApps'),
-    config = require('../../../infrastructure/config'),
+    mobileApps = require('../../../infrastructure/appFactory'),
+    config = require('../../../infrastructure/configuration'),
     data = require('../../../../src/data/mssql'),
 
     app, mobileApp;

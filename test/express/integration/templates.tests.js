@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/mobileApps'),
+    mobileApps = require('../../infrastructure/appFactory'),
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.templates', function () {

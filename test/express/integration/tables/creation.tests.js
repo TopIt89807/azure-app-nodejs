@@ -3,9 +3,9 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').use(require('chai-subset')).expect,
     request = require('supertest-as-promised'),
-    config = require('../../../infrastructure/config'),
+    config = require('../../../infrastructure/configuration'),
     express = require('express'),
-    mobileApps = require('../../../infrastructure/mobileApps'),
+    mobileApps = require('../../../infrastructure/appFactory'),
     data = require('../../../../src/data/mssql'),
     statements = require('../../../../src/data/mssql/statements'),
     queries = require('../../../../src/query'),

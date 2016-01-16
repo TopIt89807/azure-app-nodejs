@@ -2,8 +2,8 @@ var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     data = require('../../../src/data/mssql'),
-    mobileApps = require('../../infrastructure/mobileApps'),
-    config = require('../../infrastructure/config'),
+    mobileApps = require('../../infrastructure/appFactory'),
+    config = require('../../infrastructure/configuration'),
     app, mobileApp;
 
 // added the .sql prefix to exclude from travis tests for now. remove when SQLite is done.

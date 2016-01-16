@@ -4,7 +4,7 @@
 var expect = require('chai').use(require('chai-subset')).expect,
     request = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../infrastructure/appFactory').ignoreEnvironment,
     data = require('../../../src/data/mssql'),
     queries = require('../../../src/query'),
     app, mobileApp;

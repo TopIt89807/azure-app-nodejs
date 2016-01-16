@@ -4,7 +4,7 @@
 var index = require('../../../src/data/mssql'),
     execute = require('../../../src/data/mssql/execute'),
     queries = require('../../../src/query'),
-    config = require('../../infrastructure/config')().data,
+    config = require('../../infrastructure/configuration')().data,
     expect = require('chai')
         .use(require('chai-subset'))
         .use(require('chai-as-promised'))

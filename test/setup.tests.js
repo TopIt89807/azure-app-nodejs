@@ -1,4 +1,4 @@
-var configuration = require('./infrastructure/config.js')(),
+var configuration = require('./infrastructure/configuration.js')(),
     configureGlobals = require('../src/configuration/from').configureGlobals;
 
 beforeEach(function () {

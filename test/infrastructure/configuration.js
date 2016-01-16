@@ -22,7 +22,7 @@ var api = module.exports = function (suppliedConfig) {
         .configuration;
 };
 
-api.ignoreEnv = function (suppliedConfig) {
+api.ignoreEnvironment = function (suppliedConfig) {
     return configuration.from()
         .defaults(testDefaults)
         .object(suppliedConfig)
