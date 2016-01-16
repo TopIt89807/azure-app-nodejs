@@ -4,15 +4,15 @@
 var expect = require('chai').expect,
     request = require('supertest-as-promised'),
     app = require('express')(),
-    mobileApp = require('../../infrastructure/appFactory')()
+    mobileApp = require('../../appFactory')()
     data = require('../../../src/data/mssql'),
-    config = require('../../infrastructure/configuration')().data;
+    config = require('../../appFactory').configuration().data;
 
 describe('azure-mobile-apps.express.sql.integration.endtoend.tables', function () {
     beforeEach(dropTable);
     afterEach(dropTable);
 
-    mobileApp.tables.import('../express/files/tables/endtoend');
+    mobileApp.tables.import('express/files/tables/endtoend');
     app.use(mobileApp);
 
     function dropTable() {

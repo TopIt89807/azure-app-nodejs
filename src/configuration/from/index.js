@@ -23,15 +23,14 @@ function fluentApi(configuration) {
         target[name] = function () {
             var args = Array.prototype.slice.apply(arguments);
             configuration = sources[name].apply(undefined, [configuration].concat(args))
-            api.configuration = configuration;
             return api;
         };
         return target;
     }, {});
 
-    api.configureGlobals = function () {
+    api.apply = function () {
         module.exports.configureGlobals(configuration);
-        return api;
+        return configuration;
     };
 
     return api;

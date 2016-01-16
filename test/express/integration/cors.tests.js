@@ -4,7 +4,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/appFactory').ignoreEnvironment,
+    mobileApps = require('../../appFactory').ignoreEnvironment,
     accessControlRequestHeader = 'access-control-request-headers',
     accessControlAllowOriginHeader = 'Access-Control-Allow-Origin',
     accessControlAllowMethodsHeader = 'Access-Control-Allow-Methods',

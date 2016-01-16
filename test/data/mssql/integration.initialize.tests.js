@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var config = require('../../infrastructure/configuration')().data,
+var config = require('../../appFactory').configuration().data,
     data = require('../../../src/data')({ data: config }),
     execute = require('../../../src/data/mssql/execute'),
     expect = require('chai').use(require('chai-subset')).expect;

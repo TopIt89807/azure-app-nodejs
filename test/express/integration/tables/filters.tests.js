@@ -5,8 +5,8 @@
     supertest = require('supertest-as-promised'),
     data = require('../../../../src/data/mssql'),
     express = require('express'),
-    mobileApps = require('../../../infrastructure/appFactory'),
-    config = require('../../../infrastructure/configuration'),
+    mobileApps = require('../../../appFactory'),
+    config = require('../../../appFactory').configuration,
 
     app, mobileApp;
 

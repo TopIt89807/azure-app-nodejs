@@ -8,12 +8,12 @@ var expect = require('chai').expect,
     app, mobileApp;
 
     app = require('express')();
-    mobileApps = require('../../infrastructure/appFactory').ignoreEnvironment,
+    mobileApps = require('../../appFactory').ignoreEnvironment,
 
     mobileApp = mobileApps({ auth: { secret: 'secret', getIdentity: getIdentity }});
 
-    mobileApp.api.import('../express/files/api/customapi');
-    mobileApp.api.import('../express/files/api/authapi');
+    mobileApp.api.import('express/files/api/customapi');
+    mobileApp.api.import('express/files/api/authapi');
     app.use(mobileApp);
 
 describe('azure-mobile-apps.express.integration.customapi', function () {

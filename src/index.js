@@ -12,10 +12,7 @@ var loadConfiguration = require('./configuration'),
     logger = require('./logger'),
     promises = require('./utilities/promises'),
     query = require('./query'),
-    merge = require('deeply'),
-    path = require('path'),
 
-    defaults = loadConfiguration.defaults(),
     platforms = {
         express: require('./express'),
     };
@@ -29,16 +26,14 @@ Express 4.x is currently the only supported platform.
 @returns {module:azure-mobile-apps/express}
 */
 var api = module.exports = function (configuration, environment) {
-    configuration = configuration || {};
-    var configFile = path.resolve(configuration.basePath || defaults.basePath, configuration.configFile || defaults.configFile);
-    configuration = merge({ logging: {}, data: {}, auth: {} }, defaults, loadConfiguration.from.file(configuration, configFile));
-    configuration = loadConfiguration.from.environment(configuration, environment);
-    configuration = loadConfiguration.from.settingsJson(configuration);
-
-    logger.configure(configuration.logging);
-    promises.setConstructor(configuration.promiseConstructor);
-
-    return api.create(configuration);
+    return api.create(loadConfiguration.from()
+        .defaults(configuration)
+        .file()
+        .environment(environment)
+        .settingsJson()
+        .object(configuration)
+        .commandLine()
+        .apply());
 };
 
 api.create = function (configuration) {
@@ -48,3 +43,4 @@ api.create = function (configuration) {
 api.table = table;
 api.logger = logger;
 api.query = query;
+api.promises = promises;

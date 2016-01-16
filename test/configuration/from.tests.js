@@ -10,7 +10,7 @@ describe('azure-mobile-apps.configuration.from', function () {
             .defaults()
             .commandLine(['---logging.level', 'silly'])
             .environment({ 'website_site_name': 'testName' })
-            .configuration
+            .apply()
         ).to.containSubset({
             platform: 'express',
             logging: { level: 'silly' },

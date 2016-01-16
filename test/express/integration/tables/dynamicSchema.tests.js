@@ -4,9 +4,9 @@
 var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../../infrastructure/appFactory'),
+    mobileApps = require('../../../appFactory'),
     data = require('../../../../src/data/mssql'),
-    config = require('../../../infrastructure/configuration'),
+    config = require('../../../appFactory').configuration,
     promises = require('../../../../src/utilities/promises'),
 
     app, mobileApp;
