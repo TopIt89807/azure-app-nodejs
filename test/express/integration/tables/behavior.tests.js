@@ -114,7 +114,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
         return supertest(app)
             .post('/tables/todoitem')
             .send({ id: 1, text: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .patch('/tables/todoitem/1')
@@ -138,7 +138,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
         return supertest(app)
             .post('/tables/todoitem')
             .send({ id: 1, text: 'test' })
-            .expect(200)
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .patch('/tables/todoitem/2')
@@ -166,7 +166,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .post('/tables/todoitem')
             .send('{ "id": 1, "text": "test" }')
             .set('Content-Type', '')
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 expect(res.body.id).to.equal(1);
             });
@@ -194,7 +194,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .post('/tables/todoitem')
             .send('text')
             .set('Content-Type', 'text')
-            .expect(200)
+            .expect(201)
             .then(function (res) {
                 expect(res.body.text).to.equal('text');
             });
@@ -208,7 +208,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .post('/tables/todoitem')
             .send('{ "id": 1, "text": "test" }')
             .set('Content-Type', 'application/json; charset=utf-8')
-            .expect(200);
+            .expect(201);
     });
 
     it('adds all settings to context object', function () {
