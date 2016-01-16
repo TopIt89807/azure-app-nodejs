@@ -8,8 +8,8 @@ var configuration = require('../../src/configuration'),
     testDefaults = {
         skipVersionCheck: true,
         logging: false,
-        basePath: path.resolve(__dirname, '../express/infrastructure/'), // this is what it used to be, need to refactor this out
-        configFile: '../../config.js'
+        basePath: __dirname,
+        configFile: '../config.js'
     };
 
 // this is the default test configuration that takes into account the config.js file and/or environment settings

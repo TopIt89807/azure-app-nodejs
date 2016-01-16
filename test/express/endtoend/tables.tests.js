@@ -12,7 +12,7 @@ describe('azure-mobile-apps.express.sql.integration.endtoend.tables', function (
     beforeEach(dropTable);
     afterEach(dropTable);
 
-    mobileApp.tables.import('../files/tables/endtoend');
+    mobileApp.tables.import('../express/files/tables/endtoend');
     app.use(mobileApp);
 
     function dropTable() {
