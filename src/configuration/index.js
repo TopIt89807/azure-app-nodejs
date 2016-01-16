@@ -3,9 +3,6 @@
 // ----------------------------------------------------------------------------
 module.exports = {
     defaults: require('./defaults'),
-    fromCommandLine: require('./fromCommandLine'),
-    fromEnvironment: require('./fromEnvironment'),
-    fromFile: require('./fromFile'),
-    fromSettingsJson: require('./fromSettingsJson'),
+    from: require('./from'),
     loader: require('./loader')
 }

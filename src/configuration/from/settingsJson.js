@@ -6,7 +6,7 @@ var clone = require('deeply'),
 
 module.exports = function (configuration) {
     configuration = clone(configuration);
-    
+
     // settings.json file is located in D:\home\site\diagnostics - site root is at D:\home\site\wwwroot
     // this could probably be more dynamic, an environment variable would exist to point somewhere relative to settings.json
     var basePath = configuration.basePath || './',

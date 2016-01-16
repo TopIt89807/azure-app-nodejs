@@ -7,11 +7,11 @@ var configuration = require('../../../src/configuration'),
     mobileApp = require('../../..'),
     merge = require('deeply'),
     path = require('path'),
-    environmentConfig = configuration.fromEnvironment(configuration.fromFile({}, path.resolve(__dirname, '../../config.js')));
+    environmentConfig = configuration.from.environment(configuration.from.file({}, path.resolve(__dirname, '../../config.js')));
 
 // the very basics for testing
 function testDefaults() {
-    return configuration.fromCommandLine({
+    return configuration.from.commandLine({
         skipVersionCheck: true,
         logging: false,
         basePath: __dirname,
@@ -25,9 +25,9 @@ function testDefaults() {
 var api = module.exports = function (suppliedConfig, environment) {
     var config = api.ignoreEnv(suppliedConfig);
     var configFile = path.resolve(config.basePath, config.configFile);
-    config = configuration.fromFile(config, configFile);
-    config = configuration.fromEnvironment(config, environment);
-    config = configuration.fromSettingsJson(config); // not sure if this is tested?
+    config = configuration.from.file(config, configFile);
+    config = configuration.from.environment(config, environment);
+    config = configuration.from.settingsJson(config); // not sure if this is tested?
     return config;
 };
 

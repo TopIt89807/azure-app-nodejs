@@ -21,7 +21,7 @@
  * @param {string} MS_SkipVersionCheck If specified, does not validate client api version before serving requests
  * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
  */
-var connectionString = require('./connectionString'),
+var connectionString = require('../connectionString'),
     merge = require('deeply');
 
 // determine various configuration information from environment such as web.config settings, etc.
