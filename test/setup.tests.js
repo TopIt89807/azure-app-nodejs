@@ -1,4 +1,4 @@
-var config = require('./express/infrastructure/config.js')() || {};
+var config = require('./infrastructure/config.js')() || {};
 var configureGlobals = require('../src').configureGlobals;
 
 beforeEach(function () {

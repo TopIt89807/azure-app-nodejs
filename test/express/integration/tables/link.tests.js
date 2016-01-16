@@ -4,8 +4,8 @@
 ﻿var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
-    config = require('../../infrastructure/config'),
+    mobileApps = require('../../../infrastructure/mobileApps').ignoreEnv,
+    config = require('../../../infrastructure/config'),
 
     app, mobileApp;
 

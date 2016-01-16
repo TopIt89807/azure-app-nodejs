@@ -3,27 +3,25 @@
 // ----------------------------------------------------------------------------
 
 // we can expand this to provide different configurations for different environments
-var configuration = require('../../../src/configuration'),
+var configuration = require('../../src/configuration'),
     path = require('path'),
     testDefaults = {
         skipVersionCheck: true,
         logging: false,
-        basePath: __dirname,
+        basePath: path.resolve(__dirname, '../express/infrastructure/'), // this is what it used to be, need to refactor this out
         configFile: '../../config.js'
     };
 
-var api = module.exports = function (suppliedConfig, environment) {
-
-return configuration.from()
-    .defaults(testDefaults)
-    .file()
-    .environment(environment)
-    .object(suppliedConfig)
-    .commandLine()
-    .configuration;
+// this is the default test configuration that takes into account the config.js file and/or environment settings
+var api = module.exports = function (suppliedConfig) {
+    return configuration.from()
+        .defaults(testDefaults)
+        .file()
+        .environment()
+        .object(suppliedConfig)
+        .commandLine()
+        .configuration;
 };
-
-api.defaults = testDefaults;
 
 api.ignoreEnv = function (suppliedConfig) {
     return configuration.from()

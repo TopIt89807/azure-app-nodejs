@@ -8,7 +8,7 @@ var expect = require('chai').expect,
     app, mobileApp;
 
     app = require('express')();
-    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
 
     mobileApp = mobileApps({ auth: { secret: 'secret', getIdentity: getIdentity }});
 

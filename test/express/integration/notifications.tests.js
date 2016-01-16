@@ -8,7 +8,7 @@ var sinon = require('sinon'),
         .expect,
     request = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
     nhStub, notifFactoryStub, app, installation;
 
 

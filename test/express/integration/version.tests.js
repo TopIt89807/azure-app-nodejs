@@ -4,7 +4,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../infrastructure/mobileApps'),
+    mobileApps = require('../../infrastructure/mobileApps'),
 
     app, mobileApp;
 

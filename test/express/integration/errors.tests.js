@@ -4,7 +4,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.errors', function () {
