@@ -13,12 +13,10 @@ var merge = require('../../utilities/merge').mergeObjects,
         settingsJson: require('./settingsJson')
     };
 
-module.exports = merge(fluentApi, sources);
-
-function fluentApi(configuration) {
+module.exports = function (configuration) {
     configuration = configuration || {};
 
-    // for each configuration source above, add a function that applies changes to the above configuration variable and returns the same api (i.e. fluent)
+    // for each configuration source above, add a function that applies changes to the configuration and returns the api (i.e. fluent)
     // each source module must export a function with the configuration object as the first parameter, others are optional and passed on
     var api = Object.keys(sources).reduce(function (target, name) {
         target[name] = function () {
@@ -35,9 +33,9 @@ function fluentApi(configuration) {
     };
 
     return api;
-}
+};
 
-// yeh maybe not the best place
+// yeh maybe not the best place, should be in parent module, but then we get a circular reference
 module.exports.configureGlobals = function (configuration) {
     logger.configure(configuration.logging);
     promises.setConstructor(configuration.promiseConstructor);
