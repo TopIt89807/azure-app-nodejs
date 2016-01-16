@@ -7,33 +7,35 @@ var configuration = require('../../../src/configuration'),
     mobileApp = require('../../..'),
     merge = require('deeply'),
     path = require('path'),
-    environmentConfig = configuration.fromEnvironment(configuration.fromFile(path.resolve(__dirname, '../../config.js')), process.env);
+    environmentConfig = configuration.fromEnvironment(configuration.fromFile({}, path.resolve(__dirname, '../../config.js')));
 
-// initialize configuration for testing
-var testDefaults = {
-    skipVersionCheck: true,
-    logging: false,
-    basePath: __dirname,
-    configFile: '../../config.js',
-    data: {
-        provider: 'memory'
-    }
+// the very basics for testing
+function testDefaults() {
+    return configuration.fromCommandLine({
+        skipVersionCheck: true,
+        logging: false,
+        basePath: __dirname,
+        configFile: '../../config.js',
+        data: {
+            provider: 'memory'
+        }
+    });
 }
 
-configuration.fromCommandLine(testDefaults);
-
-var api = module.exports = function (userConfig, environment) {
-    var config = api.ignoreEnv(userConfig);
+var api = module.exports = function (suppliedConfig, environment) {
+    var config = api.ignoreEnv(suppliedConfig);
     var configFile = path.resolve(config.basePath, config.configFile);
-    config = merge(config, configuration.fromFile(configFile));
-    configuration.fromEnvironment(config, environment || process.env);
-    configuration.fromSettingsJson(config);
+    config = configuration.fromFile(config, configFile);
+    config = configuration.fromEnvironment(config, environment);
+    config = configuration.fromSettingsJson(config); // not sure if this is tested?
     return config;
-}
+};
 
-api.ignoreEnv = function (userConfig) {
-    return merge(mobileApp.defaultConfig(), testDefaults, userConfig);
-}
+api.defaults = testDefaults;
+
+api.ignoreEnv = function (suppliedConfig) {
+    return merge(configuration.defaults(), testDefaults(), suppliedConfig);
+};
 
 api.data = function () {
     return environmentConfig.data;

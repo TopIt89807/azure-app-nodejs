@@ -1,10 +1,12 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-module.exports = function (path) {
+var merge = require('deeply');
+
+module.exports = function (configuration, path) {
     try {
-        return require(path);
+        return merge(configuration, require(path));
     } catch(ex) {
-        return {};
+        return configuration;
     }
 }

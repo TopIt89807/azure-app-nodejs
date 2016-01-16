@@ -6,8 +6,8 @@ var q = require('q'),
 
 // if this gets much more complex, we should change to using something like optimist
 // this method modifies the original configuration parameter
-module.exports = function (configuration, arguments) {
-    var args = arguments || process.argv.slice(2),
+module.exports = function (configuration, commandLineArguments) {
+    var args = commandLineArguments || process.argv.slice(2),
         customArgs = {};
 
     // filter for custom arguments

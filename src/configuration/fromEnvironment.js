@@ -26,7 +26,9 @@ var connectionString = require('./connectionString'),
 
 // determine various configuration information from environment such as web.config settings, etc.
 module.exports = function (configuration, environment) {
+    configuration = merge(configuration || {});
     configuration.data = configuration.data || {};
+    environment = environment || process.env;
 
     Object.keys(environment).forEach(function (key) {
         switch(key.toLowerCase()) {

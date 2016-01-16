@@ -5,12 +5,12 @@
 var mobileApp = require('../../..'),
     config = require('./config');
 
-var api = module.exports = function (userSuppliedConfig, environment) {
-    return mobileApp.buildApp(config(userSuppliedConfig, environment));
+var api = module.exports = function (suppliedConfig, environment) {
+    return mobileApp.buildApp(config(suppliedConfig, environment));
 };
 
-api.ignoreEnv = function (userSuppliedConfig, environment) {
-    return mobileApp.buildApp(config.ignoreEnv(userSuppliedConfig, environment));
+api.ignoreEnv = function (suppliedConfig, environment) {
+    return mobileApp.buildApp(config.ignoreEnv(suppliedConfig, environment));
 };
 
 api.table = mobileApp.table;
