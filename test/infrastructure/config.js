@@ -11,7 +11,6 @@ var configuration = require('../../src/configuration'),
         configFile: '../config.js'
     };
 
-// this is the default test configuration that takes into account the config.js file and/or environment settings
 var api = module.exports = function (suppliedConfig) {
     return configuration.from()
         .defaults(testDefaults)
@@ -19,6 +18,7 @@ var api = module.exports = function (suppliedConfig) {
         .environment()
         .object(suppliedConfig)
         .commandLine()
+        .configureGlobals()
         .configuration;
 };
 
@@ -27,5 +27,6 @@ api.ignoreEnv = function (suppliedConfig) {
         .defaults(testDefaults)
         .object(suppliedConfig)
         .commandLine()
+        .configureGlobals()
         .configuration;
 };

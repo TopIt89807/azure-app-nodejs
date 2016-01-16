@@ -10,8 +10,8 @@ The azure-mobile-apps module is the Nodejs implementation of Azure Mobile Apps
 var loadConfiguration = require('./configuration'),
     table = require('./express/tables/table'),
     logger = require('./logger'),
-    query = require('./query'),
     promises = require('./utilities/promises'),
+    query = require('./query'),
     merge = require('deeply'),
     path = require('path'),
 
@@ -39,29 +39,9 @@ var api = module.exports = function (configuration, environment) {
     promises.setConstructor(configuration.promiseConstructor);
 
     return api.create(configuration);
-/*
-var config = merge(configuration.defaults(), testDefaults(), suppliedConfig);;
-var configFile = path.resolve(config.basePath, config.configFile);
-config = merge(config, configuration.fromFile(configFile));
-configuration.fromEnvironment(config, environment || process.env);
-configuration.fromSettingsJson(config);
-return config;
-*/
-
 };
 
 api.create = function (configuration) {
-    return platforms[configuration.platform](configuration);
-};
-
-// encapsulates configuration of global modules to simplify test configuration
-api.configureGlobals = function (configuration) {
-    logger.configure(configuration.logging);
-    promises.setConstructor(configuration.promiseConstructor);
-};
-
-api.buildApp = function (configuration) {
-    api.configureGlobals(configuration);
     return platforms[configuration.platform](configuration);
 };
 
