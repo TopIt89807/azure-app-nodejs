@@ -33,4 +33,11 @@ api.ignoreEnvironment = function (configuration) {
         .apply());
 };
 
+api.ignoreCommandLine = function (configuration) {
+    return mobileApps.create(loadConfiguration.from()
+        .defaults(testDefaults)
+        .object(configuration)
+        .apply());
+};
+
 module.exports = api;

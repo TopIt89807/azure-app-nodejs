@@ -1,7 +1,15 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var q = require('q'),
+/**
+Azure Mobile Apps can be configured by providing command line arguments.
+Arguments should be prefixed with three dashes (`---`) with the value
+in the next agrument. Command line arguments override all other options.
+@module azure-mobile-apps/configuration/Command Line
+@param {string} logging.level Sets the minimum level for log statements to be logged. Valid values are 'error', 'warn', 'info', 'verbose', 'debug' and 'silly'.
+@param {string} promiseConstructor=native Sets the promise library being used. Valid vallues are 'q' and 'native'.
+*/
+ var q = require('q'),
     winston = require('winston');
 
 // if this gets much more complex, we should change to using something like optimist
@@ -33,9 +41,10 @@ module.exports = function (configuration, commandLineArguments) {
                 break;
 
             case 'promiseConstructor':
-                if (customArgs[property] === 'q') {
-                    configuration.promiseConstructor = q.Promise;
-                }
+                configuration.promiseConstructor = ({
+                    'q': q.Promise,
+                    'native': Promise
+                })[customArgs[property]];
                 break;
         }
     });

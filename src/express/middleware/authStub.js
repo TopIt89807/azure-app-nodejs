@@ -9,11 +9,6 @@ module.exports = function (configuration) {
         var auth = authModule(configuration.auth);
 
         return function (req, res, next) {
-            // var envelope = { type: "LoginCompleted", oauth: {{oauth}}, error: {{error}} }
-            // https://dacors.azurewebsites.net/.auth/login/done#token=%7B%22authenticationToken%22%3A%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWQ6MjQ5MGM5ZTQ1MjIwZjE3YTk1YzlkYTRkYTUyYzlhM2QiLCJpZHAiOiJtaWNyb3NvZnRhY2NvdW50IiwidmVyIjoiMyIsImlzcyI6Imh0dHBzOi8vZGFjb3JzLmF6dXJld2Vic2l0ZXMubmV0LyIsImF1ZCI6Imh0dHBzOi8vZGFjb3JzLmF6dXJld2Vic2l0ZXMubmV0LyIsImV4cCI6MTQ1MjA1ODUwMSwibmJmIjoxNDUyMDU0OTAxfQ.si7pxuFOSYOzm8Yf7EumNGREelYfUQRZFv5ME7X8dPo%22%2C%22user%22%3A%7B%22userId%22%3A%22sid%3A2490c9e45220f17a95c9da4da52c9a3d%22%7D%7D
-            // https://dacors.azurewebsites.net/.auth/login/facebook?session_mode=token&completion_type=postMessage&completion_origin=http%3A%2F%2Flocalhost%3A3001
-            // {"authenticationToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWQ6MjQ5MGM5ZTQ1MjIwZjE3YTk1YzlkYTRkYTUyYzlhM2QiLCJpZHAiOiJtaWNyb3NvZnRhY2NvdW50IiwidmVyIjoiMyIsImlzcyI6Imh0dHBzOi8vZGFjb3JzLmF6dXJld2Vic2l0ZXMubmV0LyIsImF1ZCI6Imh0dHBzOi8vZGFjb3JzLmF6dXJld2Vic2l0ZXMubmV0LyIsImV4cCI6MTQ1MjA1ODUwMSwibmJmIjoxNDUyMDU0OTAxfQ.si7pxuFOSYOzm8Yf7EumNGREelYfUQRZFv5ME7X8dPo","user":{"userId":"sid:2490c9e45220f17a95c9da4da52c9a3d"}}"
-
             if (req.params.provider === 'done') {
                 res.status(200).end();
             } else {
@@ -49,6 +44,10 @@ module.exports = function (configuration) {
             function jwtDate(date) {
                 return Math.round(date.getTime() / 1000);
             }
+        };
+    } else {
+        return function (req, res, next) {
+            next();
         };
     }
 };

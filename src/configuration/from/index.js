@@ -3,24 +3,18 @@
 // ----------------------------------------------------------------------------
 var logger = require('../../logger'),
     promises = require('../../utilities/promises'),
-    sources = {
-        commandLine: require('./commandLine'),
-        defaults: require('./defaults'),
-        environment: require('./environment'),
-        file: require('./file'),
-        object: require('./object'),
-        settingsJson: require('./settingsJson')
-    };
+    sources = ['commandLine', 'defaults', 'environment', 'file', 'object', 'settingsJson'];
 
 module.exports = function (configuration) {
     configuration = configuration || {};
 
     // for each configuration source above, add a function that applies changes to the configuration and returns the api (i.e. fluent)
     // each source module must export a function with the configuration object as the first parameter, others are optional and passed on
-    var api = Object.keys(sources).reduce(function (target, name) {
+    var api = sources.reduce(function (target, name) {
         target[name] = function () {
             var args = Array.prototype.slice.apply(arguments);
-            configuration = sources[name].apply(undefined, [configuration].concat(args))
+            configuration = require('./' + name).apply(undefined, [configuration].concat(args));
+            api.configuration = configuration;
             return api;
         };
         return target;
