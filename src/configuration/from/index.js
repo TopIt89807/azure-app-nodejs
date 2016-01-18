@@ -1,8 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var merge = require('../../utilities/merge').mergeObjects,
-    logger = require('../../logger'),
+var logger = require('../../logger'),
     promises = require('../../utilities/promises'),
     sources = {
         commandLine: require('./commandLine'),
