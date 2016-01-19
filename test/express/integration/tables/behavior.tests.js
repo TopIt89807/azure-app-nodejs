@@ -5,7 +5,7 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     bodyParser = require('body-parser'),
-    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../../appFactory').ignoreEnvironment,
 
     app, mobileApp;
 
@@ -80,14 +80,13 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('sets request size limit implicitly (query.take) to pageSize', function () {
-        var table = mobileApps.table(),
-            query;
+        var table, query;
 
+        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true });
+        table = mobileApp.table();
         table.read(function (context) {
             query = context.query.toOData();
         });
-
-        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
 

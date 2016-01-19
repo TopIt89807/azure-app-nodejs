@@ -4,7 +4,7 @@
 ﻿var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../../appFactory').ignoreEnvironment,
 
     app, mobileApp;
 
@@ -13,7 +13,7 @@ describe('azure-mobile-apps.express.integration.tables.etag', function () {
     beforeEach(function () {
         app = express();
         mobileApp = mobileApps({ pageSize: 2 });
-        var table = mobileApps.table();
+        var table = mobileApp.table();
         table.read(function (context) {
             return {
                 id: '1', version: 'ver'

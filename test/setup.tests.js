@@ -1,6 +1,6 @@
-var config = require('./express/infrastructure/config.js')() || {};
-var configureGlobals = require('../src').configureGlobals;
+var configuration = require('./appFactory').configuration(),
+    configureGlobals = require('../src/configuration/from').configureGlobals;
 
 beforeEach(function () {
-    configureGlobals(config);
+    configureGlobals(configuration);
 });

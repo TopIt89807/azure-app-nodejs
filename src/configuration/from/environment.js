@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
- * Azure Mobile Apps can be configured by providing values for specifiec environment
+ * Azure Mobile Apps can be configured by providing values for specific environment
  * variables. These variables are described below. Variable names are not case sensitive.
  * For configuration using Javascript, see {@link configuration global configuration}.
- * @module azure-mobile-apps/Environment Variables
+ * @module azure-mobile-apps/configuration/Environment Variables
  * @param {string} MS_MobileAppName Name of the mobile app
  * @param {string} MS_MobileLogLevel Minimum log level of messages to log (error, warn, info, verbose, debug, silly)
  * @param {boolean} MS_DebugMode Enables or disables debug mode
@@ -21,12 +21,14 @@
  * @param {string} MS_SkipVersionCheck If specified, does not validate client api version before serving requests
  * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
  */
-var connectionString = require('./connectionString'),
+var connectionString = require('../connectionString'),
     merge = require('deeply');
 
 // determine various configuration information from environment such as web.config settings, etc.
 module.exports = function (configuration, environment) {
+    configuration = merge(configuration || {});
     configuration.data = configuration.data || {};
+    environment = environment || process.env;
 
     Object.keys(environment).forEach(function (key) {
         switch(key.toLowerCase()) {

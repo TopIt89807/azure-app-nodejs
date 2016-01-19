@@ -4,9 +4,9 @@
 var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/mobileApps'),
+    mobileApps = require('../../../appFactory'),
     data = require('../../../../src/data/mssql'),
-    config = require('../../infrastructure/config'),
+    config = require('../../../appFactory').configuration,
     promises = require('../../../../src/utilities/promises'),
 
     app, mobileApp;
@@ -18,7 +18,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', funct
     });
 
     afterEach(function (done) {
-        data(config.data()).execute({ sql: 'drop table dynamic' }).then(done, done);
+        data(config().data).execute({ sql: 'drop table dynamic' }).then(done, done);
     });
 
     it('creates table and returns inserted records', function () {

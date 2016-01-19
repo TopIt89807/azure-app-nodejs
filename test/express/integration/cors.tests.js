@@ -4,7 +4,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../appFactory').ignoreEnvironment,
     accessControlRequestHeader = 'access-control-request-headers',
     accessControlAllowOriginHeader = 'Access-Control-Allow-Origin',
     accessControlAllowMethodsHeader = 'Access-Control-Allow-Methods',
@@ -12,7 +12,6 @@ var expect = require('chai').expect,
     accessControlExposeHeadersHeader = 'Access-Control-Expose-Headers',
     accessControlMaxAgeHeader = 'Access-Control-Max-Age',
     expectedAllowedMethods = 'GET, PUT, PATCH, POST, DELETE, OPTIONS',
-    config = require('../infrastructure/config'),
 
     app, mobileApp;
 

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var config = require('./infrastructure/config'),
+var config = require('../../appFactory').configuration().data,
     schema = require('../../../src/data/mssql/schema')(config),
     statements = require('../../../src/data/mssql/statements'),
     queries = require('../../../src/query'),

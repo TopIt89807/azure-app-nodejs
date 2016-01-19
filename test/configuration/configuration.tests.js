@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var mobileApps = require('../..'),
+    appFactory = require('../appFactory'),
     expect = require('chai').expect,
     log = require('../../src/logger'),
     promises = require('../../src/utilities/promises');
@@ -63,11 +64,9 @@ describe('azure-mobile-apps.configuration', function () {
     it("consumes promiseConstructor setting if function", function () {
         var oldConstructor = promises.getConstructor();
 
-        var mobileApp = mobileApps({
+        var mobileApp = appFactory.ignoreCommandLine({
             promiseConstructor: function () {
-                return {
-                    test: 'constr'
-                }
+                return { test: 'constr' };
             }
         });
 

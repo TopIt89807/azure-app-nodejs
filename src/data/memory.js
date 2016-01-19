@@ -3,8 +3,8 @@
 // ----------------------------------------------------------------------------
 var promises = require('../utilities/promises');
 
-module.exports = function () {
-    var tables = {};
+module.exports = function (tables) {
+    tables = tables || {};
 
     return function (table) {
         return {
@@ -22,7 +22,7 @@ module.exports = function () {
             },
             delete: function (id, version) {
                 delete items(table)[id];
-                return promises.resolved(1);
+                return promises.resolved(id);
             },
             undelete: function (id) {
                 // unsupported
@@ -33,7 +33,7 @@ module.exports = function () {
                 return promises.resolved();
             },
             initialize: function () {
-                return promises.resolved();                
+                return promises.resolved();
             }
         }
 

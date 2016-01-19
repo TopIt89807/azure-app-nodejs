@@ -5,8 +5,8 @@
     supertest = require('supertest-as-promised'),
     data = require('../../../../src/data/mssql'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/mobileApps'),
-    config = require('../../infrastructure/config'),
+    mobileApps = require('../../../appFactory'),
+    config = require('../../../appFactory').configuration,
 
     app, mobileApp;
 
@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.filters', function ()
     });
 
     afterEach(function (done) {
-        data(config.data()).execute({ sql: 'drop table filters' }).then(done, done);
+        data(config().data).execute({ sql: 'drop table filters' }).then(done, done);
     });
 
     it('allows filters on reads', function () {

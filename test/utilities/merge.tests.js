@@ -60,6 +60,11 @@ describe('azure-mobile-apps.utilities.merge', function () {
             merged = merge({ a: { b: 1 }}, { a: function () {}});
             expect(merged.a.toString()).to.equal(func);
             expect(merged.a.b).to.equal(1);
+
+            var source = function () { return 'test'; };
+            merged = merge(source, { a: 1 });
+            expect(merged()).to.equal('test');
+            expect(merged.a).to.equal(1);
         });
     });
 
@@ -75,7 +80,7 @@ describe('azure-mobile-apps.utilities.merge', function () {
                     a: 'a'
                 },
                 noConflictFunc: function () {
-                    
+
                 }
             };
 

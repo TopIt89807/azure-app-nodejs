@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
-    mobileApps = require('../infrastructure/mobileApps').ignoreEnv,
+    mobileApps = require('../../appFactory').ignoreEnvironment,
     app = require('express')(),
     mobileApp;
 

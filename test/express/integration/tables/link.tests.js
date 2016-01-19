@@ -4,8 +4,8 @@
 ﻿var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../infrastructure/mobileApps').ignoreEnv,
-    config = require('../../infrastructure/config'),
+    mobileApps = require('../../../appFactory').ignoreEnvironment,
+    config = require('../../../appFactory').configuration,
 
     app, mobileApp;
 
@@ -35,7 +35,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
     });
 
     it('adds Link header when top > take & results.length === take', function () {
-        var table = mobileApps.table();
+        var table = mobileApp.table();
 
         table.read(function (context) {
             context.query = context.query.take(1);
