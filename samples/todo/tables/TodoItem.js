@@ -39,18 +39,19 @@ table.insert(function (context) {
     return context.execute();
 });
 
-// UPDATE - for this scenario, we don't need to do anything - this is
-// the default version
-//table.update(function (context) {
-//  return context.execute();
-//});
+// UPDATE - only allow updating of record belong to the authenticated user
+table.update(function (context) {
+    context.query.where({ userId: context.user.id });
+    return context.execute();
+});
 
-// DELETE - for this scenario, we don't need to do anything - this is
-// the default version
-//table.delete(function (context) {
-//  return context.execute();
-//});
-// An example to disable deletions
+// DELETE - only allow deletion of records belong to the authenticated uer
+table.update(function (context) {
+    context.query.where({ userId: context.user.id });
+    return context.execute();
+});
+// An example to disable deletions - the same operation can be used on
+// any table operation (read, insert, update, delete)
 //table.delete.access = 'disabled';
 
 // Finally, export the table to the Azure Mobile Apps SDK - it can be
