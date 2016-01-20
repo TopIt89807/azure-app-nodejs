@@ -41,7 +41,6 @@
     "destination": "./jsdoc/out",
     "readme": "./README.md",
     "recurse": true,
-    "template": "./node_modules/minami",
-    "tutorials": "./jsdoc/tutorials"
+    "template": "./node_modules/minami"
   }
 }
