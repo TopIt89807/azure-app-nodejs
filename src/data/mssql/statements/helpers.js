@@ -1,3 +1,7 @@
+﻿// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
+
 var errors = require('../../../utilities/errors');
 
 var helpers = module.exports = {

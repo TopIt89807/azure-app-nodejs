@@ -1,3 +1,7 @@
+﻿// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
+
 var queries = require('../../query');
 
 module.exports = function (table) {
