@@ -46,7 +46,7 @@ table.update(function (context) {
 });
 
 // DELETE - only allow deletion of records belong to the authenticated uer
-table.update(function (context) {
+table.delete(function (context) {
     context.query.where({ userId: context.user.id });
     return context.execute();
 });
