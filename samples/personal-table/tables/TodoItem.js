@@ -14,13 +14,27 @@ table.dynamicSchema = false;
 // Must be authenticated for this to work
 table.access = 'authenticated';
 
-// Ensure only records belonging to the authenticated user are retrieved
-table.read(function (context) {
+/**
+ * Limit the viewable records to those that the user created.  This
+ * is used in the individual read, update and delete operations to
+ * ensure that one user cannot touch another users records
+ *
+ * @param {Context} context - the request context
+ * @returns {Response} the response from the execution
+ */
+function limitToAuthenticatedUser(context) {
     context.query.where({ userId: context.user.id });
     return context.execute();
-});
+}
 
-// When adding record, add or overwrite the userId with the authenticated user
+// Attach the limitation to each of the affected operations
+table.read(limitToAuthenticatedUser);
+table.update(limitToAuthenticatedUser);
+table.delete(limitToAuthenticatedUser);
+
+// When adding a new record, overwrite the userId with the
+// id of the user so that the read/update/delete limitations
+// will work properly
 table.insert(function (context) {
     context.item.userId = context.user.id;
     return context.execute();
