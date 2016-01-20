@@ -8,9 +8,9 @@ a single read-only table.  The application will seed the table with data on crea
 * Single Read-Only Table (TodoItem) with Static Schema
 * Seeding of data
 
-This project can be used with any of the client projects provided by the QuickStart blade under 
-your Web app in the (Azure Portal)[https://portal.azure.com].
+This project can be used with any of the client projects provided by the QuickStart blade under
+your Web app in the [Azure Portal](https://portal.azure.com).
 
 # More Information
 
-For more information, see the (Azure documentation)[https://azure.microsoft.com/en-us/documentation/articles/app-service-mobile-node-backend-how-to-use-server-sdk/].
+For more information, see the [Azure documentation](https://azure.microsoft.com/en-us/documentation/articles/app-service-mobile-node-backend-how-to-use-server-sdk/).
