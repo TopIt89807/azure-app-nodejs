@@ -12,6 +12,10 @@ module.exports = {
             Object.keys(definitions).forEach(function (name) {
                 var definition = definitions[name];
 
+                // ES2015 Module Syntax support
+                if (definition && definition.default)
+                    definition = definition.default;
+
                 if (definition && definition.name)
                     name = definition.name;
 
