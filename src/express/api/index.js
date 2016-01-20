@@ -48,11 +48,14 @@ module.exports = function (configuration) {
     return router;
 
     function buildApiRouter(definition) {
-        var apiRouter = express.Router();
+        var apiRouter = express.Router(),
+            routeWasAdded = false;
+
         Object.getOwnPropertyNames(definition).forEach(function (method) {
             var middleware = getDefinedMiddleware(definition[method]);
             if (types.isFunction(middleware) || types.isArray(middleware)) {
                 if (supportsVerb(method)) {
+                    routeWasAdded = true;
                     logger.verbose("Adding method " + method + " to api " + definition.name);
                     apiRouter[method]('/', configureMiddleware(definition, method, middleware));
                 } else {
@@ -60,6 +63,10 @@ module.exports = function (configuration) {
                 }
             }
         });
+
+        if(!routeWasAdded)
+            logger.warn("No routes were added to api " + definition.name);
+
         return apiRouter;
     }
 
