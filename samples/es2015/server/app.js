@@ -32,7 +32,7 @@ export default function application() {
     // Initialize the database before listening for incoming requests
     // The tables.initialize() method does the initialization asynchronously
     // and returns a Promise.
-    mobile.tables.initialize().then(function () {
+    return mobile.tables.initialize().then(function () {
         app.use(mobile);    // Register the Azure Mobile Apps middleware
         return app;
     });
