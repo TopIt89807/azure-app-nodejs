@@ -1,0 +1,16 @@
+<html>
+<head>
+    <script>
+        window.onload = function () {
+            setTimeout(function () {
+                if (window.opener)
+                    window.opener.postMessage('%s', '*');
+                window.location.href = '/.auth/login/done#token=%s';
+            }, 2000);
+        }
+    </script>
+</head>
+<body>
+    Logging in with user ID: %s
+</body>
+</html>

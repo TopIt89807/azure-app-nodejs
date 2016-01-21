@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var authModule = require('../../auth');
+var authModule = require('../../auth'),
+    templates = require('../../templates');
 
 ///.auth/login/facebook?session_mode=token&completion_type=postMessage&completion_origin=http%3A%2F%2Flocalhost%3A3001
 module.exports = function (configuration) {
@@ -31,7 +32,7 @@ module.exports = function (configuration) {
                     postMessageData = JSON.stringify(envelope),
                     urlToken = encodeURIComponent(JSON.stringify(envelope.oauth));
 
-                res.send("<script>window.onload = function () { if (window.opener) window.opener.postMessage('" + postMessageData + "', '*'); window.location.href = '/.auth/login/done#token=" + urlToken + "' }</script>");
+                res.send(templates('authStub.html', postMessageData, urlToken, payload.sub));
             }
 
             function expiry() {

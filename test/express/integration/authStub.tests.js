@@ -16,40 +16,28 @@ describe('azure-mobile-apps.express.integration.authStub', function () {
         app.use(mobileApp);
     });
 
-    it('.auth/login/provider returns appropriate postMessage', function (done) {
-        supertest(app)
+    it('.auth/login/provider returns appropriate postMessage', function () {
+        return supertest(app)
             .get('/.auth/login/facebook')
-            .expect(function (res) {
-                try {
-                    var envelope = JSON.parse(res.text.match(/postMessage\('(.*)', '\*'\)/)[1]),
-                        token = envelope.oauth.authenticationToken;
-                    expect(token).to.not.be.undefined;
-                    auth.validate(token)
-                        .then(function () { done(); })
-                        .catch(done);
-                } catch(error) {
-                    done(error);
-                }
-            })
-            .end(function () {});
+            .expect(200)
+            .then(function (res) {
+                var envelope = JSON.parse(res.text.match(/postMessage\('(.*)', '\*'\)/)[1]),
+                    token = envelope.oauth.authenticationToken;
+                expect(token).to.not.be.undefined;
+                return auth.validate(token);
+            });
     });
 
-    it('.auth/login/provider returns appropriate redirect', function (done) {
-        supertest(app)
+    it('.auth/login/provider returns appropriate redirect', function () {
+        return supertest(app)
             .get('/.auth/login/facebook')
-            .expect(function (res) {
-                try {
-                    var envelope = JSON.parse(decodeURIComponent(res.text.match(/token=(.*)' }/)[1])),
-                        token = envelope.authenticationToken;
-                    expect(token).to.not.be.undefined;
-                    auth.validate(token)
-                        .then(function () { done(); })
-                        .catch(done);
-                } catch(error) {
-                    done(error);
-                }
-            })
-            .end(function () {});
+            .expect(200)
+            .then(function (res) {
+                var envelope = JSON.parse(decodeURIComponent(res.text.match(/token=(.*)';/)[1])),
+                    token = envelope.authenticationToken;
+                expect(token).to.not.be.undefined;
+                return auth.validate(token);
+            });
     });
 
     it('authStub tokens can be used against app', function () {
