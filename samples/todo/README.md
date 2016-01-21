@@ -9,7 +9,7 @@ The major reason this sample exists is to provide a fully annotated source code 
 # Features
 
 * Single Table (TodoItem)
-* Home Page (available in Beta3)
+* Home Page (available in rc2)
 * Swagger support, including a UI at /swagger/ui (available in Beta4)
 
 This project can be used with any of the client projects provided by the QuickStart blade under
