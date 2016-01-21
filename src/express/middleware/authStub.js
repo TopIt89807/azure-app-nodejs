@@ -12,7 +12,7 @@ module.exports = function (configuration) {
             if (req.params.provider === 'done') {
                 res.status(200).end();
             } else {
-                var payload = {
+                var payload = configuration.authStubClaims || {
                         "sub": "sid:00000000000000000000000000000000",
                         "idp": req.params.provider,
                         "ver": "3",
@@ -21,17 +21,17 @@ module.exports = function (configuration) {
                         "exp": jwtDate(expiry()),
                         "nbf": jwtDate(new Date())
                     },
-                    token = auth.sign(payload),
                     envelope = {
                         type: "LoginCompleted",
                         oauth: {
-                            authenticationToken: token,
+                            authenticationToken: auth.sign(payload),
                             user: { userId: payload.sub }
                         }
-                    };
-                //res.send('<html><body>Hello!</body></html>');
-                //res.redirect('/.auth/login/done#token=' + encodeURIComponent(JSON.stringify(envelope.oauth)));
-                res.send("<script>window.onload = function () { if (window.opener) window.opener.postMessage('" + JSON.stringify(envelope) + "', '*'); window.location.href = '/.auth/login/done#token=" + encodeURIComponent(JSON.stringify(envelope.oauth)) + "' }</script>");
+                    },
+                    postMessageData = JSON.stringify(envelope),
+                    urlToken = encodeURIComponent(JSON.stringify(envelope.oauth));
+
+                res.send("<script>window.onload = function () { if (window.opener) window.opener.postMessage('" + postMessageData + "', '*'); window.location.href = '/.auth/login/done#token=" + urlToken + "' }</script>");
             }
 
             function expiry() {

@@ -44,7 +44,7 @@ module.exports = function (configuration) {
     else
         mobileApp
             .use(middleware('crossOrigin'))
-            .use(configuration.authStubRoute || '.auth/login/:provider', middleware('authStub'));
+            .use(configuration.authStubRoute || '/.auth/login/:provider', middleware('authStub'));
 
     mobileApp
         .use(middleware('version'))
