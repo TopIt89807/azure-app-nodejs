@@ -9,7 +9,7 @@ var winston = require('winston'),
 module.exports = function () {
     return {
         platform: 'express',
-        basePath: path.dirname(require.main.filename),
+        basePath: basePath(),
         configFile: 'azureMobile',
         promiseConstructor: Promise,
         apiRootPath: '/api',
@@ -48,3 +48,9 @@ module.exports = function () {
         notifications: { }
     };
 };
+
+function basePath() {
+    return environment.hosted
+        ? (process.env.HOME || '') + "\\site\\wwwroot"
+        : path.dirname(require.main.filename);
+}
