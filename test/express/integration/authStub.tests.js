@@ -16,38 +16,31 @@ describe('azure-mobile-apps.express.integration.authStub', function () {
         app.use(mobileApp);
     });
 
-    it('.auth/login/provider returns appropriate postMessage', function () {
-        return supertest(app)
-            .get('/.auth/login/facebook')
-            .expect(200)
-            .then(function (res) {
-                var envelope = JSON.parse(res.text.match(/postMessage\('(.*)', '\*'\)/)[1]),
-                    token = envelope.oauth.authenticationToken;
-                expect(token).to.not.be.undefined;
-                return auth.validate(token);
-            });
-    });
-
     it('.auth/login/provider returns appropriate redirect', function () {
         return supertest(app)
             .get('/.auth/login/facebook')
-            .expect(200)
+            .expect(302)
             .then(function (res) {
-                var envelope = JSON.parse(decodeURIComponent(res.text.match(/token=(.*)';/)[1])),
+                var envelope = JSON.parse(decodeURIComponent(res.headers.location.match(/token=(.*)/)[1])),
                     token = envelope.authenticationToken;
                 expect(token).to.not.be.undefined;
                 return auth.validate(token);
             });
     });
 
+    it('.auth/login/done returns 200', function () {
+        return supertest(app)
+            .get('/.auth/login/done')
+            .expect(200);
+    });
+
     it('authStub tokens can be used against app', function () {
         return supertest(app)
             .get('/.auth/login/facebook')
-            .expect(200)
+            .expect(302)
             .then(function (res) {
-                var envelope = JSON.parse(res.text.match(/postMessage\('(.*)', '\*'\)/)[1]),
-                    token = envelope.oauth.authenticationToken;
-                expect(token).to.not.be.undefined;
+                var envelope = JSON.parse(decodeURIComponent(res.headers.location.match(/token=(.*)/)[1])),
+                    token = envelope.authenticationToken;
 
                 return supertest(app)
                     .get('/')
@@ -59,9 +52,10 @@ describe('azure-mobile-apps.express.integration.authStub', function () {
     it('authStub uses payload set in authStubClaims configuration object', function () {
         return supertest(app)
             .get('/.auth/login/facebook')
-            .expect(function (res) {
-                var envelope = JSON.parse(res.text.match(/postMessage\('(.*)', '\*'\)/)[1]),
-                    token = envelope.oauth.authenticationToken;
+            .expect(302)
+            .then(function (res) {
+                var envelope = JSON.parse(decodeURIComponent(res.headers.location.match(/token=(.*)/)[1])),
+                    token = envelope.authenticationToken;
                 expect(auth.decode(token).id).to.equal('test');
             });
     });
