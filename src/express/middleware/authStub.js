@@ -18,7 +18,7 @@ module.exports = function (configuration) {
 
         return function (req, res, next) {
             if (req.params.provider !== 'done') {
-                var claims = payload(),
+                var claims = payload(req.params.provider),
                     oauth = {
                         authenticationToken: auth.sign(claims),
                         user: { userId: claims.sub || 'authentication stub user' }
@@ -37,7 +37,7 @@ module.exports = function (configuration) {
         };
     }
 
-    function payload() {
+    function payload(provider) {
         if(configuration.authStubClaims) {
             if(configuration.authStubClaims.constructor === Function)
                 return configuration.authStubClaims();
@@ -47,7 +47,7 @@ module.exports = function (configuration) {
 
         return {
             "sub": "sid:00000000000000000000000000000000",
-            "idp": req.params.provider,
+            "idp": provider,
         }
     }
 };
