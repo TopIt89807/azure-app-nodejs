@@ -3,6 +3,9 @@
 // ----------------------------------------------------------------------------
 
 module.exports = function (claims) {
+    if(claims.constructor !== Array)
+        claims = [claims];
+
     return claims.reduce(function (target, identity) {
         identity.claims = identity.user_claims.reduce(mapClaims, {});
         target[identity['provider_name']] = identity;
