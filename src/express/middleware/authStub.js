@@ -1,53 +1,53 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var authModule = require('../../auth');
+var authModule = require('../../auth'),
+    templates = require('../../templates');
 
-///.auth/login/facebook?session_mode=token&completion_type=postMessage&completion_origin=http%3A%2F%2Flocalhost%3A3001
+/*
+This is (being) tested with Javascript, Xamarin, Android and Windows 8.1. iOS pending. Notes:
+- This does not work with WindowsAuthenticationBroker (i.e. Windows platforms). It is documented to not work against localhost. It should work in an emulator, but requires HTTPS.
+- Android currently requires the server to be running on port 80. A fix is in progress.
+- Android requires a redirect from .auth/login/provider. If the page completes loading, the provider is considered to be not enabled.
+  If we want to provide a page to allow selection from multiple defined logins or allow cancellation, it must be rendered on an intermediate page.
+*/
+
 module.exports = function (configuration) {
     if(configuration && configuration.auth && Object.keys(configuration.auth).length > 0) {
         var auth = authModule(configuration.auth);
 
         return function (req, res, next) {
-            if (req.params.provider === 'done') {
-                res.status(200).end();
-            } else {
-                var payload = {
-                        "sub": "sid:00000000000000000000000000000000",
-                        "idp": req.params.provider,
-                        "ver": "3",
-                        "iss": "urn:microsoft:windows-azure:zumo",
-                        "aud": "urn:microsoft:windows-azure:zumo",
-                        "exp": jwtDate(expiry()),
-                        "nbf": jwtDate(new Date())
-                    },
-                    token = auth.sign(payload),
-                    envelope = {
-                        type: "LoginCompleted",
-                        oauth: {
-                            authenticationToken: token,
-                            user: { userId: payload.sub }
-                        }
+            if (req.params.provider !== 'done') {
+                var claims = payload(),
+                    oauth = {
+                        authenticationToken: auth.sign(claims),
+                        user: { userId: claims.sub || 'authentication stub user' }
                     };
-                //res.send('<html><body>Hello!</body></html>');
-                //res.redirect('/.auth/login/done#token=' + encodeURIComponent(JSON.stringify(envelope.oauth)));
-                res.send("<script>window.onload = function () { if (window.opener) window.opener.postMessage('" + JSON.stringify(envelope) + "', '*'); window.location.href = '/.auth/login/done#token=" + encodeURIComponent(JSON.stringify(envelope.oauth)) + "' }</script>");
-            }
 
-            function expiry() {
-                // expire local tokens after a day
-                var date = new Date();
-                date.setDate(date.getDate() + 1);
-                return date;
-            }
-
-            function jwtDate(date) {
-                return Math.round(date.getTime() / 1000);
+                res.redirect('done#token=' + encodeURIComponent(JSON.stringify(oauth)));
+            } else {
+                // most client platforms watch for a redirect to .auth/login/done with a token on the querystring
+                // this template also extracts the token from the querystring and does a postMessage for Javascript platforms
+                res.send(templates('authStub.html'));
             }
         };
     } else {
         return function (req, res, next) {
             next();
         };
+    }
+
+    function payload() {
+        if(configuration.authStubClaims) {
+            if(configuration.authStubClaims.constructor === Function)
+                return configuration.authStubClaims();
+            else
+                return configuration.authStubClaims;
+        }
+
+        return {
+            "sub": "sid:00000000000000000000000000000000",
+            "idp": req.params.provider,
+        }
     }
 };

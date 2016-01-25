@@ -44,7 +44,10 @@ module.exports = function () {
             schema: 'dbo',
             dynamicSchema: true
         },
-        auth: { secret: '0000', validateTokens: false },
+        auth: {
+            secret: '0000',
+            validateTokens: false
+        },
         notifications: { }
     };
 };
