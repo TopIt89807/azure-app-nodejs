@@ -8,7 +8,7 @@ module.exports = function (configuration) {
             "iss": "urn:microsoft:windows-azure:zumo",
             "aud": "urn:microsoft:windows-azure:zumo",
             "exp": 9999999999,
-            "nbf": 9999999999
+            "nbf": 0
         };
 
         res.status(200).json({
