@@ -12,7 +12,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.authStub', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ auth: { secret: 'secret' }, homePage: true, authStubClaims: { sub: 'test' } });
+        mobileApp = mobileApps({ auth: { secret: 'secret' }, homePage: true, authStubClaims: function () { return { sub: 'test' }; } });
         app.use(mobileApp);
     });
 

@@ -18,13 +18,10 @@ module.exports = function (configuration) {
 
         return function (req, res, next) {
             if (req.params.provider !== 'done') {
-                var payload = configuration.authStubClaims || {
-                        "sub": "sid:00000000000000000000000000000000",
-                        "idp": req.params.provider,
-                    },
+                var claims = payload(),
                     oauth = {
-                        authenticationToken: auth.sign(payload),
-                        user: { userId: payload.sub || 'authentication stub user' }
+                        authenticationToken: auth.sign(claims),
+                        user: { userId: claims.sub || 'authentication stub user' }
                     };
 
                 res.redirect('done#token=' + encodeURIComponent(JSON.stringify(oauth)));
@@ -38,5 +35,19 @@ module.exports = function (configuration) {
         return function (req, res, next) {
             next();
         };
+    }
+
+    function payload() {
+        if(configuration.authStubClaims) {
+            if(configuration.authStubClaims.constructor === Function)
+                return configuration.authStubClaims();
+            else
+                return configuration.authStubClaims;
+        }
+
+        return {
+            "sub": "sid:00000000000000000000000000000000",
+            "idp": req.params.provider,
+        }
     }
 };
