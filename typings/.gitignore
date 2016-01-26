@@ -2,7 +2,7 @@
 doc
 
 # dependencies used to test azure-mobile-apps.d.ts
-#express
-#mime
-#node
-#serve-static
+express
+mime
+node
+serve-static
