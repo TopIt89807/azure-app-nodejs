@@ -27,8 +27,8 @@ module.exports = function(configuration) {
         function getTableSchemas() {
             var tables = configuration.tables;
             return promises.all(Object.keys(tables).map(function (tableName) {
-                var schemaFactory = !data(tables[tableName]).schema;
-                if(schemaFactory)
+                var schemaFactory = data(tables[tableName]).schema;
+                if(!schemaFactory)
                     throw new Error('The selected data provider does not support the schema function required for swagger');
                 return schemaFactory();
             }));
