@@ -3,9 +3,10 @@
     <script>
     window.onload = function () {
         if (window.opener) {
-            var envelope = {
+            var location = window.location.href,
+                envelope = {
                     type: "LoginCompleted",
-                    oauth: JSON.parse(window.href.location.substring(window.href.location.indexOf('token=') + 6))
+                    oauth: JSON.parse(decodeURIComponent(location.substring(location.indexOf('token=') + 6)))
                 };
             window.opener.postMessage(JSON.stringify(envelope), '*');
         }
