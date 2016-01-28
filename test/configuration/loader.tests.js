@@ -72,6 +72,10 @@ describe('azure-mobile-apps.configuration.loader', function () {
         expect(table.func).to.have.property('json', true);
         expect(table.func.toString()).to.equal('function () { }');
     });
+
+    it('does not throw when target path does not exist', function () {
+        loader.loadPath('this/path/does/not/exist');
+    });
 });
 
 function requireWithRefresh(path) {
