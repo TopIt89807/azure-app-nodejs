@@ -74,7 +74,7 @@ describe('azure-mobile-apps.configuration.loader', function () {
     });
 
     it('does not throw when target path does not exist', function () {
-        loader.loadPath('this/path/does/not/exist');
+        expect(loader.loadPath('this/path/does/not/exist')).to.deep.equal({});
     });
 });
 
