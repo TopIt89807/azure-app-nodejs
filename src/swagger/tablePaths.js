@@ -39,7 +39,7 @@ module.exports = function (configuration) {
         paths['/tables/' + schema.name + '/{id}'] = {
             get: createOperation({
                 summary: 'Find a specific record in the ' + schema.name + ' table',
-                description: 'Return the ' + schema.name + ' object is returned that corresponds with the provided id.',
+                description: 'Return the ' + schema.name + ' object that corresponds with the provided id.',
                 parameters: ['id'],
                 responses: {
                     '200': createOperation.response('The request item', 'item')
