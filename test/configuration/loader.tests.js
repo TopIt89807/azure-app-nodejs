@@ -72,6 +72,11 @@ describe('azure-mobile-apps.configuration.loader', function () {
         expect(table.func).to.have.property('json', true);
         expect(table.func.toString()).to.equal('function () { }');
     });
+
+    it("loads apis using helper function correctly", function () {
+        var configuration = loader.loadPath('./files/api');
+        expect(configuration.custom1.get).to.be.a('function');
+    });
 });
 
 function requireWithRefresh(path) {
