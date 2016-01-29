@@ -6,7 +6,7 @@
   "author": "Microsoft",
   "license": "MIT",
   "dependencies": {
-    "azure-mobile-apps": "^2.0.0-rc3",
+    "azure-mobile-apps": "^2.0.0-rc4",
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.4.0",
     "express": "^4.13.3",
