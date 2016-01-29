@@ -24,10 +24,12 @@ module.exports = {
             // get all files with supported extensions
             var filePaths = getFilePaths(filesPath);
 
-            if (filePaths.length)
+            if (filePaths.length) {
                 return loadFiles({}, filePaths);
-            else
-                throw new Error('Requested configuration path (' + fullPath + ') does not exist');
+            } else {
+                logger.warn('Requested configuration path (' + fullPath + ') does not exist');
+                return {};
+            }
         }
         else
             return loadDirectory({}, fullPath);
