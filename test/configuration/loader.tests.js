@@ -72,9 +72,11 @@ describe('azure-mobile-apps.configuration.loader', function () {
         expect(table.func).to.have.property('json', true);
         expect(table.func.toString()).to.equal('function () { }');
     });
+    
     it("loads apis using helper function correctly", function () {
         var configuration = loader.loadPath('./files/api');
         expect(configuration.custom1.get).to.be.a('function');
+    });
 
     it('does not throw when target path does not exist', function () {
         expect(loader.loadPath('this/path/does/not/exist')).to.deep.equal({});
