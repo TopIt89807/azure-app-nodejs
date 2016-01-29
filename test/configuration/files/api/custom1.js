@@ -1,3 +1,3 @@
-module.exports = require('azure-mobile-apps').api({
+module.exports = require('../../../..').api({
     get: function (req, res, next) {}
 })
