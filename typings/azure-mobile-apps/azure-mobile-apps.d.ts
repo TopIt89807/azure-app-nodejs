@@ -10,6 +10,7 @@ declare module "azure-mobile-apps" {
     interface AzureMobileApps {
         (configuration?: Azure.MobileApps.Configuration): Azure.MobileApps.Platforms.Express.MobileApp;
         table(): Azure.MobileApps.Platforms.Express.Table;
+        api(definition?: Azure.MobileApps.ApiDefinition): Azure.MobileApps.ApiDefinition;
         logger: Azure.MobileApps.Logger;
         query: Azure.MobileApps.Query;
     }

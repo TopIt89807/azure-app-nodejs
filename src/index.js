@@ -44,3 +44,6 @@ api.table = table;
 api.logger = logger;
 api.query = query;
 api.promises = promises;
+
+// this is purely a helper function to allow intellisense for custom API definitions
+api.api = function (definition) { return definition; };
