@@ -1,6 +1,7 @@
 
 [![Build Status](https://travis-ci.org/Azure/azure-mobile-apps-node.svg?branch=master)](https://travis-ci.org/Azure/azure-mobile-apps-node)
-[![Gemnasium](https://img.shields.io/gemnasium/mathiasbynens/he.svg)]()
+[![Dependency Status](https://david-dm.org/adrianhall/stylelint-loader.svg)](https://david-dm.org/adrianhall/stylelint-loader)
+[![devDependency Status](https://david-dm.org/adrianhall/stylelint-loader/dev-status.svg)](https://david-dm.org/adrianhall/stylelint-loader#info=devDependencies)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Azure/azure-mobile-apps-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Azure Mobile Apps - Node SDK
