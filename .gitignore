@@ -35,3 +35,4 @@ node_modules
 
 jsdoc/out
 azureMobile.js
+test/config.js
