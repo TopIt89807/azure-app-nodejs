@@ -69,6 +69,18 @@ describe('azure-mobile-apps.express.integration.version', function () {
             .expect(200);
     });
 
+    it('api version header is case insensitive', function () {
+        app = express();
+        mobileApp = mobileApps.ignoreEnvironment({ skipVersionCheck: false });
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .set('ZuMo-ApI-vErSiOn', '2.0.0')
+            .expect(200);
+    });
+
     it('succeeds when appropriate api version is specified in a querystring', function () {
         app = express();
         mobileApp = mobileApps.ignoreEnvironment({ skipVersionCheck: false });
@@ -77,6 +89,17 @@ describe('azure-mobile-apps.express.integration.version', function () {
 
         return supertest(app)
             .get('/tables/todoitem?zumo-api-version=2.0.0')
+            .expect(200);
+    });
+
+    it('api version querystring is case insensitive', function () {
+        app = express();
+        mobileApp = mobileApps.ignoreEnvironment({ skipVersionCheck: false });
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem?ZuMo-ApI-vErSiOn=2.0.0')
             .expect(200);
     });
 
