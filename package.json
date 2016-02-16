@@ -11,7 +11,9 @@
     "test": "npm run lint & mocha",
     "lint": "jshint src",
     "jsdoc": "jsdoc -c jsdoc/config.json",
-    "typedoc": "typedoc --out typings/doc typings --module commonjs --theme typings/theme --includeDeclarations"
+    "typedoc": "typedoc --out typings/doc typings --module commonjs --theme typings/theme --includeDeclarations",
+    "testCI": "mocha -g sql.integration --invert --timeout 10000",
+    "travis": "npm run lint & npm run testCI"
   },
   "dependencies": {
     "azure-sb": "^0.10.2",
