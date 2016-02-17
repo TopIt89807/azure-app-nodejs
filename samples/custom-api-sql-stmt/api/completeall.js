@@ -2,9 +2,9 @@ var api = {
     get: (request, response, next) => {
         var query = {
             sql: 'UPDATE TodoItem SET complete=@completed',
-            parameters: [{
-                completed: request.params.completed
-            }]
+            parameters: [
+                { name: 'completed', value: request.params.completed }
+            ]
         };
 
         request.azureMobile.data.execute(query)
