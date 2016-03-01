@@ -38,12 +38,12 @@ describe('azure-mobile-apps.swagger', function () {
         it("generates path objects for tables", function () {
             expect(paths(configuration)(table)).to.containSubset({
                 '/tables/todoitem': {
-                    get: { parameters: [ { name: "$filter" }, { name: "zumo-api-version" } ], operationId: 'GetTodoitem', responses: {} },
+                    get: { parameters: [ { name: "$filter" }, { name: "zumo-api-version" } ], operationId: 'QueryTodoitem', responses: {} },
                     post: { parameters: [ { in: 'body' }, { name: "zumo-api-version" } ], operationId: 'InsertTodoitem', responses: {} },
                     patch: { parameters: [ { in: 'body' }, { name: "zumo-api-version" } ], operationId: 'UpdateTodoitem', responses: {} },
                 },
                 '/tables/todoitem/{id}': {
-                    get: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], operationId: 'QueryTodoitem', responses: {} },
+                    get: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], operationId: 'FindTodoitem', responses: {} },
                     post: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], operationId: 'UndeleteTodoitem', responses: {} },
                     patch: { parameters: [ { name: "id" }, { in: 'body' }, { name: "zumo-api-version" } ], operationId: 'UpdateByIdTodoitem', responses: {}},
                     delete: { parameters: [ { name: "id" }, { name: "zumo-api-version" } ], operationId: 'DeleteTodoitem', responses: {} }
