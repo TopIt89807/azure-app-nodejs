@@ -13,11 +13,12 @@ module.exports = function (configuration) {
         createTableTag = tableTag(configuration),
         tables = object.values(configuration.tables);
 
-    return function (basePath, host, tableSchemas) {
+    return function (basePath, host, tableSchemas, schemes) {
         return {
             swagger: "2.0",
             basePath: basePath,
             host: host,
+            schemes: schemes || ['http', 'https'],
             consumes: ['application/json'],
             produces: ['application/json'],
             info: {

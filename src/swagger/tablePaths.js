@@ -13,7 +13,7 @@ module.exports = function (configuration) {
                 summary: 'Query the ' + schema.name + ' table',
                 description: 'The provided OData query is evaluated and an array of ' + schema.name + ' objects is returned. If no OData query is specified, all items are returned.',
                 odata: true,
-                operation: 'Get',
+                operation: 'Query',
                 responses: {
                     '200': createOperation.response('An array of items matching the provided query', 'array')
                 }
@@ -44,7 +44,7 @@ module.exports = function (configuration) {
                 summary: 'Find a specific record in the ' + schema.name + ' table',
                 description: 'Return the ' + schema.name + ' object that corresponds with the provided id.',
                 parameters: ['id'],
-                operation: 'Query',
+                operation: 'Find',
                 responses: {
                     '200': createOperation.response('The request item', 'item')
                 }

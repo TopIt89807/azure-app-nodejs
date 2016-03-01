@@ -20,7 +20,7 @@ module.exports = function(configuration) {
 
         getTableSchemas()
             .then(function (schemas) {
-                res.json(swagger(configuration)('/', host, schemas));
+                res.json(swagger(configuration)('/', host, schemas, [scheme()]));
             })
             .catch(next);
 
@@ -32,6 +32,10 @@ module.exports = function(configuration) {
                     throw new Error('The selected data provider does not support the schema function required for swagger');
                 return schemaFactory();
             }));
+        }
+
+        function scheme() {
+            return req.get('x-arr-ssl') ? 'https' : 'http';
         }
     }
 };
