@@ -4,7 +4,7 @@
 var ODataParameters = require('./ODataParameters');
 
 module.exports = function (configuration, schema) {
-    var createOperation = function (options) { //summary, description, parameters, odata, responses
+    var createOperation = function (options) { //summary, description, parameters, odata, responses, operation
         options.parameters = options.parameters || [];
         options.responses = options.responses || {};
 
@@ -18,6 +18,7 @@ module.exports = function (configuration, schema) {
             summary: options.summary,
             description: options.description,
             parameters: options.parameters.map(createParameter),
+            operationId: options.operation + camelCase(schema.name),
             responses: options.responses
         };
 
@@ -75,5 +76,9 @@ module.exports = function (configuration, schema) {
                 'error': undefined //{ $ref: '#/definitions/errorType' }
             })[type];
         }
+    }
+
+    function camelCase(name) {
+        return name[0].toUpperCase() + name.substring(1);
     }
 };
