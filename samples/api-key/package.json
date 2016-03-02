@@ -1,7 +1,7 @@
 {
-    "name": "azure-mobile-apps.samples.todo",
+    "name": "azure-mobile-apps.samples.api-key",
     "version": "0.1.0",
-    "description": "Canonical Sample App for the Azure Mobile Apps QuickStart",
+    "description": "An Azure App Service Mobile App backend with api-key authentication",
     "main": "app.js",
     "author": "Microsoft",
     "license": "MIT",

@@ -16,7 +16,7 @@ var mobile = azureMobileApps({
     // Custom config setting, available on context.configuration
     // In this case, it is used to determine whether an authenticated user also 
     // requires a valid api key
-    alwaysRequireValidApiKey: true
+    allowUsersWithoutApiKey: true
 });
 
 // Import the files from the tables and api directory

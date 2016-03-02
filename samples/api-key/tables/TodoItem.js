@@ -12,8 +12,8 @@ var azureMobileApps = require('azure-mobile-apps'),
 // Create a new table definition
 var table = azureMobileApps.table();
 
-// Access should be anonymous.  Users will still be authenticated,
-// but unauthenticated users will not be rejected before our custom validateApiKey middleware runs.
+// Access should be anonymous so that unauthenticated users are not rejected
+// before our custom validateApiKey middleware runs.
 table.access = 'anonymous';
 
 // validate api key header prior to table operation execution

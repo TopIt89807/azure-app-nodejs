@@ -1,6 +1,6 @@
 # Azure App Service Mobile Apps backend for the QuickStart
 
-This sample provides a template basic application for use with Azure App Service.  It demonstrates the ability to validate 
+This sample provides a basic application template for use with Azure App Service.  It demonstrates the ability to validate 
 api keys, a method of custom authentication.
 
 # Features

@@ -5,8 +5,9 @@
 module.exports = function (req, res, next) {
     var context = req.azureMobile;
 
-    // Skip api key if there is an authenticated user and valid api keys are not always required
-    if (context.user && !context.configuration.alwaysRequireValidApiKey)
+    // Skip api key validation if a authenticated user exists
+    // and authenticated users do not require api keys
+    if (context.user && context.configuration.allowUsersWithoutApiKey)
         return next();
 
     // Validate zumo-api-key header against environment variable.
