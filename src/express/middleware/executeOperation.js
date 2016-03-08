@@ -31,7 +31,8 @@ module.exports = function (operations) {
 
         function setResults(results) {
             res.results = results;
-            next();
+            if(!res.headersSent)
+                next();
         }
 
         function determineOperation() {

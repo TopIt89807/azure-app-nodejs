@@ -238,4 +238,28 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 ]);
             });
     });
+
+    it('terminates table middleware execution if response is sent directly', function () {
+        var table = mobileApp.table(),
+            nextMiddlewareExecuted = false;
+
+        table.read(function (context) {
+            context.res.status(202).end()
+        });
+
+        table.read.use(table.operation, function (req, res, next) {
+            nextMiddlewareExecuted = true
+            next()
+        })
+
+        mobileApp.tables.add('todoitem', table);
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/tables/todoitem')
+            .expect(function (res) {
+                console.log(nextMiddlewareExecuted);
+                expect(nextMiddlewareExecuted).to.be.false;
+            });
+    });
 });
