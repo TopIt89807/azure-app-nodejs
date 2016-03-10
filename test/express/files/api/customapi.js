@@ -5,6 +5,9 @@ var api = module.exports = {
     put: [ addHeader, send ],
     delete: function(req, res, next) {
         res.status(200).end();
+    },
+    patch: function(req, res, next) {
+        res.status(200).json({ response: req.body.message + '1' });
     }
 };
 

@@ -44,7 +44,7 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
 
     it('returns correct options on preflight', function () {
         return request(app).options('/api/customapiname')
-            .expect('allow', 'GET,HEAD,PUT,DELETE')
+            .expect('allow', 'GET,HEAD,PUT,DELETE,PATCH')
             .expect(200);
     });
 
@@ -57,6 +57,17 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
 
     it('returns 405 on disabled method', function () {
         return request(app).post('/api/authapi').expect(405);
+    });
+
+    it('parses json if specified in content-type', function () {
+        return request(app)
+            .patch('/api/customapiname')
+            .set('content-type', 'application/json')
+            .send({ message: 'test' })
+            .expect(200)
+            .then(function (res) {
+                expect(res.body.response).to.equal('test1');
+            });
     });
 });
 

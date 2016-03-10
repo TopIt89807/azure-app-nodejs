@@ -8,6 +8,7 @@ Mobile App. It returns a router that can be attached to an express app with
 some additional functions for registering apis.
 */
 var express = require('express'),
+    bodyParser = require('body-parser'),
     logger = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     authorize = require('../middleware/authorize'),
@@ -23,6 +24,9 @@ Create an instance of an express router for routing and handling api requests.
 */
 module.exports = function (configuration) {
     var router = express.Router();
+
+    // by default, only parse json
+    router.use(bodyParser.json());
 
     /**
     Register a single api with the specified definition.
