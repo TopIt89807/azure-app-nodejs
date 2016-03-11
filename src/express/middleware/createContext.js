@@ -19,6 +19,8 @@ module.exports = function (configuration) {
             configuration: configuration,
             logger: logger,
             tables: function (name) {
+                if(!configuration.tables[name])
+                    throw new Error("The table '" + name + "' does not exist.")
                 return attachOperators(name, dataProvider(configuration.tables[name]));
             }
         };
