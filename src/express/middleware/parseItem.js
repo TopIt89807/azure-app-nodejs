@@ -4,8 +4,7 @@
 var bodyParser = require('body-parser'),
     errors = require('../../utilities/errors'),
     strings = require('../../utilities/strings'),
-    types = require('../../utilities/types'),
-    uuid = require('node-uuid');
+    types = require('../../utilities/types');
 
 module.exports = function(table) {
     return [
