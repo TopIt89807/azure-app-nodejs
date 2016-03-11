@@ -7,7 +7,8 @@ var statements = require('./statements'),
     schema = require('./schema'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
-    queries = require('../../query');
+    queries = require('../../query'),
+    uuid = require('node-uuid');
 
 module.exports = function (configuration) {
     assert(configuration, 'Data configuration was not provided.');
@@ -40,6 +41,7 @@ module.exports = function (configuration) {
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');
+                item.id = item.id || uuid.v4();
                 return insert(configuration, statements.insert(table, item), item);
             },
             delete: function (query, version) {

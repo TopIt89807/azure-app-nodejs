@@ -7,19 +7,19 @@ var bodyParser = require('body-parser'),
     types = require('../../utilities/types'),
     uuid = require('node-uuid');
 
-module.exports = function (table) {
+module.exports = function(table) {
     return [
         attachTableContext,
         parseItem,
         configureItem
     ];
 
-    function attachTableContext (req, res, next) {
+    function attachTableContext(req, res, next) {
         req.azureMobile.table = table;
         next();
     }
 
-    function parseItem (req, res, next) {
+    function parseItem(req, res, next) {
         // by default, we are going to parse json
         if (!req.headers['content-type'])
             req.headers['content-type'] = 'application/json';
@@ -36,7 +36,7 @@ module.exports = function (table) {
         }
     }
 
-    function configureItem (req, res, next) {
+    function configureItem(req, res, next) {
         var item = req.body;
 
         if (types.isObject(item)) {
@@ -44,8 +44,7 @@ module.exports = function (table) {
                 next(errors.badRequest('The item ID and querystring ID did not match'));
             } else {
                 // for PATCH operations, the ID can come from the querystring
-                // if no id was specified by the client, set one here. This will be overwritten by autoIncrement if set
-                item.id = req.params.id || item.id || uuid.v4();
+                item.id = req.params.id || item.id;
 
                 // set version property from if-match header, if specified
                 var etag = req.get('if-match');
