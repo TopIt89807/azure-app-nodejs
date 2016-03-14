@@ -26,6 +26,8 @@ module.exports = function (table) {
         idRoute = '/:id',
         router = table.execute;
 
+    importDefinition.setAccess(table);
+
     configureOperation('read', 'get', [defaultRoute], [parseQuery(table)], [nextLink]);
     configureOperation('read', 'get', [idRoute], [parseQuery(table)], [eTag]);
     configureOperation('insert', 'post', [defaultRoute], [parseItem(table)], [eTag]);
