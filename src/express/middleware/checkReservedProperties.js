@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 var errors = require('../../utilities/errors'),
 
-    reservedProperties = ['createdAt', 'deletedAt', 'deleted'];
+    reservedProperties = ['createdAt', 'updatedAt', 'deleted'];
 
 module.exports = function (req, res, next) {
     var reservedPropertyName = Object.keys(req.azureMobile.item)
