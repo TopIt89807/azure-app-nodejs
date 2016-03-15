@@ -262,4 +262,24 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 expect(nextMiddlewareExecuted).to.be.false;
             });
     });
+
+    it('returns 400 on insert if reserved properties are contained in item', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send({ createdAt: new Date() })
+            .expect(400);
+    });
+
+    it('returns 400 on update if reserved properties are contained in item', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .patch('/tables/todoitem')
+            .send({ updatedAt: new Date() })
+            .expect(400);
+    });
 });

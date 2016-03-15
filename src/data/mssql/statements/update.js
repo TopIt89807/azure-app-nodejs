@@ -21,8 +21,8 @@ module.exports = function (table, item, query) {
 
             if (prop.toLowerCase() === 'version') {
                 versionValue = value;
-            } else if (helpers.isSystemProperty(prop)) {
-                throw errors.badRequest('Cannot update item with property ' + prop + ' as it is reserved');
+            // } else if (helpers.isSystemProperty(prop)) {
+            //     throw errors.badRequest('Cannot update item with property ' + prop + ' as it is reserved');
             } else if (prop.toLowerCase() !== 'id') {
                 setStatements.push(helpers.formatMember(prop) + ' = @' + prop);
                 parameters.push({ name: prop, value: value, type: helpers.getMssqlType(value) });
