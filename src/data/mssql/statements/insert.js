@@ -2,7 +2,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
-    errors = require('../../../utilities/errors'),
     _ = require('underscore.string');
 
 module.exports = function (table, item) {
@@ -12,9 +11,6 @@ module.exports = function (table, item) {
         parameters = [];
 
     Object.keys(item).forEach(function (prop) {
-        // if (helpers.isSystemProperty(prop))
-        //     throw errors.badRequest('Cannot insert item with property ' + prop + ' as it is reserved');
-
         // ignore the property if it is an autoIncrement id
         if ((prop !== 'id' || !table.autoIncrement) && item[prop] !== undefined) {
             columnNames.push(helpers.formatMember(prop));

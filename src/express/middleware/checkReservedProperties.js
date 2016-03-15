@@ -10,7 +10,7 @@ module.exports = function (req, res, next) {
         .find(function (property) { return reservedProperties.indexOf(property) > -1; });
 
     if(reservedPropertyName)
-        next(errors.badRequest(`Cannot update item with property '${reservedPropertyName}' as it is reserved`));
+        next(errors.badRequest("Cannot update item with property '" + reservedPropertyName + "' as it is reserved"));
     else
         next();
 };
