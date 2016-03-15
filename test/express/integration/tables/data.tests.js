@@ -304,4 +304,31 @@ describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
                 expect(results.body[0].id).to.equal('2')
             });
     });
+
+    it("allows update of reserved properties from table scripts", function () {
+        var table = mobileApp.table();
+        table.update(function (context) {
+            var table = context.tables('integration');
+            return table.where({ id: '1' }).read().then(function (items) {
+                var item = items[0];
+                item.string = "test3";
+                return table.update(item);
+            })
+        })
+        mobileApp.tables.add('integration', table);
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/integration')
+            .send({ id: '1', string: "test", bool: true, number: 1 })
+            .expect(201)
+            .then(function () {
+                return supertest(app)
+                    .patch('/tables/integration')
+                    .expect(200);
+            })
+            .then(function (result) {
+                expect(result.body.string).to.equal('test3')
+            });
+    });
 });
