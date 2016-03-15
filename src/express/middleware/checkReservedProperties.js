@@ -6,11 +6,15 @@ var errors = require('../../utilities/errors'),
     reservedProperties = ['createdAt', 'updatedAt', 'deleted'];
 
 module.exports = function (req, res, next) {
-    var reservedPropertyName = Object.keys(req.azureMobile.item)
-        .find(function (property) { return reservedProperties.indexOf(property) > -1; });
+    var properties = Object.keys(req.azureMobile.item),
+        propertyName;
 
-    if(reservedPropertyName)
-        next(errors.badRequest("Cannot update item with property '" + reservedPropertyName + "' as it is reserved"));
+    for(var i = 0, l = properties.length; i < l && !propertyName; i++)
+        if(reservedProperties.indexOf(properties[i]) > -1)
+            propertyName = properties[i]
+
+    if(propertyName)
+        next(errors.badRequest("Cannot update item with property '" + propertyName + "' as it is reserved"));
     else
         next();
 };
