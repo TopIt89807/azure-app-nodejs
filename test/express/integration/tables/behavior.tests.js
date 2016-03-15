@@ -262,4 +262,8 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 expect(nextMiddlewareExecuted).to.be.false;
             });
     });
+
+    it('returns 400 if reserved properties are contained in item', function () {
+        expect(true).to.be.false;
+    });
 });

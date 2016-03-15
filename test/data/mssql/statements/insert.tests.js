@@ -41,11 +41,5 @@ describe('azure-mobile-apps.data.sql.statements', function () {
             expect(statement.sql).to.equal('INSERT INTO [dbo].[table] DEFAULT VALUES; SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
             expect(statement.parameters).to.deep.equal([]);
         });
-
-        it('throws if inserting a system property column', function () {
-            expect(function () {
-                var statement = insert({ name: 'table' }, { id: 'id', deleted: false });
-            }).to.throw('Cannot insert item with property deleted as it is reserved');
-        });
     });
 });
