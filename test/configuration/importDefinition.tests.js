@@ -85,5 +85,16 @@ describe('azure-mobile-apps.configuration.importDefinition', function() {
             expect(definition.method.authorize).to.equal(false);
             expect(definition.method.disable).to.equal(false);
         });
+
+        it('sets access value on definition', function () {
+            definition = {
+                authorize: false,
+                disable: true,
+                access: 'authenticated'
+            };
+            setAccess(definition);
+            expect(definition.authorize).to.equal(true);
+            expect(definition.disable).to.equal(false);
+        });
     });
 });

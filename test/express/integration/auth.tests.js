@@ -134,6 +134,15 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .expect(401);
         });
 
+        it('returns 401 for table requests against authorized table (alternate syntax) with no token', function () {
+            mobileApp.tables.add('todoitem', { access: 'authenticated' });
+            app.use(mobileApp);
+
+            return supertest(app)
+                .get('/tables/todoitem')
+                .expect(401);
+        });
+
         it('returns 200 for table requests against authorized table with valid token', function () {
             mobileApp.tables.add('todoitem', { authorize: true });
             app.use(mobileApp);
@@ -144,8 +153,7 @@ describe('azure-mobile-apps.express.integration.auth', function () {
                 .expect(200);
         });
 
-        it('returns 200 for well formed but invalid token', function () {
-            mobileApp.configuration.auth.validateTokens = true;
+        it('returns 401 for well formed but invalid token', function () {
             mobileApp.tables.add('todoitem');
             app.use(mobileApp);
 

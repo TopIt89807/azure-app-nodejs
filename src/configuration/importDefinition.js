@@ -24,16 +24,19 @@ module.exports = {
         }
     },
     setAccess: function (definition, method) {
-        resolveProperty('authorize');
-        resolveProperty('disable');
-
-        var access = definition[method].access;
-        if (access) {
-            definition[method].authorize = access === 'authenticated';
-            definition[method].disable = access === 'disabled';
+        var source = method ? definition[method] : definition;
+        if(method) {
+            applyDefaultValueFor('authorize');
+            applyDefaultValueFor('disable');
         }
 
-        function resolveProperty(property) {
+        var access = source.access;
+        if (access) {
+            source.authorize = access === 'authenticated';
+            source.disable = access === 'disabled';
+        }
+
+        function applyDefaultValueFor(property) {
             if (definition[method].hasOwnProperty(property)) {
                 // already set on operation, do nothing
                 return;
