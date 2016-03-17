@@ -3,7 +3,9 @@
 // Definitions by: Microsoft Azure <https://github.com/Azure/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-/// <reference path="../express/express.d.ts" />
+// Express dependency must include express.d.ts manually - 
+//      tsd install express -so
+// Rremoving <reference path="../../../express/express.d.ts" />
 /// <reference path="../azure-sb/azure-sb.d.ts" />
 
 declare module "azure-mobile-apps" {
