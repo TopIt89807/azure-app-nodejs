@@ -26,16 +26,6 @@ module.exports = function (configuration) {
                     '201': createOperation.response('The inserted item', 'item'),
                     '409': createOperation.response('An item with the same ID already exists', 'item')
                 }
-            }),
-            patch: createOperation({
-                summary: 'Update a record in the ' + schema.name + ' table',
-                parameters: ['body'],
-                operation: 'Update',
-                responses: {
-                    '200': createOperation.response('The updated item', 'item'),
-                    '409': createOperation.response('A concurrency violation occurred', 'item'),
-                    '412': createOperation.response('A concurrency violation occurred', 'item')
-                }
             })
         }
 
@@ -61,8 +51,8 @@ module.exports = function (configuration) {
             }),
             patch: createOperation({
                 summary: 'Update a record in the ' + schema.name + ' table',
-                parameters: ['id', 'body'],
-                operation: 'UpdateById',
+                parameters: ['optionalId', 'body'],
+                operation: 'Update',
                 responses: {
                     '200': createOperation.response('The updated item', 'item'),
                     '409': createOperation.response('A concurrency violation occurred', 'item'),

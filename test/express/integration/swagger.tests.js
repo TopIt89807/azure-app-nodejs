@@ -62,8 +62,7 @@ describe('azure-mobile-apps.express.sql.integration.swagger', function () {
         paths: {
             '/tables/swagger': {
                 get: { parameters: [ { name: "$filter" } ] },
-                post: { parameters: [ { in: 'body' } ] },
-                patch: { parameters: [ { in: 'body' } ]},
+                post: { parameters: [ { in: 'body' } ] }
             },
             '/tables/swagger/{id}': {
                 get: { parameters: [ { name: "id" } ] },

@@ -43,6 +43,13 @@ module.exports = function (configuration, schema) {
                 type: "string",
                 in: "path"
             },
+            'optionalId': {
+                name: "id",
+                description: "The record identifier. If not specified, the identifier will be determined from the provided item.",
+                required: false,
+                type: "string",
+                in: "path"
+            },
             'body': {
                 name: "body",
                 description: "The item",
