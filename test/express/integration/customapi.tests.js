@@ -59,7 +59,7 @@ describe('azure-mobile-apps.express.integration.customapi', function () {
         return request(app).post('/api/authapi').expect(405);
     });
 
-    it('parses json if specified in content-type', function () {
+    it('parses json if specified in content-type header', function () {
         return request(app)
             .patch('/api/customapiname')
             .set('content-type', 'application/json')

@@ -210,6 +210,17 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .expect(201);
     });
 
+    it('content-type header is not case sensitive', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send('{ "id": 1, "text": "test" }')
+            .set('ConTent-Type', 'application/json')
+            .expect(201);
+    })
+
     it('adds all settings to context object', function () {
         var table = mobileApp.table();
 

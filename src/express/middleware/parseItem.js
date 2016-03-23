@@ -20,10 +20,10 @@ module.exports = function(table) {
 
     function parseItem(req, res, next) {
         // by default, we are going to parse json
-        if (!req.headers['content-type'])
+        if (!req.get('content-type'))
             req.headers['content-type'] = 'application/json';
 
-        if (!req.body && req.headers['content-type'].indexOf('application/json') > -1) {
+        if (!req.body && req.get('content-type').toLowerCase().indexOf('application/json') > -1) {
             bodyParser.json()(req, res, function (error) {
                 if(error)
                     error.badRequest = true;
