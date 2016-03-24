@@ -15,27 +15,31 @@ module.exports = function(configuration) {
     return router;
 
     function metadata(req, res, next) {
-        var data = req.azureMobile.data,
-            host = req.get('host');
+        if(configuration.swagger) {
+            var data = req.azureMobile.data,
+                host = req.get('host');
 
-        getTableSchemas()
-            .then(function (schemas) {
-                res.json(swagger(configuration)('/', host, schemas, [scheme()]));
-            })
-            .catch(next);
+            getTableSchemas()
+                .then(function (schemas) {
+                    res.json(swagger(configuration)('/', host, schemas, [scheme()]));
+                })
+                .catch(next);
 
-        function getTableSchemas() {
-            var tables = configuration.tables;
-            return promises.all(Object.keys(tables).map(function (tableName) {
-                var schemaFactory = data(tables[tableName]).schema;
-                if(!schemaFactory)
-                    throw new Error('The selected data provider does not support the schema function required for swagger');
-                return schemaFactory();
-            }));
-        }
+            function getTableSchemas() {
+                var tables = configuration.tables;
+                return promises.all(Object.keys(tables).map(function (tableName) {
+                    var schemaFactory = data(tables[tableName]).schema;
+                    if(!schemaFactory)
+                        throw new Error('The selected data provider does not support the schema function required for swagger');
+                    return schemaFactory();
+                }));
+            }
 
-        function scheme() {
-            return req.get('x-arr-ssl') ? 'https' : 'http';
+            function scheme() {
+                return req.get('x-arr-ssl') ? 'https' : 'http';
+            }
+        } else {
+            res.status(404).send("To access swagger definitions, you must enable swagger support by adding swagger: true to your configuration")
         }
     }
 };

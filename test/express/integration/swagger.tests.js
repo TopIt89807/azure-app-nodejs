@@ -22,7 +22,10 @@ describe('azure-mobile-apps.express.sql.integration.swagger', function () {
 
         return supertest(app)
             .get('/swagger')
-            .expect(404);
+            .expect(404)
+            .expect(function (res) {
+                expect(res.text).to.contain("swagger: true")
+            });
     });
 
     it("generates basic API definitions for tables", function () {
@@ -57,6 +60,18 @@ describe('azure-mobile-apps.express.sql.integration.swagger', function () {
             .get('/swagger/ui/?url=http://localhost/swagger')
             .expect(200);
     });
+
+    it("returns 404 for swagger-ui if swagger configuration option is not set", function () {
+        mobileApp = mobileApps();
+        app.use(mobileApp);
+
+        return supertest(app)
+            .get('/swagger/ui/?url=http://localhost/swagger')
+            .expect(404)
+            .expect(function (res) {
+                expect(res.text).to.contain("swagger: true")
+            });
+    })
 
     var metadataSubset = {
         paths: {

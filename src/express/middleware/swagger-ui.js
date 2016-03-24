@@ -10,13 +10,13 @@ module.exports = function(configuration) {
         middleware = swaggerPath && express.static(swaggerPath);
 
     return function (req, res, next) {
-        if(swaggerPath) {
+        if(swaggerPath && configuration.swagger) {
             if(!req.query.url)
                 res.redirect('?url=' + swaggerUrl());
             else
                 middleware(req, res, next);
         } else {
-            next(errors.notFound());
+            res.status(404).send("To access the swagger UI, you must enable swagger support by adding swagger: true to your configuration and installing the swagger-ui npm module")
         }
 
         function swaggerUrl() {
