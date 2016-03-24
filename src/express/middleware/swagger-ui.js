@@ -1,8 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var errors = require('../../utilities/errors'),
-    express = require('express'),
+var express = require('express'),
     path = require('path');
 
 module.exports = function(configuration) {
