@@ -3,14 +3,14 @@
 // ----------------------------------------------------------------------------
 var errors = require('../../utilities/errors'),
 
-    reservedProperties = ['createdAt', 'updatedAt', 'deleted'];
+    reservedProperties = ['createdat', 'updatedat', 'deleted'];
 
 module.exports = function (req, res, next) {
     var properties = Object.keys(req.azureMobile.item),
         propertyName;
 
     for(var i = 0, l = properties.length; i < l && !propertyName; i++)
-        if(reservedProperties.indexOf(properties[i]) > -1)
+        if(reservedProperties.indexOf(properties[i].toLowerCase()) > -1)
             propertyName = properties[i]
 
     if(propertyName)

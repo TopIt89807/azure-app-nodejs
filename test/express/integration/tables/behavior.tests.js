@@ -293,4 +293,14 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
             .send({ updatedAt: new Date() })
             .expect(400);
     });
+
+    it('reserved properties are not case sensitive', function () {
+        mobileApp.tables.add('todoitem');
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/todoitem')
+            .send({ CReatedAT: new Date() })
+            .expect(400);
+    });
 });
