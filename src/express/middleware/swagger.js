@@ -15,14 +15,19 @@ module.exports = function(configuration) {
     return router;
 
     function metadata(req, res, next) {
-        var data = req.azureMobile.data,
-            host = req.get('host');
+        if(configuration.swagger) {
+            var data = req.azureMobile.data,
+                host = req.get('host');
 
-        getTableSchemas()
-            .then(function (schemas) {
-                res.json(swagger(configuration)('/', host, schemas, [scheme()]));
-            })
-            .catch(next);
+            getTableSchemas()
+                .then(function (schemas) {
+                    res.json(swagger(configuration)('/', host, schemas, [scheme()]));
+                })
+                .catch(next);
+                
+        } else {
+            res.status(404).send("To access swagger definitions, you must enable swagger support by adding swagger: true to your configuration")
+        }
 
         function getTableSchemas() {
             var tables = configuration.tables;
