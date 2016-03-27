@@ -16,7 +16,10 @@ var table = azureMobileApps.table();
 // before our custom validateApiKey middleware runs.
 table.access = 'anonymous';
 
-// validate api key header prior to table operation execution
+// validate api key header prior to execution of any table operation
 table.use(validateApiKey, table.execute);
+// to require api key authentication for only one operation (in this case insert)
+// instead of table.use(validateApiKey, table.execute) use:
+// table.insert.use(validateApiKey, table.operation);
 
 module.exports = table;
