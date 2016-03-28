@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
 
     // Validate zumo-api-key header against environment variable.
     // The header could also be validated against config setting, etc
-    var apiKey = process.env['zumo_api_key'];
+    var apiKey = process.env['zumo-api-key'];
     if (apiKey && req.get('zumo-api-key') != apiKey)
         return res.status(401).send('This operation requires a valid api key');
     else
