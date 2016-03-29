@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
-    format = require('../query/format'),
+    format = require('azure-odata-sql').format,
     queries = require('../../../query'),
     mssql = require('mssql');
 
