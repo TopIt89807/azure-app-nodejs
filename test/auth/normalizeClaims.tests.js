@@ -87,4 +87,27 @@ describe('azure-mobile-apps.auth.normalizeClaims', function () {
 		expect(n.p1).to.have.property('user_id');
 		expect(n.p1).to.have.property('user_claims');
     });
+
+    it('adds groups to an array', function () {
+        var n = normalizeClaims({
+			'provider_name': 'p1',
+			'user_claims': [ { 'typ': 'groups', val: 'group' } ]
+        });
+
+        expect(n.p1.claims.groups).to.be.an('array');
+        expect(n.p1.claims.groups.length).to.equal(1);
+    });
+
+    it('converts claim types with multiple values to an array', function () {
+        var n = normalizeClaims({
+			'provider_name': 'p1',
+			'user_claims': [
+                { 'typ': 'claimType', val: 'claim1' } ,
+                { 'typ': 'claimType', val: 'claim2' }
+            ]
+        });
+
+        expect(n.p1.claims.claimType).to.be.an('array');
+        expect(n.p1.claims.claimType.length).to.equal(2);
+    })
 });

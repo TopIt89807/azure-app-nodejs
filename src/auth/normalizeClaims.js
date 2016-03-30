@@ -13,10 +13,28 @@ module.exports = function (claims) {
     }, {});
 
     function mapClaims(target, claim) {
-        target[claim.typ] = claim.val;
-        if (claim.typ.indexOf('http://schemas.xmlsoap.org/ws') !== -1) {
-            target[claim.typ.slice(claim.typ.lastIndexOf('/') + 1)] = claim.val;
-        }
+        setDefaults(target, claim.typ, claim.val);
+        setClaim(target, claim.typ, claim.val);
+        if (claim.typ.indexOf('http://schemas.xmlsoap.org/ws') !== -1)
+            setClaim(target, claim.typ.slice(claim.typ.lastIndexOf('/') + 1), claim.val);
         return target;
     }
+
+    function setDefaults(target, type, value) {
+        if(type === 'groups') {
+            if(target[type] === undefined)
+                target[type] = [];
+        }
+    }
+
+    function setClaim(target, type, value) {
+        var existingValue = target[type];
+        if(existingValue === undefined || existingValue === null)
+            target[type] = value;
+        else if (existingValue.constructor === Array)
+            existingValue.push(value);
+        else
+            target[type] = [existingValue, value];
+    }
+
 };
