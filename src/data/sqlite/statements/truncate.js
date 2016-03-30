@@ -5,6 +5,6 @@ var helpers = require('../helpers');
 
 module.exports = function (table) {
     return {
-        sql: 'TRUNCATE TABLE ' + helpers.formatTableName(table.name)
+        sql: 'DELETE FROM ' + helpers.formatTableName(table.name)
     }
 }

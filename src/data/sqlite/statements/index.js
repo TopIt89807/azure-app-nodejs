@@ -13,4 +13,5 @@ module.exports = {
     undelete: require('./undelete'),
     createIndex: require('./createIndex'),
     getIndexes: require('./getIndexes'),
+    createTrigger: require('./createTrigger')
 };

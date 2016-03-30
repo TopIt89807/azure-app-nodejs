@@ -9,36 +9,55 @@ var sqlite3 = require('sqlite3'),
     log = require('../../logger'),
     connection;
 
-module.exports = function (config, statement) {
-    var parameters = {};
-
+module.exports = function (config, statements) {
     connection = connection || new sqlite3.Database(config.filename || ':memory:');
 
-    if(statement.noop)
-        return promises.resolved();
+    var results;
 
-    if(statement.parameters)
-        statement.parameters.forEach(function (parameter) {
-            parameters[parameter.name] = parameter.value;
+    if(statements.constructor === Array)
+        return promises.all(statements.map(executeSingleStatement)).then(function () {
+            return results;
         });
+    else
+        return executeSingleStatement(statements);
 
-    log.silly('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
+    function executeSingleStatement(statement) {
+        if(statement.noop)
+            return promises.resolved();
 
-    return promises.create(function (resolve, reject) {
-        connection.all(statement.sql, parameters, function (err, results) {
-            if(err) {
-                log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
+        var parameters = {};
 
-                if(err.number === errorCodes.UniqueConstraintViolation)
-                    reject(errors.duplicate('An item with the same ID already exists'));
+        // SQLite expects the '@' symbol prefix for each parameter
+        if(statement.parameters)
+            Object.keys(statement.parameters).forEach(function (parameterName) {
+                parameters['@' + parameterName] = statement.parameters[parameterName];
+            });
 
-                if(err.number === errorCodes.InvalidDataType)
-                    reject(errors.badRequest('Invalid data type provided'));
+        log.silly('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
-                reject(err);
-            }
+        return promises.create(function (resolve, reject) {
+            connection.all(statement.sql, parameters, function (err, rows) {
+                if(err) {
+                    log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
-            resolve(statement.transform ? statement.transform(results) : results);
+                    // console.dir(err)
+                    //
+                    // if(err.number === errorCodes.UniqueConstraintViolation)
+                    //     reject(errors.duplicate('An item with the same ID already exists'));
+                    //
+                    // if(err.number === errorCodes.InvalidDataType)
+                    //     reject(errors.badRequest('Invalid data type provided'));
+
+                    reject(err);
+                }
+
+                var queryResults = statement.transform ? statement.transform(rows) : rows;
+
+                if(queryResults !== undefined)
+                    results = queryResults;
+
+                resolve(queryResults);
+            });
         });
-    });
+    }
 };
