@@ -8,13 +8,10 @@ var config = require('../../appFactory').configuration().data,
     queries = require('../../../src/query'),
     promises = require('../../../src/utilities/promises'),
     helpers = require('../../../src/data/mssql/helpers'),
-    expect = require('chai')
-        .use(require('chai-subset'))
-        .use(require('chai-as-promised'))
-        .expect,
+    expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect,
     table = { name: 'dynamicSchema' };
 
-describe('azure-mobile-apps.data.sql.integration.dynamicSchema', function () {
+describe('azure-mobile-apps.data.mssql.integration.dynamicSchema', function () {
     afterEach(function (done) {
         execute(config, { sql: 'drop table dbo.dynamicSchema' }).then(done, done);
     });

@@ -6,25 +6,25 @@
 
 var expect = require('chai').expect,
     mssql = require('mssql'),
-    statements = require('../../../../src/data/mssql/statements');
+    statements = require('../../../../src/data/sqlite/statements');
 
-describe('azure-mobile-apps.data.mssql.statements', function () {
+describe('azure-mobile-apps.data.sqlite.statements', function () {
     describe('updateSchema', function () {
         var updateSchema = statements.updateSchema;
 
         it('generates simple statement', function () {
             var statement = updateSchema({ name: 'table' }, [{ name: 'id' }, { name: 'version' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }], { id: 1, text: 'test' });
-            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL');
+            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] NVARCHAR(MAX) NULL');
         });
 
         it('generates system properties if missing', function () {
             var statement = updateSchema({ name: 'table' }, [{ name: 'id' }], { id: 1, text: 'test' });
-            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0');
+            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL,createdAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0),updatedAt DATETIMEOFFSET(7) NOT NULL DEFAULT CONVERT(DATETIMEOFFSET(7),SYSUTCDATETIME(),0),deleted bit NOT NULL DEFAULT 0');
         });
 
         it('correctly handles missing system properties that exist in item', function () {
             var statement = updateSchema({ name: 'table' }, [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }], { id: 1, text: 'test', version: 'someVersion' });
-            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL');
+            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] NVARCHAR(MAX) NULL,version ROWVERSION NOT NULL');
         });
 
         it('generates statement for predefined columns', function () {
@@ -33,7 +33,7 @@ describe('azure-mobile-apps.data.mssql.statements', function () {
                 [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }, { name : 'version' }],
                 { id: 1 }
             );
-            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL');
+            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] NVARCHAR(MAX) NULL');
         });
 
         it('generates statement for predefined columns when item is not supplied', function () {
@@ -41,7 +41,7 @@ describe('azure-mobile-apps.data.mssql.statements', function () {
                 { name: 'table', columns: { 'text': 'string' } },
                 [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }, { name : 'version' }]
             );
-            expect(statement.sql).to.equal('ALTER TABLE [dbo].[table] ADD [text] NVARCHAR(MAX) NULL');
+            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] NVARCHAR(MAX) NULL');
         });
     });
 });
