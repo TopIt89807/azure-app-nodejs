@@ -21,5 +21,6 @@ module.exports = {
     checkConcurrency: function (rows) {
         if(rows[0].recordsAffected === 0)
             throw errors.concurrency('No records were updated');
-    }
+    },
+    ignoreResults: function () {}
 }
