@@ -28,10 +28,17 @@ module.exports = function (config, statements) {
         var parameters = {};
 
         // SQLite expects the '@' symbol prefix for each parameter
-        if(statement.parameters)
+        if(statement.parameters) {
+            if(statement.parameters.constructor === Array)
+                statement = {
+                    sql: statement.sql,
+                    parameters: helpers.mapParameters(statement.parameters)
+                };
+                
             Object.keys(statement.parameters).forEach(function (parameterName) {
                 parameters['@' + parameterName] = statement.parameters[parameterName];
             });
+        }
 
         log.silly('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 

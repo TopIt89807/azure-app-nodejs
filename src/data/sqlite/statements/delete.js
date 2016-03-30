@@ -11,16 +11,16 @@ module.exports = function (table, query, version) {
         filterClause = format.filter(queries.toOData(query)),
         deleteStmt = {
             sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql + ';',
-            parameters: helpers.statements.mapParameters(filterClause.parameters)
+            parameters: helpers.mapParameters(filterClause.parameters)
         },
         selectStmt = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql + ";",
-            parameters: helpers.statements.mapParameters(filterClause.parameters),
-            transform: helpers.statements.prepareItems
+            parameters: helpers.mapParameters(filterClause.parameters),
+            transform: helpers.transforms.prepareItems
         },
         countStmt = {
             sql: "SELECT changes() AS recordsAffected;",
-            transform: helpers.statements.checkConcurrency
+            transform: helpers.transforms.checkConcurrency
         };
 
     if (table.softDelete)

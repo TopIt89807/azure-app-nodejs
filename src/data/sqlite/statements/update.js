@@ -12,7 +12,7 @@ module.exports = function (table, item, query) {
         setStatements = [],
         versionValue,
         filter = filterClause(),
-        updateParameters = helpers.statements.mapParameters(filter.parameters);
+        updateParameters = helpers.mapParameters(filter.parameters);
 
     for (var property in item) {
         if(item.hasOwnProperty(property)) {
@@ -42,17 +42,17 @@ module.exports = function (table, item, query) {
 
     var countStatement = {
         sql: "SELECT changes() AS recordsAffected",
-        transform: helpers.statements.checkConcurrency
+        transform: helpers.transforms.checkConcurrency
     };
 
 
-    var selectParameters = helpers.statements.mapParameters(filter.parameters);
+    var selectParameters = helpers.mapParameters(filter.parameters);
     selectParameters.id = item.id;
 
     var selectStatement = {
         sql: _.sprintf("SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql),
         parameters: selectParameters,
-        transform: helpers.statements.prepareItems
+        transform: helpers.transforms.prepareItems
     };
 
     return [updateStatement, countStatement, selectStatement];

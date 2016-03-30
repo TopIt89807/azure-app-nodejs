@@ -4,12 +4,6 @@
 var errors = require('../../../utilities/errors');
 
 module.exports = {
-    mapParameters: function (parameters) {
-        return parameters.reduce(function (result, parameter) {
-            result[parameter.name] = parameter.value;
-            return result;
-        }, {});
-    },
     prepareItems: function (rows) {
         if (rows.length === 0)
             return undefined;

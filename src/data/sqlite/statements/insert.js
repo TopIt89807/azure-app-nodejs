@@ -25,7 +25,7 @@ module.exports = function (table, item) {
 
 
     function transformResult(results) {
-        return helpers.statements.translateVersion(results[0]);
+        return helpers.transforms.translateVersion(results[0]);
     }
 
     return [{

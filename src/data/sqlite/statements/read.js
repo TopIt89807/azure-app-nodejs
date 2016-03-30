@@ -4,7 +4,7 @@
 var queries = require('../../../query'),
     format = require('azure-odata-sql').format,
     log = require('../../../logger'),
-    helpers = require('./helpers');
+    helpers = require('../helpers');
 
 module.exports = function (source, tableConfig) {
     // this is not great, affects original object
@@ -24,7 +24,7 @@ module.exports = function (source, tableConfig) {
     function transformResult(results) {
         log.silly('Read query returned ' + results[0].length + ' results');
 
-        var finalResults = helpers.translateVersion(results[0]);
+        var finalResults = helpers.transforms.translateVersion(results[0]);
 
         // if there is more than one result set, total count is the second query
         if(results.length > 1)

@@ -10,16 +10,16 @@ module.exports = function (table, query, version) {
         filterClause = format.filter(queries.toOData(query)),
         undeleteStatement = {
             sql: "UPDATE " + tableName + " SET deleted = 0 WHERE " + filterClause.sql,
-            parameters: helpers.statements.mapParameters(filterClause.parameters)
+            parameters: helpers.mapParameters(filterClause.parameters)
         },
         countStatement = {
             sql: "SELECT changes() AS recordsAffected",
-            transform: helpers.statements.checkConcurrency
+            transform: helpers.transforms.checkConcurrency
         },
         selectStatement = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql,
-            parameters: helpers.statements.mapParameters(filterClause.parameters),
-            transform: helpers.statements.prepareItems
+            parameters: helpers.mapParameters(filterClause.parameters),
+            transform: helpers.transforms.prepareItems
         };
 
     if (version) {

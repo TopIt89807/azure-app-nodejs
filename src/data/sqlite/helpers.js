@@ -4,11 +4,18 @@
 
 var types = require('../../utilities/types'),
     strings = require('../../utilities/strings'),
-    statementHelpers = require('./statements/helpers'),
+    transforms = require('./statements/transforms'),
     mssql = require('mssql');
 
 var helpers = module.exports = {
-    statements: statementHelpers,
+    transforms: transforms,
+
+    mapParameters: function (parameters) {
+        return parameters.reduce(function (result, parameter) {
+            result[parameter.name] = parameter.value;
+            return result;
+        }, {});
+    },
 
     // Performs the following validations on the specified identifier:
     // - first char is alphabetic or an underscore
