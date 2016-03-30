@@ -269,7 +269,6 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
         return supertest(app)
             .get('/tables/todoitem')
             .expect(function (res) {
-                console.log(nextMiddlewareExecuted);
                 expect(nextMiddlewareExecuted).to.be.false;
             });
     });
