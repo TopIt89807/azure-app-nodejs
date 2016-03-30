@@ -18,7 +18,7 @@ describe('azure-mobile-apps.data.sqlite.statements', function () {
             expect(statement).to.containSubset([
                 { sql: 'SELECT * FROM [table] WHERE ([id] = @p1);', parameters: { p1: 'id' } },
                 { sql: 'DELETE FROM [table] WHERE ([id] = @p1);', parameters: { p1: 'id' } },
-                { sql: 'SELECT @@rowcount AS recordsAffected;' },
+                { sql: 'SELECT changes() AS recordsAffected;' },
             ]);
         });
 
@@ -27,7 +27,7 @@ describe('azure-mobile-apps.data.sqlite.statements', function () {
             expect(statement).to.containSubset([
                 { sql: 'UPDATE [table] SET [deleted] = 1 WHERE ([id] = @p1) AND [deleted] = 0;', parameters: { p1: 'id' } },
                 { sql: 'SELECT * FROM [table] WHERE ([id] = @p1);', parameters: { p1: 'id' } },
-                { sql: 'SELECT @@rowcount AS recordsAffected;' },
+                { sql: 'SELECT changes() AS recordsAffected;' },
             ]);
         });
     });

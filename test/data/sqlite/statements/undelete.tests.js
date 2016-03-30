@@ -10,8 +10,19 @@ describe('azure-mobile-apps.data.sqlite.statements', function () {
     describe('undelete', function () {
         it('generates simple statement and parameters', function () {
             var statement = statements.undelete({ name: 'table' }, queries.create('table').where({ id: 'id' }));
-            expect(statement.sql).to.equal('UPDATE [table] SET deleted = 0 WHERE ([id] = @p1); SELECT @@rowcount AS recordsAffected; SELECT * FROM [table] WHERE ([id] = @p1)');
-            expect(statement.parameters).to.containSubset([{ name: 'p1', value: 'id' }]);
+            expect(statement).to.containSubset([
+                {
+                    sql: "UPDATE [table] SET deleted = 0 WHERE ([id] = @p1)",
+                    parameters: { p1: 'id' }
+                },
+                {
+                    sql: "SELECT changes() AS recordsAffected",
+                },
+                {
+                    sql: "SELECT * FROM [table] WHERE ([id] = @p1)",
+                    parameters: { p1: 'id' }
+                }
+            ]);
         });
     });
 });

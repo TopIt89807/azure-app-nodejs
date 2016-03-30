@@ -8,20 +8,24 @@ var helpers = require('../helpers'),
 module.exports = function (table, query, version) {
     var tableName = helpers.formatTableName(table.name),
         filterClause = format.filter(queries.toOData(query)),
-        sql = "UPDATE " + tableName + " SET deleted = 0 WHERE " + filterClause.sql,
-        parameters = Array.prototype.slice.apply(filterClause.parameters);
+        undeleteStatement = {
+            sql: "UPDATE " + tableName + " SET deleted = 0 WHERE " + filterClause.sql,
+            parameters: helpers.statements.mapParameters(filterClause.parameters)
+        },
+        countStatement = {
+            sql: "SELECT changes() AS recordsAffected",
+            transform: helpers.statements.checkConcurrency
+        },
+        selectStatement = {
+            sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql,
+            parameters: helpers.statements.mapParameters(filterClause.parameters),
+            transform: helpers.statements.prepareItems
+        };
 
     if (version) {
-        sql += " AND [version] = @version ";
-        parameters.push({ name: 'version', value: new Buffer(version, 'base64') });
+        undeleteStatement.sql += " AND [version] = @version";
+        undeleteStatement.parameters.version = version;
     }
 
-    sql += "; SELECT @@rowcount AS recordsAffected; SELECT * FROM " + tableName + " WHERE " + filterClause.sql;
-
-    return {
-        sql: sql,
-        parameters: parameters,
-        multiple: true,
-        transform: helpers.statements.checkConcurrencyAndTranslate
-    };
+    return [undeleteStatement, countStatement, selectStatement];
 };

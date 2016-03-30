@@ -11,39 +11,51 @@ module.exports = function (table, item, query) {
     var tableName = helpers.formatTableName(table.name),
         setStatements = [],
         versionValue,
-        parameters = [],
-        filter = filterClause();
+        filter = filterClause(),
+        updateParameters = helpers.statements.mapParameters(filter.parameters);
 
-    for (var prop in item) {
-        if(item.hasOwnProperty(prop)) {
-            var value = item[prop];
+    for (var property in item) {
+        if(item.hasOwnProperty(property)) {
+            var value = item[property];
 
-            if (prop.toLowerCase() === 'version') {
+            if (property.toLowerCase() === 'version') {
                 versionValue = value;
-            } else if (prop.toLowerCase() !== 'id') {
-                setStatements.push(helpers.formatMember(prop) + ' = @' + prop);
-                parameters.push({ name: prop, value: value });
+            } else if (property.toLowerCase() !== 'id') {
+                setStatements.push(helpers.formatMember(property) + ' = @' + property);
+                updateParameters[property] = value;
             }
         }
     }
 
-    var sql = _.sprintf("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql);
-    parameters.push({ name: 'id', value: item.id });
-    parameters.push.apply(parameters, filter.parameters);
+    updateParameters.id = item.id;
+
+    var updateStatement = {
+        sql: _.sprintf("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql),
+        parameters: updateParameters
+    };
 
     if (versionValue) {
-        sql += " AND [version] = @version";
-        parameters.push({ name: 'version', type: mssql.VarBinary, value: new Buffer(versionValue, 'base64') });
+        updateStatement.sql += " AND [version] = @version";
+        updateStatement.parameters.version = versionValue;
     }
 
-    sql += _.sprintf("; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql);
 
-    return {
-        sql: sql,
-        parameters: parameters,
-        multiple: true,
-        transform: helpers.statements.checkConcurrencyAndTranslate
+    var countStatement = {
+        sql: "SELECT changes() AS recordsAffected",
+        transform: helpers.statements.checkConcurrency
     };
+
+
+    var selectParameters = helpers.statements.mapParameters(filter.parameters);
+    selectParameters.id = item.id;
+
+    var selectStatement = {
+        sql: _.sprintf("SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql),
+        parameters: selectParameters,
+        transform: helpers.statements.prepareItems
+    };
+
+    return [updateStatement, countStatement, selectStatement];
 
     function filterClause() {
         if(!query)

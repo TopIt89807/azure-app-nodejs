@@ -16,10 +16,11 @@ module.exports = function (table, query, version) {
         selectStmt = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql + ";",
             parameters: helpers.statements.mapParameters(filterClause.parameters),
-            transform: transformResults
+            transform: helpers.statements.prepareItems
         },
         countStmt = {
-            sql: "SELECT @@rowcount AS recordsAffected;"
+            sql: "SELECT changes() AS recordsAffected;",
+            transform: helpers.statements.checkConcurrency
         };
 
     if (table.softDelete)
@@ -36,8 +37,4 @@ module.exports = function (table, query, version) {
         return [deleteStmt, selectStmt, countStmt];
     else
         return [selectStmt, deleteStmt, countStmt];
-
-    function transformResults(results) {
-        return helpers.statements.checkConcurrencyAndTranslate(results);
-    }
 };

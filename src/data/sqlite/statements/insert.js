@@ -8,33 +8,31 @@ module.exports = function (table, item) {
     var tableName = helpers.formatTableName(table.name),
         columnNames = [],
         valueParams = [],
-        parameters = [];
+        parameters = {};
 
-    Object.keys(item).forEach(function (prop) {
+    Object.keys(item).forEach(function (property) {
         // ignore the property if it is an autoIncrement id
-        if ((prop !== 'id' || !table.autoIncrement) && item[prop] !== undefined) {
-            columnNames.push(helpers.formatMember(prop));
-            valueParams.push('@' + prop);
-            parameters.push({ name: prop, value: item[prop] });
+        if ((property !== 'id' || !table.autoIncrement) && item[property] !== undefined) {
+            columnNames.push(helpers.formatMember(property));
+            valueParams.push('@' + property);
+            parameters[property] = item[property];
         }
     });
 
     var sql = columnNames.length > 0
-        ? _.sprintf("INSERT INTO %s (%s) VALUES (%s); ", tableName, columnNames.join(','), valueParams.join(','))
-        : _.sprintf("INSERT INTO %s DEFAULT VALUES; ", tableName)
+        ? _.sprintf("INSERT INTO %s (%s) VALUES (%s);", tableName, columnNames.join(','), valueParams.join(','))
+        : _.sprintf("INSERT INTO %s DEFAULT VALUES;", tableName)
 
-    if(table.autoIncrement)
-        sql += _.sprintf('SELECT * FROM %s WHERE [id] = SCOPE_IDENTITY()', tableName);
-    else
-        sql += _.sprintf('SELECT * FROM %s WHERE [id] = @id', tableName);
 
     function transformResult(results) {
         return helpers.statements.translateVersion(results[0]);
     }
 
-    return {
+    return [{
         sql: sql,
         parameters: parameters,
         transform: transformResult
-    };
+    }, {
+        sql: _.sprintf("SELECT * FROM %s WHERE [rowid] = last_insert_rowid();", tableName)
+    }];
 }
