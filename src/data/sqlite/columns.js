@@ -29,7 +29,7 @@ module.exports = function (configuration) {
     }
 
     function set(table, item) {
-        var setStatements = statements.setTypes(table, item);
+        var setStatements = statements.setColumns(table, item);
         return execute(configuration, setStatements)
             .catch(function (error) {
                 return initialize(table).then(function () {
@@ -40,6 +40,6 @@ module.exports = function (configuration) {
     }
 
     function initialize(table) {
-        return execute(configuration, statements.createTypesTable(table));
+        return execute(configuration, statements.createColumnsTable(table));
     }
 };

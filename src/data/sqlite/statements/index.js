@@ -12,8 +12,7 @@ module.exports = {
     updateSchema: require('./updateSchema'),
     undelete: require('./undelete'),
     createIndex: require('./createIndex'),
-    getIndexes: require('./getIndexes'),
     createTrigger: require('./createTrigger'),
-    createTypesTable: require('./createTypesTable'),
-    setTypes: require('./setTypes')
+    createColumnsTable: require('./createColumnsTable'),
+    setColumns: require('./setColumns')
 };
