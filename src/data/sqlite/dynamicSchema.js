@@ -9,7 +9,7 @@ var execute = require('./execute'),
 module.exports = function (table) {
     var api = {
         execute: function (config, statement, item, attempt) {
-            var schema = schemas(config);            
+            var schema = schemas(config);
             attempt = attempt || 1;
 
             return execute(config, statement)
@@ -23,6 +23,7 @@ module.exports = function (table) {
                 if (attempt >= 3)
                     return promises.rejected(err);
 
+                // need to update column definition here
                 if(err.number === errorCodes.InvalidObjectName)
                     return schema.createTable(table, item);
                 if(err.number === errorCodes.InvalidColumnName)

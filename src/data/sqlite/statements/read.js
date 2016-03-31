@@ -22,14 +22,15 @@ module.exports = function (source, tableConfig) {
     return statements.length === 1 ? statements[0] : statements;
 
     function transformResult(results) {
-        log.silly('Read query returned ' + results[0].length + ' results');
-
-        var finalResults = results[0];
-
+        log.silly('Read query returned ' + results.length + ' results');
+        return results;
+        //var finalResults = results[0];
+        //
+        // not sure yet......
         // if there is more than one result set, total count is the second query
-        if(results.length > 1)
-            finalResults.totalCount = results[1][0].count;
-
-        return finalResults;
+        // if(results.length > 1)
+        //     finalResults.totalCount = results[1][0].count;
+        //
+        // return finalResults;
     }
 };

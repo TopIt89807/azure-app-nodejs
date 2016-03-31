@@ -1,51 +1,45 @@
 var execute = require('./execute'),
     statements = require('./statements'),
-    promises = require('../../../utilities/promises'),
-    queries = require('../../../query'),
+    helpers = require('./helpers'),
+    promises = require('../../utilities/promises'),
+    queries = require('../../query'),
 
-    typesTable = { name: '__types' },
-    tables = {};
+    typesTable = { name: '__types' };
 
 module.exports = function (configuration) {
+    var tables = {};
+    configuration = configuration || {};
+
     return {
         for: function (table) {
             if(tables[table.name])
                 return promises.resolved(tables[table.name]);
             return get(table);
         },
-        set: function (table, item) {
-            set(table, item);
-        }
+        set: set
     };
 
     function get(table) {
-        var query = queries.create(typesTable.name).where({ table: table.name });
+        var query = queries.create(typesTable.name).select('name', 'type').where({ table: table.name });
         return execute(configuration, statements.read(query, typesTable))
             .catch(function (error) {
-                return initialize().then(function () {
-                    return execute(configuration, statements.read(query, typesTable));
-                });
+                // nothing has been inserted for this table, we're going to return an empty array of results later anyway
+                return [];
             });
     }
 
     function set(table, item) {
-        var statements = item.map(function (column) {
-            statements.insert(typesTable, {
-                table: table.name,
-                property: '',
-                type: ''
-            });
-        };
-
-        return execute(configuration, statements)
+        var setStatements = statements.setTypes(table, item);
+        return execute(configuration, setStatements)
             .catch(function (error) {
-                return initialize().then(function () {
-                    return execute(configuration, statements)
+                return initialize(table).then(function () {
+                    // if we fail this time, we're borked
+                    return execute(configuration, setStatements);
                 });
             });
     }
 
-    function handleError() {
-
+    function initialize(table) {
+        return execute(configuration, statements.createTypesTable(table));
     }
 };

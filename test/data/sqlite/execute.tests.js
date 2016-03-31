@@ -17,9 +17,9 @@ describe('azure-mobile-apps.data.sqlite.execute', function () {
     it("executes multiple statements", function () {
         return execute({}, [
             { sql: "select @p1 as test", parameters: { p1: 'test' } },
-            { sql: "select @p1 as test", parameters: { p1: 'test' } }
+            { sql: "select @p1 as test", parameters: { p1: 'test2' } }
         ]).then(function (result) {
-            expect(result).to.deep.equal([{ test: 'test' }]);
+            expect(result).to.deep.equal([{ test: 'test2' }]);
         });
     });
 });

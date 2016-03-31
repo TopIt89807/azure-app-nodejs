@@ -73,8 +73,16 @@ var helpers = module.exports = {
             case Date:
                 return "TEXT";
             default:
-                throw new Error("Unable to map value " + value.toString() + " to a SQL type.");
+                throw new Error("Unable to map value " + value.toString() + " of type " + value.constructor.name + " to a SQL type.");
         }
+    },
+
+    getSchemaType: function (value) {
+        var type = value && value.constructor;
+        // we will attempt to support unknown types. Boolean and Date properties will suffer...
+        if(!type || type === String || type === Number || type === Boolean || type === Date)
+            return (value === undefined || value === null) ? 'unknown' : value.constructor.name.toLowerCase();
+        throw new Error("Unsupported type: " + type.name);
     },
 
     getPredefinedColumnType: function (value) {
