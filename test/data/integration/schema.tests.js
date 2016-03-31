@@ -1,62 +1,59 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var targets = require('./targets'),
-    config = require('../../appFactory').configuration().data,
+var config = require('../../appFactory').configuration().data,
     queries = require('../../../src/query'),
     expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect;
 
-targets.forEach(function (target) {
-    describe('azure-mobile-apps.data.' + target + '.integration.schema', function () {
-        var index = require('../../../src/data/' + target),
-            cleanUp = require('../' + target + '/integration.cleanUp'),
-            table = { name: 'schemaTest', seed: [{ id: '1' }, { id: '2' }] },
-            operations = index(config)(table);
+describe('azure-mobile-apps.data.integration.schema', function () {
+    var index = require('../../../src/data/' + config.provider),
+        cleanUp = require('../' + config.provider + '/integration.cleanUp'),
+        table = { name: 'schemaTest', seed: [{ id: '1' }, { id: '2' }] },
+        operations = index(config)(table);
 
-        afterEach(function (done) {
-            cleanUp(config, table).then(done, done);
-        });
-
-        it("initialize creates table and seeds", function () {
-            return operations.initialize(table)
-                .then(function () {
-                    return read();
-                })
-                .then(function (results) {
-                    expect(results.length).to.equal(2);
-                })
-        });
-
-        it("initialize handles existing tables", function () {
-            return operations.initialize(table)
-                .then(function () {
-                    return operations.initialize(table);
-                })
-                .then(function () {
-                    return read();
-                })
-                .then(function (results) {
-                    expect(results.length).to.equal(2);
-                })
-        });
-
-        it("schema returns databse schema for table", function () {
-            return operations.initialize(table)
-                .then(function () {
-                    return operations.schema(table);
-                })
-                .then(function (tableSchema) {
-                    expect(tableSchema).to.containSubset({
-                        name: table.name,
-                        properties: [
-                            { name: 'id', type: 'string' }
-                        ]
-                    });
-                });
-        });
-
-        function read() {
-            return operations.read(queries.create('schemaTest'));
-        }
+    afterEach(function (done) {
+        cleanUp(config, table).then(done, done);
     });
+
+    it("initialize creates table and seeds", function () {
+        return operations.initialize(table)
+            .then(function () {
+                return read();
+            })
+            .then(function (results) {
+                expect(results.length).to.equal(2);
+            })
+    });
+
+    it("initialize handles existing tables", function () {
+        return operations.initialize(table)
+            .then(function () {
+                return operations.initialize(table);
+            })
+            .then(function () {
+                return read();
+            })
+            .then(function (results) {
+                expect(results.length).to.equal(2);
+            })
+    });
+
+    it("schema returns databse schema for table", function () {
+        return operations.initialize(table)
+            .then(function () {
+                return operations.schema(table);
+            })
+            .then(function (tableSchema) {
+                expect(tableSchema).to.containSubset({
+                    name: table.name,
+                    properties: [
+                        { name: 'id', type: 'string' }
+                    ]
+                });
+            });
+    });
+
+    function read() {
+        return operations.read(queries.create('schemaTest'));
+    }
 });

@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------
 var queries = require('../../../query'),
     format = require('azure-odata-sql').format,
+    convert = require('../convert'),
     log = require('../../../logger'),
     helpers = require('../helpers');
 
@@ -21,9 +22,12 @@ module.exports = function (source, tableConfig) {
     statements[0].parameters = helpers.mapParameters(statements[0].parameters);
     return statements.length === 1 ? statements[0] : statements;
 
-    function transformResult(results) {
-        log.silly('Read query returned ' + results.length + ' results');
-        return results;
+    function transformResult(rows) {
+        log.silly('Read query returned ' + rows.length + ' results');
+        return rows.map(function (row) {
+            return convert.item(tableConfig.sqliteColumns, row);
+        });
+
         //var finalResults = results[0];
         //
         // not sure yet......

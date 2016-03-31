@@ -5,13 +5,16 @@ var statements = require('./statements'),
     execute = require('./execute'),
     dynamicSchema = require('./dynamicSchema'),
     schema = require('./schema'),
+    columnsModule = require('./columns'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
+    promises = require('../../utilities/promises'),
     queries = require('../../query'),
     uuid = require('node-uuid');
 
 module.exports = function (configuration) {
     configuration = configuration || {};
+    var columns = columnsModule(configuration);
 
     var tableAccess = function (table) {
         assert(table, 'A table was not specified');
@@ -27,25 +30,35 @@ module.exports = function (configuration) {
 
         return {
             read: function (query) {
-                query = query || queries.create(table.name);
-                return read(configuration, statements.read(query, table));
+                return loadColumns().then(function () {
+                    query = query || queries.create(table.name);
+                    return read(configuration, statements.read(query, table));
+                });
             },
             update: function (item, query) {
                 assert(item, 'An item to update was not provided');
-                return update(configuration, statements.update(table, item, query), item);
+                return loadColumns(item).then(function () {
+                    return update(configuration, statements.update(table, item, query), item);
+                });
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');
-                item.id = item.id || uuid.v4();
-                return insert(configuration, statements.insert(table, item), item);
+                return loadColumns(item).then(function () {
+                    item.id = item.id || uuid.v4();
+                    return insert(configuration, statements.insert(table, item), item);
+                });
             },
             delete: function (query, version) {
                 assert(query, 'The delete query was not provided');
-                return execute(configuration, statements.delete(table, query, version));
+                return loadColumns().then(function () {
+                    return execute(configuration, statements.delete(table, query, version));
+                });
             },
             undelete: function (query, version) {
                 assert(query, 'The undelete query was not provided');
-                return execute(configuration, statements.undelete(table, query, version));
+                return loadColumns().then(function () {
+                    return execute(configuration, statements.undelete(table, query, version));
+                });
             },
             truncate: function () {
                 return execute(configuration, statements.truncate(table));
@@ -57,9 +70,19 @@ module.exports = function (configuration) {
                 return schema(configuration).get(table);
             }
         };
+
+        function loadColumns(item) {
+            if(!table.sqliteColumns) {
+                if(item)
+                    table.sqliteColumns = columns.fromItem(item);
+                else
+                    return columns.for(table);
+            }
+            return promises.resolved();
+        }
     };
 
-    // expose a method to allow direct execution if SQL queries
+    // expose a method to allow direct execution of SQL queries
     tableAccess.execute = function (statement) {
         assert(statement, 'A SQL statement was not provided');
         return execute(configuration, statement);

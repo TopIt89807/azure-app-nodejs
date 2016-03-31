@@ -19,7 +19,7 @@ module.exports = function (table, query, version) {
         selectStatement = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
-            transform: helpers.transforms.prepareItems
+            transform: helpers.transforms.prepareItems(table)
         };
 
     if (version) {

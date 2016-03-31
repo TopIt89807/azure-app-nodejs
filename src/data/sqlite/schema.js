@@ -6,13 +6,14 @@ module.exports = function (configuration) {
     var statements = require('./statements'),
         execute = require('./execute'),
         dynamicSchema = require('./dynamicSchema'),
+        columns = require('./columns')(configuration),
         promises = require('../../utilities/promises'),
         log = require('../../logger'),
         helpers = require('./helpers');
 
     var api = {
         initialize: function (table) {
-            return execute(configuration, statements.getColumns(table))
+            return columns.for(table)
                 .then(function (columns) {
                     if(columns.length === 0)
                         return api.createTable(table)
@@ -41,7 +42,7 @@ module.exports = function (configuration) {
 
         updateSchema: function(table, item) {
             log.info('Updating schema for table ' + table.name);
-            return execute(configuration, statements.getColumns(table))
+            return columns.for(table)
                 .then(function (columns) {
                     return execute(configuration, statements.updateSchema(table, columns, item));
                 })
@@ -76,7 +77,7 @@ module.exports = function (configuration) {
         },
 
         get: function (table) {
-            return execute(configuration, statements.getColumns(table)).then(function (columns) {
+            return columns.for(table).then(function (columns) {
                 return {
                     name: table.name,
                     properties: columns.map(function (column) {

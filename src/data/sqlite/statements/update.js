@@ -52,7 +52,7 @@ module.exports = function (table, item, query) {
     var selectStatement = {
         sql: _.sprintf("SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql),
         parameters: selectParameters,
-        transform: helpers.transforms.prepareItems
+        transform: helpers.transforms.prepareItems(table)
     };
 
     return [updateStatement, countStatement, selectStatement];

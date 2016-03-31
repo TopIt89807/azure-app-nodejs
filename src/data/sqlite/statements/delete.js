@@ -11,12 +11,13 @@ module.exports = function (table, query, version) {
         filterClause = format.filter(queries.toOData(query)),
         deleteStmt = {
             sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql + ';',
-            parameters: helpers.mapParameters(filterClause.parameters)
+            parameters: helpers.mapParameters(filterClause.parameters),
+            // transform: helpers.transforms.ignoreResults
         },
         selectStmt = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql + ";",
             parameters: helpers.mapParameters(filterClause.parameters),
-            transform: helpers.transforms.prepareItems
+            transform: helpers.transforms.prepareItems(table)
         },
         countStmt = {
             sql: "SELECT changes() AS recordsAffected;",

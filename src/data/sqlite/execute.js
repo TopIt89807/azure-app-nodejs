@@ -30,7 +30,8 @@ module.exports = function (config, statements, transaction) {
             if(statement.parameters.constructor === Array)
                 statement = {
                     sql: statement.sql,
-                    parameters: helpers.mapParameters(statement.parameters)
+                    parameters: helpers.mapParameters(statement.parameters),
+                    transform: statement.transform
                 };
 
             // SQLite expects the '@' symbol prefix for each parameter

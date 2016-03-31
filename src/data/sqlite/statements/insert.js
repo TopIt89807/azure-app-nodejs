@@ -28,6 +28,6 @@ module.exports = function (table, item) {
         parameters: parameters
     }, {
         sql: _.sprintf("SELECT * FROM %s WHERE [rowid] = last_insert_rowid();", tableName),
-        transform: helpers.transforms.prepareItems
+        transform: helpers.transforms.prepareItems(table)
     }];
 }
