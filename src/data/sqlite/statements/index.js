@@ -8,7 +8,6 @@ module.exports = {
     read: require('./read'),
     truncate: require('./truncate'),
     createTable: require('./createTable'),
-    getColumns: require('./getColumns'),
     updateSchema: require('./updateSchema'),
     undelete: require('./undelete'),
     createIndex: require('./createIndex'),

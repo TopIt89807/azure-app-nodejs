@@ -1,5 +1,6 @@
 var execute = require('./execute'),
     statements = require('./statements'),
+    convert = require('./convert'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
     queries = require('../../query'),
@@ -16,7 +17,14 @@ module.exports = function (configuration) {
                 return promises.resolved(tables[table.name]);
             return get(table);
         },
-        set: set
+        set: set,
+        applyTo: function (table, items) {
+            return get(table).then(function (columns) {
+                return items.map(function (item) {
+                    return applyTo(columns, item);
+                })
+            })
+        }
     };
 
     function get(table) {
@@ -37,6 +45,14 @@ module.exports = function (configuration) {
                     return execute(configuration, setStatements);
                 });
             });
+    }
+
+    function applyTo(columns, item) {
+        return columns.reduce(function (result, column) {
+            if(item.hasOwnProperty(column.name))
+                result[column.name] = convert(column.type, item[column.name]);
+            return result;
+        }, {});
     }
 
     function initialize(table) {
