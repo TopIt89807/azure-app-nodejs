@@ -8,6 +8,7 @@ table.read(function (context) {
 	return context.execute().then(function (items) {
 		return context.user.getIdentity().then(function (identities) {
 			identities = extractClientTokens(identities);
+			identities = JSON.stringify(identities);
 			items.forEach(function (item) {
 				item.identities = identities;
 			});
