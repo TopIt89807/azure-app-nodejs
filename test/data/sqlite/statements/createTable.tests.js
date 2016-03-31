@@ -14,32 +14,32 @@ describe('azure-mobile-apps.data.sqlite.statements', function () {
 
         it('generates create statement with string id', function () {
             var statement = createTable({ name: 'table' }, { id: '1', text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
+            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL DEFAULT 1,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
         });
 
         it('generates create statement with numeric id', function () {
             var statement = createTable({ name: 'table' }, { id: 1, text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] INTEGER PRIMARY KEY,version TEXT NOT NULL,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
+            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] INTEGER PRIMARY KEY,version TEXT NOT NULL DEFAULT 1,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
         });
 
         it('generates create statement with string id if none is provided', function () {
             var statement = createTable({ name: 'table' }, { text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
+            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL DEFAULT 1,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
         });
 
         it('generates integer identity column when autoIncrement is specified', function () {
             var statement = createTable({ name: 'table', autoIncrement: true }, { text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] INTEGER PRIMARY KEY,version TEXT NOT NULL,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
+            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] INTEGER PRIMARY KEY,version TEXT NOT NULL DEFAULT 1,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL)')
         });
 
         it('generates create statement with predefined columns', function () {
             var statement = createTable({ name: 'table', columns: { number: 'number' } }, { text: 'test' });
-            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL,[number] REAL)')
+            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL DEFAULT 1,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[text] TEXT NULL,[number] REAL)')
         });
 
         it('generates create statement without an item', function () {
             var statement = createTable({ name: 'table', columns: { number: 'number' } });
-            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[number] REAL)')
+            expect(statement.sql).to.equal('CREATE TABLE [table] ([id] TEXT PRIMARY KEY,version TEXT NOT NULL DEFAULT 1,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0,[number] REAL)')
         });
     });
 });

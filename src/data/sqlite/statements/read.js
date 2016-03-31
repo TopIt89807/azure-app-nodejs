@@ -24,7 +24,7 @@ module.exports = function (source, tableConfig) {
     function transformResult(results) {
         log.silly('Read query returned ' + results[0].length + ' results');
 
-        var finalResults = helpers.transforms.translateVersion(results[0]);
+        var finalResults = results[0];
 
         // if there is more than one result set, total count is the second query
         if(results.length > 1)

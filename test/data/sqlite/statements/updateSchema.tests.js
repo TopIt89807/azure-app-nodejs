@@ -19,12 +19,12 @@ describe('azure-mobile-apps.data.sqlite.statements', function () {
 
         it('generates system properties if missing', function () {
             var statement = updateSchema({ name: 'table' }, [{ name: 'id' }], { id: 1, text: 'test' });
-            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] TEXT NULL,version TEXT NOT NULL,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0');
+            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] TEXT NULL,version TEXT NOT NULL DEFAULT 1,createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,deleted INTEGER NOT NULL DEFAULT 0');
         });
 
         it('correctly handles missing system properties that exist in item', function () {
             var statement = updateSchema({ name: 'table' }, [{ name: 'id' }, { name: 'createdAt' }, { name: 'updatedAt' }, { name: 'deleted' }], { id: 1, text: 'test', version: 'someVersion' });
-            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] TEXT NULL,version TEXT NOT NULL');
+            expect(statement.sql).to.equal('ALTER TABLE [table] ADD [text] TEXT NULL,version TEXT NOT NULL DEFAULT 1');
         });
 
         it('generates statement for predefined columns', function () {

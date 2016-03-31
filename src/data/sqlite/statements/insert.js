@@ -23,16 +23,11 @@ module.exports = function (table, item) {
         ? _.sprintf("INSERT INTO %s (%s) VALUES (%s);", tableName, columnNames.join(','), valueParams.join(','))
         : _.sprintf("INSERT INTO %s DEFAULT VALUES;", tableName)
 
-
-    function transformResult(results) {
-        return helpers.transforms.translateVersion(results[0]);
-    }
-
     return [{
         sql: sql,
-        parameters: parameters,
-        transform: transformResult
+        parameters: parameters
     }, {
-        sql: _.sprintf("SELECT * FROM %s WHERE [rowid] = last_insert_rowid();", tableName)
+        sql: _.sprintf("SELECT * FROM %s WHERE [rowid] = last_insert_rowid();", tableName),
+        transform: helpers.transforms.prepareItems
     }];
 }
