@@ -7,7 +7,7 @@ var sqlite3 = require('sqlite3'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
     errors = require('../../utilities/errors'),
-    errorCodes = require('./errorCodes'),
+    errorTypes = require('./errorTypes'),
     log = require('../../logger'),
     connection;
 
@@ -44,20 +44,22 @@ module.exports = function (config, statements, transaction) {
 
         return promises.create(function (resolve, reject) {
             (transaction || connection).all(statement.sql, parameters, function (err, rows) {
-                if(err) {
-                    log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
+                try {
+                    if(err) {
+                        log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
-                    // console.dir(err)
-                    //
-                    // if(err.number === errorCodes.UniqueConstraintViolation)
-                    //     reject(errors.duplicate('An item with the same ID already exists'));
-                    //
-                    // if(err.number === errorCodes.InvalidDataType)
-                    //     reject(errors.badRequest('Invalid data type provided'));
+                        if(errorTypes.isUniqueViolation(err))
+                            reject(errors.duplicate('An item with the same ID already existsc'));
 
+                        if(errorTypes.isInvalidDataType(err))
+                            reject(errors.badRequest('Invalid data type provided'));
+
+                        reject(err);
+                    } else {
+                        resolve(statement.transform ? statement.transform(rows) : rows);
+                    }
+                } catch(err) {
                     reject(err);
-                } else {
-                    resolve(statement.transform ? statement.transform(rows) : rows);
                 }
             });
         });

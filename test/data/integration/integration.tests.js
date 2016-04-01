@@ -79,17 +79,15 @@ describe('azure-mobile-apps.data.integration', function () {
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         });
 
-        return operations.initialize().then(function () {
-            var item = { id: '1', string: 'test', bool: true, number: 1.1 };
-            return insert(item)
-                .then(function () {
-                    return del('1');
-                })
-                .then(function (results) {
-                    expect(results).to.containSubset(item);
-                    return expect(del('1')).to.be.rejectedWith('No records were updated');
-                });
-        });
+        var item = { id: '1', string: 'test', bool: true, number: 1.1 };
+        return insert(item)
+            .then(function () {
+                return del('1');
+            })
+            .then(function (results) {
+                expect(results).to.containSubset(item);
+                return expect(del('1')).to.be.rejectedWith('No records were updated');
+            });
     });
 
     it("handles large numeric values", function () {

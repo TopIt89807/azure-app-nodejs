@@ -12,7 +12,7 @@ module.exports = function (table, query, version) {
         deleteStmt = {
             sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql + ';',
             parameters: helpers.mapParameters(filterClause.parameters),
-            // transform: helpers.transforms.ignoreResults
+            transform: helpers.transforms.ignoreResults
         },
         selectStmt = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql + ";",

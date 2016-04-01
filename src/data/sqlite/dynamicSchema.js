@@ -5,7 +5,7 @@ var execute = require('./execute'),
     promises = require('../../utilities/promises'),
     schemas = require('./schema'),
     columns = require('./columns'),
-    errorCodes = require('./errorCodes');
+    errorTypes = require('./errorTypes');
 
 module.exports = function (table) {
     var api = {
@@ -24,24 +24,24 @@ module.exports = function (table) {
                 if (attempt >= 3)
                     return promises.rejected(err);
 
-                if(err.number === errorCodes.InvalidObjectName)
+                if(errorTypes.isMissingTable(err))
                     return schema.createTable(table, item).then(updateColumns);
-                if(err.number === errorCodes.InvalidColumnName)
+                if(errorTypes.isMissingColumn(err))
                     return schema.updateSchema(table, item).then(updateColumns);
+
                 return promises.rejected(err);
             }
 
             function updateColumns() {
                 return columns.set(table, item);
             }
-
         },
         read: function (config, statement) {
             return execute(config, statement)
                 .catch(function (err) {
                     // if dynamic schema is enabled and the error is invalid column, it is likely that the schema has not been
                     // updated to include the column. V1 behavior is to return an empty array, maintain this behavior.
-                    if((err.number === errorCodes.InvalidColumnName || err.number === errorCodes.InvalidObjectName)) {
+                    if(errorTypes.isMissingTable(err) || errorTypes.isMissingColumn(err)) {
                         var result = [];
                         return result;
                     }
