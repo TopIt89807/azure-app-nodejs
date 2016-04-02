@@ -37,6 +37,9 @@ module.exports = function (configuration) {
                 })
                 .then(function () {
                     return api.seedData(table);
+                })
+                .then(function () {
+                    return columns.set(table, item);
                 });
         },
 
@@ -48,6 +51,9 @@ module.exports = function (configuration) {
                 })
                 .then(function () {
                     return api.createIndexes(table);
+                })
+                .then(function () {
+                    return columns.set(table, item);
                 });
         },
 

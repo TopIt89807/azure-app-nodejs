@@ -5,12 +5,19 @@ var execute = require('./execute'),
     promises = require('../../utilities/promises'),
     queries = require('../../query'),
 
-    typesTable = { name: '__types' };
+    typesTable = { name: '__types' },
+    reservedColumns = {
+        id: 'string',
+        createdAt: 'date',
+        updatedAt: 'date',
+        version: 'string',
+        deleted: 'boolean'
+    };
 
 module.exports = function (configuration) {
     configuration = configuration || {};
 
-    return {
+    var api = {
         for: get,
         set: set,
         applyTo: function (table, items) {
@@ -20,19 +27,40 @@ module.exports = function (configuration) {
                 })
             })
         },
-        fromItem: function (item) {
-            return Object.keys(item).map(function (property) {
+        fromItem: function (table, item) {
+            item = item || {};
+            // add columns from item
+            var itemColumns = Object.keys(item).map(function (property) {
                 return { name: property, type: helpers.getSchemaType(item[property]) };
             });
+
+            // add predefined columns
+            if(table.columns)
+                Object.keys(table.columns).forEach(function (predefinedColumn) {
+                    itemColumns.push({ name: predefinedColumn, type: table.columns[predefinedColumn]});
+                });
+
+            // add reserved properties
+            Object.keys(reservedColumns).forEach(function (reservedColumn) {
+                if(!item.hasOwnProperty(reservedColumn))
+                    itemColumns.push({ name: reservedColumn, type: reservedColumns[reservedColumn] });
+            });
+
+            return itemColumns;
         }
     };
+
+    return api;
 
     function get(table) {
         if(table.sqliteColumns)
             return promises.resolved(table.sqliteColumns);
 
-        var query = queries.create(typesTable.name).select('name', 'type').where({ table: table.name });
-        return execute(configuration, statements.read(query, typesTable))
+        var query = queries.create(typesTable.name).select('name', 'type').where({ table: table.name }),
+            statement = statements.read(query, typesTable);
+        statement.transform = undefined;
+
+        return execute(configuration, statement)
             .then(function (columns) {
                 table.sqliteColumns = columns;
                 return columns;
@@ -44,7 +72,8 @@ module.exports = function (configuration) {
     }
 
     function set(table, item) {
-        var setStatements = statements.setColumns(table, item);
+        var itemColumns = api.fromItem(table, item),
+            setStatements = statements.setColumns(table, itemColumns);
         return execute(configuration, setStatements)
             .catch(function (error) {
                 return initialize(table).then(function () {
@@ -53,7 +82,7 @@ module.exports = function (configuration) {
                 });
             })
             .then(function (columns) {
-                table.sqliteColumns = columns;
+                table.sqliteColumns = itemColumns;
             });
     }
 

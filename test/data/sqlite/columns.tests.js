@@ -23,7 +23,12 @@ describe('azure-mobile-apps.data.sqlite.columns', function () {
                     { name: 'number', type: 'number' },
                     { name: 'string', type: 'string' },
                     { name: 'boolean', type: 'boolean' },
-                    { name: 'date', type: 'date' }
+                    { name: 'date', type: 'date' },
+                    { name: 'id', type: 'string' },
+                    { name: 'createdAt', type: 'date' },
+                    { name: 'updatedAt', type: 'date' },
+                    { name: 'version', type: 'string' },
+                    { name: 'deleted', type: 'boolean' }
                 ]);
             });
     });

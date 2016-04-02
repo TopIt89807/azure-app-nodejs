@@ -1,12 +1,11 @@
-var insert = require('./insert'),
-    helpers = require('../helpers');
+var insert = require('./insert');
 
-module.exports = function (table, item) {
-    var statements = Object.keys(item).map(function (property) {
+module.exports = function (table, itemColumns) {
+    var statements = itemColumns.map(function (column) {
         return insert({ name: '__types' }, {
             table: table.name,
-            name: property,
-            type: helpers.getSchemaType(item[property])
+            name: column.name,
+            type: column.type
         })[0];
     });
 

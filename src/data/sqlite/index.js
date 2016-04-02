@@ -37,13 +37,13 @@ module.exports = function (configuration) {
             },
             update: function (item, query) {
                 assert(item, 'An item to update was not provided');
-                return loadColumns(item).then(function () {
+                return loadColumns().then(function () {
                     return update(configuration, statements.update(table, item, query), item);
                 });
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');
-                return loadColumns(item).then(function () {
+                return loadColumns().then(function () {
                     item.id = item.id || uuid.v4();
                     return insert(configuration, statements.insert(table, item), item);
                 });
@@ -71,13 +71,9 @@ module.exports = function (configuration) {
             }
         };
 
-        function loadColumns(item) {
-            if(!table.sqliteColumns) {
-                if(item)
-                    table.sqliteColumns = columns.fromItem(item);
-                else
-                    return columns.for(table);
-            }
+        function loadColumns() {
+            if(!table.sqliteColumns)
+                return columns.for(table);
             return promises.resolved();
         }
     };
