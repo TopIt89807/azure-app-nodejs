@@ -2,7 +2,7 @@ module.exports = {
     stringId: function () {
         return movies.map(function (movie, index) {
             return {
-                id: 'Movie ' + ('000' + (index + 1)).slice(-4),
+                id: 'Movie ' + ('00' + (index)).slice(-3),
                 bestPictureWinner: movie.bestPictureWinner,
                 duration: movie.duration,
                 mpaaRating: movie.mpaaRating,
