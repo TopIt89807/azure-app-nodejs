@@ -2,8 +2,12 @@ var convert = module.exports = {
     value: function (type, value) {
         switch(type) {
             case 'boolean':
+                if(value === undefined || value === null)
+                    return value;
                 return !!value;
             case 'date':
+            if(value === undefined || value === null)
+                return value;
                 return new Date(value);
             default:
                 return value;
