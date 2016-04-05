@@ -6,7 +6,7 @@
     express = require('express'),
     mobileApps = require('../../../appFactory'),
     config = require('../../../appFactory').configuration,
-    data = require('../../../../src/data/mssql'),
+    data = require('../../../../src/data'),
     promises = require('../../../../src/utilities/promises'),
 
     app, mobileApp;
@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         });
 
         afterEach(function (done) {
-            data(config().data).execute({ sql: 'drop table initialize' }).then(done, done);
+            data(config()).execute({ sql: 'drop table initialize' }).then(function () { done(); }, done);
         });
 
         it('creates non-dynamic tables', function () {

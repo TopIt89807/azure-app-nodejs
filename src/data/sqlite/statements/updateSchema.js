@@ -10,9 +10,11 @@ module.exports = function (tableConfig, existingColumns, item) {
         newColumns = newColumnSql();
 
     if(newColumns.length > 0)
-        return {
-            sql: "ALTER TABLE " + tableName + " ADD " + newColumns.join(',')
-        };
+        return newColumns.map(function (column) {
+            return {
+                sql: "ALTER TABLE " + tableName + " ADD COLUMN " + column
+            };
+        });
     else
         return { noop: true };
 

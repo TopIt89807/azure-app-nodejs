@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 ﻿var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
-    data = require('../../../../src/data/mssql'),
+    data = require('../../../../src/data'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
     config = require('../../../appFactory').configuration,
@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.filters', function ()
     });
 
     afterEach(function (done) {
-        data(config().data).execute({ sql: 'drop table filters' }).then(done, done);
+        data(config()).execute({ sql: 'drop table filters' }).then(function () { done(); }, done);
     });
 
     it('allows filters on reads', function () {

@@ -5,7 +5,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    data = require('../../../../src/data/mssql'),
+    data = require('../../../../src/data'),
     config = require('../../../appFactory').configuration,
     promises = require('../../../../src/utilities/promises'),
 
@@ -18,7 +18,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', funct
     });
 
     afterEach(function (done) {
-        data(config().data).execute({ sql: 'drop table dynamic' }).then(done, done);
+        data(config()).execute({ sql: 'drop table dynamic' }).then(function () { done() }, done);
     });
 
     it('creates table and returns inserted records', function () {
@@ -46,10 +46,12 @@ describe('azure-mobile-apps.express.sql.integration.tables.dynamicSchema', funct
         return supertest(app)
             .post('/tables/dynamic')
             .send({ id: '1', string: 'one' })
+            .expect(201)
             .then(function () {
                 return supertest(app)
                     .post('/tables/dynamic')
-                    .send({ id: '2', string: 'two', bool: false, number: 2 });
+                    .send({ id: '2', string: 'two', bool: false, number: 2 })
+                    .expect(201);
             })
             .then(function () {
                 return supertest(app).get('/tables/dynamic');

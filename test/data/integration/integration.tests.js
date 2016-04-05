@@ -19,11 +19,7 @@ describe('azure-mobile-apps.data.integration', function () {
         operations.initialize().then(done, done);
     });
 
-    beforeEach(function (done) {
-        operations.truncate().then(done, done);
-    });
-
-    after(function (done) {
+    afterEach(function (done) {
         cleanUp(config, table).then(function (arg) { done() }, done);
     });
 
@@ -172,6 +168,20 @@ describe('azure-mobile-apps.data.integration', function () {
             })
             .then(function (deleted) {
                 expect(deleted.length).to.equal(2);
+            });
+    });
+
+    it("handles multiple schema updates", function () {
+        return insert({ id: '1', p1: 1.1 })
+            .then(function () {
+                return insert({ id: '2', p1: 2.2, p2: 'test2', p3: false })
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results).to.containSubset([
+                    { id: '1', p1: 1.1, p2: null, p3: null },
+                    { id: '2', p1: 2.2, p2: 'test2', p3: false }
+                ]);
             });
     });
 
