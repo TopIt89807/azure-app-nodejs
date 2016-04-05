@@ -20,12 +20,12 @@ module.exports = function (configuration) {
         assert(table, 'A table was not specified');
 
         // set execute functions based on dynamic schema and operation
-        var read, update, insert;
+        var read, update, insert, del;
         if (table.dynamicSchema !== false) {
             read = dynamicSchema(table).read;
-            update = insert = dynamicSchema(table).execute;
+            update = insert = del = dynamicSchema(table).execute;
         } else {
-            read = update = insert = execute;
+            read = update = insert = del = execute;
         }
 
         return {
@@ -51,13 +51,13 @@ module.exports = function (configuration) {
             delete: function (query, version) {
                 assert(query, 'The delete query was not provided');
                 return loadColumns().then(function () {
-                    return execute(configuration, statements.delete(table, query, version));
+                    return del(configuration, statements.delete(table, query, version));
                 });
             },
             undelete: function (query, version) {
                 assert(query, 'The undelete query was not provided');
                 return loadColumns().then(function () {
-                    return execute(configuration, statements.undelete(table, query, version));
+                    return del(configuration, statements.undelete(table, query, version));
                 });
             },
             truncate: function () {

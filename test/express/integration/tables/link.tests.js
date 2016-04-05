@@ -13,7 +13,7 @@
 describe('azure-mobile-apps.express.integration.tables.link', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ pageSize: 2 });
+        mobileApp = mobileApps({ pageSize: 2, data: { provider: 'memory' } });
     });
 
     it('adds Link header when top > pageSize & results.length === pageSize', function () {
