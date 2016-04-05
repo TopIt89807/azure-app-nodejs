@@ -36,10 +36,10 @@ module.exports = function (configuration) {
                     return api.createIndexes(table);
                 })
                 .then(function () {
-                    return api.seedData(table);
+                    return columns.set(table, item);
                 })
                 .then(function () {
-                    return columns.set(table, item);
+                    return api.seedData(table);
                 });
         },
 

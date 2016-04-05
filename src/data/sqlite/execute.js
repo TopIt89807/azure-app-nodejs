@@ -49,12 +49,13 @@ module.exports = function (config, statements, transaction) {
                         log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
                         if(errorTypes.isUniqueViolation(err))
-                            reject(errors.duplicate('An item with the same ID already existsc'));
+                            reject(errors.duplicate('An item with the same ID already exists'));
 
-                        if(errorTypes.isInvalidDataType(err))
+                        else if(errorTypes.isInvalidDataType(err))
                             reject(errors.badRequest('Invalid data type provided'));
 
-                        reject(err);
+                        else
+                            reject(err);
                     } else {
                         resolve(statement.transform ? statement.transform(rows) : rows);
                     }

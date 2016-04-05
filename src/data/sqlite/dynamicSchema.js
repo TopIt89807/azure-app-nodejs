@@ -25,15 +25,11 @@ module.exports = function (table) {
                     return promises.rejected(err);
 
                 if(errorTypes.isMissingTable(err))
-                    return schema.createTable(table, item).then(updateColumns);
+                    return schema.createTable(table, item);
                 if(errorTypes.isMissingColumn(err))
-                    return schema.updateSchema(table, item).then(updateColumns);
+                    return schema.updateSchema(table, item);
 
                 return promises.rejected(err);
-            }
-
-            function updateColumns() {
-                return columns.set(table, item);
             }
         },
         read: function (config, statement) {
