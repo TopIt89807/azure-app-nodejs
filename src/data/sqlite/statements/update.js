@@ -33,7 +33,8 @@ module.exports = function (table, item, query) {
 
     var updateStatement = {
         sql: _.sprintf("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql),
-        parameters: updateParameters
+        parameters: updateParameters,
+        transform: function () {}
     };
 
     if (versionValue) {

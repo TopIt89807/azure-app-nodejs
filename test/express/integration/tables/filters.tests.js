@@ -60,7 +60,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.filters', function ()
             .expect(200);
     });
 
-    it('allows filters on deletes and returns a 404 when filtered', function () {
+    it('applies filters to results of update operations', function () {
         return supertest(app)
             .delete('/tables/filters/1')
             .expect(200)
