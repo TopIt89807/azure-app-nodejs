@@ -40,6 +40,7 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
                 throw new Error('Record with mismatching version was updated');
             }, function (error) {
                 expect(error.concurrency).to.be.true;
+                expect(error.item).to.not.be.undefined;
             });
     });
 
@@ -72,6 +73,7 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
                 throw new Error('Record with mismatching version was deleted');
             }, function (error) {
                 expect(error.concurrency).to.be.true;
+                expect(error.item).to.not.be.undefined;
             });
     });
 
