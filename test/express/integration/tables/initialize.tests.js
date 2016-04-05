@@ -6,12 +6,12 @@
     express = require('express'),
     mobileApps = require('../../../appFactory'),
     config = require('../../../appFactory').configuration,
+    cleanUp = require('../../../data/' + config().data.provider + '/integration.cleanUp'),
     data = require('../../../../src/data'),
     promises = require('../../../../src/utilities/promises'),
 
     app, mobileApp;
 
-// the default configuration uses the in-memory data provider - it does not (yet) support queries
 describe('azure-mobile-apps.express.sql.integration.tables.initialize', function () {
     describe('basic initialization', function () {
         beforeEach(function () {
@@ -19,7 +19,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         });
 
         afterEach(function (done) {
-            data(config()).execute({ sql: 'drop table initialize' }).then(function () { done(); }, done);
+            cleanUp(config().data, { name: 'initialize' }).then(function () { done(); }, done);
         });
 
         it('creates non-dynamic tables', function () {
@@ -97,7 +97,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         }
 
         function drop(id) {
-            return data(config().data).execute({ sql: 'drop table table' + id });
+            return data(config()).execute({ sql: 'drop table table' + id });
         }
     })
 });
