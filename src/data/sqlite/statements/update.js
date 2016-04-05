@@ -4,6 +4,7 @@
 var helpers = require('../helpers'),
     format = require('azure-odata-sql').format,
     queries = require('../../../query'),
+    errors = require('../../../utilities/errors'),
     mssql = require('mssql'),
     _ = require('underscore.string');
 
@@ -12,7 +13,8 @@ module.exports = function (table, item, query) {
         setStatements = [],
         versionValue,
         filter = filterClause(),
-        updateParameters = helpers.mapParameters(filter.parameters);
+        updateParameters = helpers.mapParameters(filter.parameters),
+        recordsAffected;
 
     for (var property in item) {
         if(item.hasOwnProperty(property)) {
@@ -42,7 +44,10 @@ module.exports = function (table, item, query) {
 
     var countStatement = {
         sql: "SELECT changes() AS recordsAffected",
-        transform: helpers.transforms.checkConcurrency
+        transform: function (rows) {
+            // we need to attach the item to the error, so we can't use the standard transforms
+            recordsAffected = rows[0].recordsAffected;
+        }
     };
 
 
@@ -52,7 +57,15 @@ module.exports = function (table, item, query) {
     var selectStatement = {
         sql: _.sprintf("SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql),
         parameters: selectParameters,
-        transform: helpers.transforms.prepareItems(table)
+        transform: function (rows) {
+            var result = helpers.transforms.prepareItems(table)(rows);
+            if(recordsAffected === 0) {
+                var error = errors.concurrency('No records were updated');
+                error.item = result;
+                throw error;
+            }
+            return result;
+        }
     };
 
     return [updateStatement, countStatement, selectStatement];

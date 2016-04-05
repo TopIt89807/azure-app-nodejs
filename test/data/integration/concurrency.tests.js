@@ -38,7 +38,9 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
             })
             .then(function () {
                 throw new Error('Record with mismatching version was updated');
-            }, function () { });
+            }, function (error) {
+                expect(error.concurrency).to.be.true;
+            });
     });
 
     it('updates items with correct version', function () {
@@ -51,6 +53,16 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
             });
     });
 
+    it('updates version with greater value on update', function () {
+        return insert({ id: '1', value: 'test' })
+            .then(function (inserted) {
+                return update({ id: '1', value: 'test2', version: inserted.version })
+                    .then(function (updated) {
+                        expect(updated.version).to.be.greaterThan(inserted.version);
+                    });
+            });
+    });
+
     it('does not delete items with incorrect version', function () {
         return insert({ id: '1', value: 'test' })
             .then(function (inserted) {
@@ -58,7 +70,9 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
             })
             .then(function () {
                 throw new Error('Record with mismatching version was deleted');
-            }, function () { });
+            }, function (error) {
+                expect(error.concurrency).to.be.true;
+            });
     });
 
     it('deletes items with correct version', function () {
@@ -78,7 +92,9 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
             })
             .then(function () {
                 throw new Error('Succeeded inserting duplicate ID');
-            }, function () {});
+            }, function (error) {
+                expect(error.duplicate).to.be.true;
+            });
     });
 
     function read() {

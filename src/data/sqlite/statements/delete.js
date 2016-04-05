@@ -4,6 +4,7 @@
 var helpers = require('../helpers'),
     format = require('azure-odata-sql').format,
     queries = require('../../../query'),
+    errors = require('../../../utilities/errors'),
     mssql = require('mssql');
 
 module.exports = function (table, query, version) {
@@ -17,12 +18,23 @@ module.exports = function (table, query, version) {
         selectStmt = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
-            transform: helpers.transforms.prepareItems(table)
+            transform: function (rows) {
+                result = helpers.transforms.prepareItems(table)(rows);
+            }
         },
         countStmt = {
             sql: "SELECT changes() AS recordsAffected",
-            transform: helpers.transforms.checkConcurrency
-        };
+            transform: function (rows) {
+                if(rows[0].recordsAffected === 0) {
+                    var error = errors.concurrency('No records were updated');
+                    error.item = result;
+                    throw error;
+                }
+                return result;
+            }
+        },
+
+        result;
 
     if (table.softDelete)
         deleteStmt.sql = "UPDATE " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0";
