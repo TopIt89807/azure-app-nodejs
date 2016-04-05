@@ -40,7 +40,7 @@ module.exports = function () {
             hostnames: ['localhost']
         },
         data: {
-            provider: 'memory',
+            provider: 'sqlite',
             schema: 'dbo',
             dynamicSchema: true
         },

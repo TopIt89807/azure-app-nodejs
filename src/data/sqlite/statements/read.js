@@ -20,21 +20,26 @@ module.exports = function (source, tableConfig) {
     var statements = format(query, tableConfig);
     statements[0].transform = transformResult;
     statements[0].parameters = helpers.mapParameters(statements[0].parameters);
-    return statements.length === 1 ? statements[0] : statements;
+
+    // if we only got one statement, there is no count query, just return the select
+    if(statements.length === 1)
+        return statements[0];
+
+    // otherwise, attach the transform to the count query
+    statements[1].transform = transformCountQuery;
+    return statements;
+
+    var results;
 
     function transformResult(rows) {
         log.silly('Read query returned ' + rows.length + ' results');
-        return rows.map(function (row) {
+        results = rows.map(function (row) {
             return convert.item(tableConfig.sqliteColumns, row);
         });
+        return results;
+    }
 
-        //var finalResults = results[0];
-        //
-        // not sure yet......
-        // if there is more than one result set, total count is the second query
-        // if(results.length > 1)
-        //     finalResults.totalCount = results[1][0].count;
-        //
-        // return finalResults;
+    function transformCountQuery(rows) {
+        results.totalCount = rows[0].count;
     }
 };

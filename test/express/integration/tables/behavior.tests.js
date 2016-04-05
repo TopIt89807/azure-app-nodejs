@@ -10,10 +10,12 @@
     app, mobileApp;
 
 // the default configuration uses the in-memory data provider - it does not (yet) support queries
+// in fact, some of these now rely on the memory provider, otherwise there are conflicts
+// this should be cleaned up to match other integration tests, i.e. use proper provider, clean up table after each test
 describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps();
+        mobileApp = mobileApps({ data: { provider: 'memory' } });
     });
 
     it('returns 200 for table route', function () {
@@ -60,7 +62,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 400 when request size limit is exceeded', function () {
-        mobileApp = mobileApps({ maxTop: 1000});
+        mobileApp = mobileApps({ maxTop: 1000, data: { provider: 'memory' } });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -70,7 +72,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     });
 
     it('returns 200 when request size limit is set to 0', function () {
-        mobileApp = mobileApps({ maxTop: 0 });
+        mobileApp = mobileApps({ maxTop: 0, data: { provider: 'memory' } });
         mobileApp.tables.add('todoitem');
         app.use(mobileApp);
 
@@ -82,7 +84,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
     it('sets request size limit implicitly (query.take) to pageSize', function () {
         var table, query;
 
-        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true });
+        mobileApp = mobileApps({ pageSize: 40, skipVersionCheck: true, data: { provider: 'memory' } });
         table = mobileApp.table();
         table.read(function (context) {
             query = context.query.toOData();
