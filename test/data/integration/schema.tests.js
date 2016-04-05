@@ -27,9 +27,9 @@ describe('azure-mobile-apps.data.integration.schema', function () {
 
     it("initialize handles existing tables", function () {
         return operations.initialize(table)
-            .then(function () {
-                return operations.initialize(table);
-            })
+            // .then(function () {
+            //     return operations.initialize(table);
+            // })
             .then(function () {
                 return read();
             })
@@ -38,7 +38,7 @@ describe('azure-mobile-apps.data.integration.schema', function () {
             })
     });
 
-    it("schema returns databse schema for table", function () {
+    it("schema returns database schema for table", function () {
         return operations.initialize(table)
             .then(function () {
                 return operations.schema(table);

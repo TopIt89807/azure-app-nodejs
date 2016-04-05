@@ -10,22 +10,22 @@ module.exports = function (table, query, version) {
     var tableName = helpers.formatTableName(table.name),
         filterClause = format.filter(queries.toOData(query)),
         deleteStmt = {
-            sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql + ';',
+            sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
             transform: helpers.transforms.ignoreResults
         },
         selectStmt = {
-            sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql + ";",
+            sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
             transform: helpers.transforms.prepareItems(table)
         },
         countStmt = {
-            sql: "SELECT changes() AS recordsAffected;",
+            sql: "SELECT changes() AS recordsAffected",
             transform: helpers.transforms.checkConcurrency
         };
 
     if (table.softDelete)
-        deleteStmt.sql = "UPDATE " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0;";
+        deleteStmt.sql = "UPDATE " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0";
 
     if (version) {
         deleteStmt.sql += " AND [version] = @version";

@@ -66,8 +66,8 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
             .then(function (inserted) {
                 return del('1', inserted.version);
             })
-            .then(function () { }, function () {
-                throw new Error('Record with matching version was not deleted');
+            .then(function () { }, function (error) {
+                throw new Error('Record with matching version was not deleted: ' + error.message);
             });
     });
 
@@ -95,8 +95,8 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
 
     function del(id, version) {
         var query = queries.create('integration').where({ id: id });
-        if(version)
-            query.where({ version: version });
-        return operations.delete(query);
+        // if(version)
+        //     query.where({ version: version });
+        return operations.delete(query, version);
     }
 });
