@@ -12,6 +12,8 @@ module.exports = {
     undelete: require('./undelete'),
     createIndex: require('./createIndex'),
     createTrigger: require('./createTrigger'),
-    createColumnsTable: require('./createColumnsTable'),
-    setColumns: require('./setColumns')
+    columns: {
+        createTable: require('./columns.createTable'),
+        set: require('./columns.set')
+    }
 };
