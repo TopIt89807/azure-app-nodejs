@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
-    _ = require('underscore.string');
+    util = require('util');
 
 module.exports = function (table, item) {
     var tableName = helpers.formatTableName(table.name),
@@ -20,14 +20,14 @@ module.exports = function (table, item) {
     });
 
     var sql = columnNames.length > 0
-        ? _.sprintf("INSERT INTO %s (%s) VALUES (%s);", tableName, columnNames.join(','), valueParams.join(','))
-        : _.sprintf("INSERT INTO %s DEFAULT VALUES;", tableName)
+        ? util.format("INSERT INTO %s (%s) VALUES (%s);", tableName, columnNames.join(','), valueParams.join(','))
+        : util.format("INSERT INTO %s DEFAULT VALUES;", tableName)
 
     return [{
         sql: sql,
         parameters: parameters
     }, {
-        sql: _.sprintf("SELECT * FROM %s WHERE [rowid] = last_insert_rowid();", tableName),
+        sql: util.format("SELECT * FROM %s WHERE [rowid] = last_insert_rowid();", tableName),
         transform: helpers.transforms.prepareItems(table)
     }];
 }

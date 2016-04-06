@@ -5,7 +5,7 @@ var helpers = require('../helpers'),
     format = require('azure-odata-sql').format,
     queries = require('../../../query'),
     mssql = require('mssql'),
-    _ = require('underscore.string');
+    util = require('util');
 
 module.exports = function (table, item, query) {
     var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
@@ -27,7 +27,7 @@ module.exports = function (table, item, query) {
         }
     }
 
-    var sql = _.sprintf("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql);
+    var sql = util.format("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql);
     parameters.push({ name: 'id', type: helpers.getMssqlType(item.id, true), value: item.id });
     parameters.push.apply(parameters, filter.parameters);
 
@@ -36,7 +36,7 @@ module.exports = function (table, item, query) {
         parameters.push({ name: 'version', type: mssql.VarBinary, value: new Buffer(versionValue, 'base64') });
     }
 
-    sql += _.sprintf("; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql);
+    sql += util.format("; SELECT @@ROWCOUNT as recordsAffected; SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql);
 
     return {
         sql: sql,

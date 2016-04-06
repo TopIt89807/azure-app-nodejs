@@ -5,7 +5,7 @@ var helpers = require('../helpers'),
     format = require('azure-odata-sql').format,
     queries = require('../../../query'),
     errors = require('../../../utilities/errors'),
-    _ = require('underscore.string');
+    util = require('util');
 
 module.exports = function (table, item, query) {
     var tableName = helpers.formatTableName(table.name),
@@ -31,7 +31,7 @@ module.exports = function (table, item, query) {
     updateParameters.id = item.id;
 
     var updateStatement = {
-        sql: _.sprintf("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql),
+        sql: util.format("UPDATE %s SET %s WHERE [id] = @id%s", tableName, setStatements.join(','), filter.sql),
         parameters: updateParameters,
         transform: function () {}
     };
@@ -55,7 +55,7 @@ module.exports = function (table, item, query) {
     selectParameters.id = item.id;
 
     var selectStatement = {
-        sql: _.sprintf("SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql),
+        sql: util.format("SELECT * FROM %s WHERE [id] = @id%s", tableName, filter.sql),
         parameters: selectParameters,
         transform: function (rows) {
             var result = helpers.transforms.prepareItems(table)(rows);
