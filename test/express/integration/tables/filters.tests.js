@@ -6,7 +6,6 @@
     data = require('../../../../src/data'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    config = require('../../../appFactory').configuration,
 
     app, mobileApp;
 
@@ -18,9 +17,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.filters', function ()
         }, done);
     });
 
-    afterEach(function (done) {
-        data(config()).execute({ sql: 'drop table filters' }).then(function () { done(); }, done);
-    });
+    afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'filters' }));
 
     it('allows filters on reads', function () {
         return supertest(app)

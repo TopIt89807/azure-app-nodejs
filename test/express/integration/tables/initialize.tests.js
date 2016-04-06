@@ -5,9 +5,6 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    config = require('../../../appFactory').configuration,
-    cleanUp = require('../../../data/' + config().data.provider + '/integration.cleanUp'),
-    data = require('../../../../src/data'),
     promises = require('../../../../src/utilities/promises'),
 
     app, mobileApp;
@@ -18,9 +15,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
             setup({ string: 'string', number: 'number' });
         });
 
-        afterEach(function (done) {
-            cleanUp(config().data, { name: 'initialize' }).then(function () { done(); }, done);
-        });
+        afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'initialize' }));
 
         it('creates non-dynamic tables', function () {
             return supertest(app)
@@ -97,7 +92,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         }
 
         function drop(id) {
-            return data(config()).execute({ sql: 'drop table table' + id });
+            return mobileApps.cleanUp(mobileApps.configuration()).table({ name: 'table' + id });
         }
     })
 });

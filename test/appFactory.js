@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------
 var mobileApps = require('..'),
     loadConfiguration = require('../src/configuration'),
+    cleanUp = require('./cleanUp'),
 
     testDefaults = {
         skipVersionCheck: true,
@@ -39,5 +40,7 @@ api.ignoreCommandLine = function (configuration) {
         .object(configuration)
         .apply());
 };
+
+api.cleanUp = cleanUp;
 
 module.exports = api;
