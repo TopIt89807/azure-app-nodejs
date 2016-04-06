@@ -92,12 +92,12 @@ module.exports = function (configuration) {
             return columns.for(table).then(function (columns) {
                 return {
                     name: table.name,
-                    properties: columns.map(function (column) {
-                        return {
-                            name: column.name,
-                            type: helpers.getColumnTypeFromSqlType(column.type)
-                        };
-                    })
+                    properties: columns //.map(function (column) {
+                    //     return {
+                    //         name: column.name,
+                    //         type: helpers.getColumnTypeFromSqlType(column.type)
+                    //     };
+                    // })
                 };
             });
         }

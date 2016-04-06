@@ -22,12 +22,14 @@ module.exports = function (configuration) {
                     'number': 'number',
                     'string': 'string',
                     'boolean': 'boolean',
+                    'date': 'string',
                     'datetime': 'string'
                 })[property.type],
                 format: ({
                     'number': 'float',
                     'string': undefined,
                     'boolean': undefined,
+                    'date': 'date-time',
                     'datetime': 'date-time'
                 })[property.type],
                 // not sure why this is causing validation failures

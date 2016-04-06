@@ -4,15 +4,14 @@
 var expect = require('chai').use(require('chai-subset')).expect,
     request = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../appFactory').ignoreEnvironment,
-    data = require('../../../src/data/mssql'),
+    mobileApps = require('../../appFactory'),
     queries = require('../../../src/query'),
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.api', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps();
+        mobileApp = mobileApps({ data: { provider: 'memory' } });
     });
 
     it('exposes data access object through request object', function () {
