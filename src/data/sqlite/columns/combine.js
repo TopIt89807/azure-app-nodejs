@@ -13,12 +13,21 @@ module.exports = function (existingColumns, table, item) {
         return { name: column, type: helpers.getColumnTypeFromValue(item[column]) };
     });
 
+    // these are in order of precedence
+    addAutoIncrementId();
     addFromArray(existingColumns);
     addFromObject(table.columns);
     addFromArray(itemColumns);
     addFromObject(reservedColumns());
 
     return columns;
+
+    function addAutoIncrementId() {
+        if(table.autoIncrement) {
+            columns.push({ name: 'id', type: 'number' });
+            added.id = true;
+        }
+    }
 
     function addFromArray(source) {
         source.forEach(function (column) {
