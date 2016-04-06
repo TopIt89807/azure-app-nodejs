@@ -27,29 +27,8 @@ module.exports = function (configuration) {
                 })
             })
         },
-        fromItem: function (table, item) {
-            item = item || {};
-            // add columns from item
-            var itemColumns = Object.keys(item).map(function (property) {
-                return { name: property, type: helpers.getSchemaType(item[property]) };
-            });
-
-            // add predefined columns
-            if(table.columns)
-                Object.keys(table.columns).forEach(function (predefinedColumn) {
-                    itemColumns.push({ name: predefinedColumn, type: table.columns[predefinedColumn]});
-                });
-
-            // add reserved properties
-            Object.keys(reservedColumns).forEach(function (reservedColumn) {
-                if(!item.hasOwnProperty(reservedColumn))
-                    itemColumns.push({ name: reservedColumn, type: reservedColumns[reservedColumn] });
-            });
-
-            return itemColumns;
-        }
+        fromItem: createColumnList
     };
-
     return api;
 
     function get(table) {
@@ -72,9 +51,14 @@ module.exports = function (configuration) {
     }
 
     function set(table, item) {
-        var itemColumns = api.fromItem(table, item),
-            setStatements = statements.setColumns(table, itemColumns);
-        return execute(configuration, setStatements)
+        var itemColumns, setStatements;
+
+        return get(table)
+            .then(function (existingColumns) {
+                itemColumns = createColumnList(item, table, existingColumns);
+                setStatements = statements.setColumns(table, itemColumns, existingColumns);
+                return execute(configuration, setStatements)
+            })
             .catch(function (error) {
                 return initialize(table).then(function () {
                     // if we fail this time, we're borked
@@ -88,5 +72,44 @@ module.exports = function (configuration) {
 
     function initialize(table) {
         return execute(configuration, statements.createColumnsTable(table));
+    }
+
+    function createColumnList(item, table, existingColumns) {
+        var columns = [],
+            added = {};
+
+        item = item || {};
+        table = table || {};
+        existingColumns = existingColumns || [];
+
+        // map out columns from item
+        var itemColumns = Object.keys(item).map(function (property) {
+            return { name: property, type: helpers.getSchemaType(item[property]) };
+        });
+
+        // add existing columns and columns from item
+        existingColumns.concat(itemColumns).forEach(function (column) {
+            if(!added[column.name])
+                columns.push({
+                    name: column.name,
+                    type: (table.columns && table.columns[column.name]) || column.type
+                });
+            added[column.name] = true;
+        });
+
+        // add predefined columns
+        if(table.columns)
+            Object.keys(table.columns).forEach(function (predefinedColumn) {
+                if(!added[predefinedColumn])
+                    columns.push({ name: predefinedColumn, type: table.columns[predefinedColumn]});
+            });
+
+        // add reserved properties
+        Object.keys(reservedColumns).forEach(function (reservedColumn) {
+            if(!added[reservedColumn])
+                columns.push({ name: reservedColumn, type: reservedColumns[reservedColumn] });
+        });
+
+        return columns;
     }
 };
