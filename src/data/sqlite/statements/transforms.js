@@ -1,8 +1,7 @@
 ﻿// ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var errors = require('../../../utilities/errors'),
-    convert = require('../convert');
+var convert = require('../convert');
 
 module.exports = {
     prepareItems: function(table) {

@@ -8,8 +8,7 @@ module.exports = function (configuration) {
         dynamicSchema = require('./dynamicSchema'),
         columns = require('./columns')(configuration),
         promises = require('../../utilities/promises'),
-        log = require('../../logger'),
-        helpers = require('./helpers');
+        log = require('../../logger');
 
     var api = {
         initialize: function (table) {

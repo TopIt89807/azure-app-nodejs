@@ -5,7 +5,6 @@ var helpers = require('../helpers'),
     format = require('azure-odata-sql').format,
     queries = require('../../../query'),
     errors = require('../../../utilities/errors'),
-    mssql = require('mssql'),
     _ = require('underscore.string');
 
 module.exports = function (table, item, query) {

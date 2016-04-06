@@ -4,7 +4,6 @@
 var execute = require('./execute'),
     promises = require('../../utilities/promises'),
     schemas = require('./schema'),
-    columns = require('./columns'),
     errorTypes = require('./errorTypes');
 
 module.exports = function (table) {

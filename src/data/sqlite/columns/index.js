@@ -2,10 +2,7 @@ var combine = require('./combine'),
     execute = require('../execute'),
     statements = require('../statements'),
     convert = require('../convert'),
-    promises = require('../../../utilities/promises'),
-    queries = require('../../../query'),
-
-    typesTable = { name: '__types' };
+    promises = require('../../../utilities/promises');
 
 module.exports = function (configuration) {
     configuration = configuration || {};

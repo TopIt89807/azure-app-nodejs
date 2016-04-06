@@ -4,10 +4,9 @@
 
 var types = require('../../utilities/types'),
     strings = require('../../utilities/strings'),
-    transforms = require('./statements/transforms'),
-    mssql = require('mssql');
+    transforms = require('./statements/transforms');
 
-var helpers = module.exports = {
+module.exports = {
     transforms: transforms,
 
     mapParameters: function (parameters) {

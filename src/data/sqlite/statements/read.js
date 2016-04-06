@@ -8,6 +8,8 @@ var queries = require('../../../query'),
     helpers = require('../helpers');
 
 module.exports = function (source, tableConfig) {
+    var results;
+
     // this is not great, affects original object
     tableConfig.flavor = 'sqlite';
 
@@ -28,8 +30,6 @@ module.exports = function (source, tableConfig) {
     // otherwise, attach the transform to the count query
     statements[1].transform = transformCountQuery;
     return statements;
-
-    var results;
 
     function transformResult(rows) {
         log.silly('Read query returned ' + rows.length + ' results');

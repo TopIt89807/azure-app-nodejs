@@ -4,12 +4,12 @@
 var helpers = require('../helpers'),
     format = require('azure-odata-sql').format,
     queries = require('../../../query'),
-    errors = require('../../../utilities/errors'),
-    mssql = require('mssql');
+    errors = require('../../../utilities/errors');
 
 module.exports = function (table, query, version) {
     var tableName = helpers.formatTableName(table.name),
         filterClause = format.filter(queries.toOData(query)),
+        result,
         deleteStmt = {
             sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
@@ -32,9 +32,7 @@ module.exports = function (table, query, version) {
                 }
                 return result;
             }
-        },
-
-        result;
+        };
 
     if (table.softDelete)
         deleteStmt.sql = "UPDATE " + tableName + " SET [deleted] = 1 WHERE " + filterClause.sql + " AND [deleted] = 0";

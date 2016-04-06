@@ -9,6 +9,7 @@ var helpers = require('../helpers'),
 module.exports = function (table, query, version) {
     var tableName = helpers.formatTableName(table.name),
         filterClause = format.filter(queries.toOData(query)),
+        recordsAffected,
         undeleteStatement = {
             sql: "UPDATE " + tableName + " SET deleted = 0 WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters)
@@ -31,9 +32,7 @@ module.exports = function (table, query, version) {
                 }
                 return result;
             }
-        },
-
-        recordsAffected;
+        };
 
     if (version) {
         undeleteStatement.sql += " AND [version] = @version";
