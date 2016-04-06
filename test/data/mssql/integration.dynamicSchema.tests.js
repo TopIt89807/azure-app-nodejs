@@ -11,6 +11,7 @@ var config = require('../../appFactory').configuration().data,
     expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect,
     table = { name: 'dynamicSchema' };
 
+// these tests rely on specific queries like getColumns and getIndexes from the mssql provider
 if(config.provider === 'mssql') {
     describe('azure-mobile-apps.data.mssql.integration.dynamicSchema', function () {
         afterEach(function (done) {
