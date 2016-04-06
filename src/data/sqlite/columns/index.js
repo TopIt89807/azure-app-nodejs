@@ -32,7 +32,7 @@ module.exports = function (configuration) {
         if(table.sqliteColumns)
             return promises.resolved(table.sqliteColumns);
 
-        var statement = { sql: "SELECT name, type FROM __types" };
+        var statement = { sql: "SELECT [name], [type] FROM [__types] WHERE [table] = @table", parameters: { table: table.name } };
 
         return execute(configuration, statement)
             .then(function (columns) {

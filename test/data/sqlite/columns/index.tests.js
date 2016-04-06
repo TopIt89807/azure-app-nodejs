@@ -17,9 +17,12 @@ describe('azure-mobile-apps.data.sqlite.columns', function () {
         });
 
         it("returns set columns", function () {
-            return columns().set({ name: 'columns' }, tableColumns)
+            return columns().set({ name: 'columns1' }, tableColumns)
                 .then(function () {
-                    return columns().for({ name: 'columns' });
+                    return columns().set({ name: 'columns2' }, tableColumns)
+                })
+                .then(function () {
+                    return columns().for({ name: 'columns1' });
                 })
                 .then(function (results) {
                     expect(results).to.deep.equal(tableColumns);

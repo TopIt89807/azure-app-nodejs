@@ -20,10 +20,10 @@ module.exports = function (existingColumns, table, item) {
         return { name: property, type: helpers.getColumnTypeFromValue(item[property]) };
     });
 
-    addFromObject(reservedColumns);
     addFromArray(existingColumns);
     addFromObject(table.columns);
     addFromArray(itemColumns);
+    addFromObject(reservedColumns);
 
     return columns;
 
