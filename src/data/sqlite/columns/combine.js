@@ -1,11 +1,4 @@
-var helpers = require('../helpers'),
-    reservedColumns = {
-        id: 'string',
-        createdAt: 'date',
-        updatedAt: 'date',
-        version: 'string',
-        deleted: 'boolean'
-    };
+var helpers = require('../helpers');
 
 module.exports = function (existingColumns, table, item) {
     var columns = [],
@@ -16,14 +9,14 @@ module.exports = function (existingColumns, table, item) {
     existingColumns = existingColumns || [];
 
     // map out columns from item
-    var itemColumns = Object.keys(item).map(function (property) {
-        return { name: property, type: helpers.getColumnTypeFromValue(item[property]) };
+    var itemColumns = Object.keys(item).map(function (column) {
+        return { name: column, type: helpers.getColumnTypeFromValue(item[column]) };
     });
 
     addFromArray(existingColumns);
     addFromObject(table.columns);
     addFromArray(itemColumns);
-    addFromObject(reservedColumns);
+    addFromObject(reservedColumns());
 
     return columns;
 
@@ -42,5 +35,15 @@ module.exports = function (existingColumns, table, item) {
                     columns.push({ name: sourceColumn, type: source[sourceColumn] });
                 added[sourceColumn] = true;
             });
+    }
+
+    function reservedColumns() {
+        return {
+            id: table.autoIncrement ? 'number' : 'string',
+            createdAt: 'date',
+            updatedAt: 'date',
+            version: 'string',
+            deleted: 'boolean'
+        };
     }
 }
