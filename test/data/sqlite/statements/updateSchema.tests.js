@@ -10,47 +10,32 @@ var expect = require("chai").use(require("chai-subset")).expect,
 
 describe("azure-mobile-apps.data.sqlite.statements", function () {
     describe("updateSchema", function () {
-        var updateSchema = statements.updateSchema;
+        var updateSchema = statements.updateSchema,
+            table = { name: 'table' },
+            base = [
+                { name: 'id', type: 'string' },
+                { name: 'createdAt', type: 'date' },
+                { name: 'updatedAt', type: 'date' },
+                { name: 'version', type: 'string' },
+                { name: 'deleted', type: 'boolean' }
+            ];
 
-        it("generates simple statement", function () {
-            var statement = updateSchema({ name: "table" }, [{ name: "id" }, { name: "version" }, { name: "createdAt" }, { name: "updatedAt" }, { name: "deleted" }], { id: 1, text: "test" });
-            expect(statement).to.containSubset([{ sql: "ALTER TABLE [table] ADD COLUMN [text] TEXT NULL" }]);
+        it("generates noop if no new columns are specified", function () {
+            var statement = updateSchema(table, base, base);
+            expect(statement.noop).to.be.true;
+        })
+
+        it("generates single statement", function () {
+            var statement = updateSchema(table, base, base.concat({ name: 'text', type: 'string' }));
+            expect(statement.length).to.equal(1);
+            expect(statement[0].sql).to.equal("ALTER TABLE [table] ADD COLUMN [text] TEXT NULL");
         });
 
-        it("generates system properties if missing", function () {
-            var statement = updateSchema({ name: "table" }, [{ name: "id" }], { id: 1, text: "test" });
-            expect(statement).to.containSubset([
-                { sql: "ALTER TABLE [table] ADD COLUMN [text] TEXT NULL" },
-                { sql: "ALTER TABLE [table] ADD COLUMN version TEXT NOT NULL DEFAULT 1" },
-                { sql: "ALTER TABLE [table] ADD COLUMN createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" },
-                { sql: "ALTER TABLE [table] ADD COLUMN updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" },
-                { sql: "ALTER TABLE [table] ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0" }
-            ]);
-        });
-
-        it("correctly handles missing system properties that exist in item", function () {
-            var statement = updateSchema({ name: "table" }, [{ name: "id" }, { name: "createdAt" }, { name: "updatedAt" }, { name: "deleted" }], { id: 1, text: "test", version: "someVersion" });
-            expect(statement).to.containSubset([
-                { sql: "ALTER TABLE [table] ADD COLUMN [text] TEXT NULL" },
-                { sql: "ALTER TABLE [table] ADD COLUMN version TEXT NOT NULL DEFAULT 1" }
-            ]);
-        });
-
-        it("generates statement for predefined columns", function () {
-            var statement = updateSchema(
-                { name: "table", columns: { "text": "string" } },
-                [{ name: "id" }, { name: "createdAt" }, { name: "updatedAt" }, { name: "deleted" }, { name : "version" }],
-                { id: 1 }
-            );
-            expect(statement).to.containSubset([{ sql: "ALTER TABLE [table] ADD COLUMN [text] TEXT NULL" }]);
-        });
-
-        it("generates statement for predefined columns when item is not supplied", function () {
-            var statement = updateSchema(
-                { name: "table", columns: { "text": "string" } },
-                [{ name: "id" }, { name: "createdAt" }, { name: "updatedAt" }, { name: "deleted" }, { name : "version" }]
-            );
-            expect(statement).to.containSubset([{ sql: "ALTER TABLE [table] ADD COLUMN [text] TEXT NULL" }]);
-        });
+        it("generates multiple statements", function () {
+            var statement = updateSchema(table, base, base.concat([{ name: 'text', type: 'string' }, { name: 'completed', type: 'boolean' }]));
+            expect(statement.length).to.equal(2);
+            expect(statement[0].sql).to.equal("ALTER TABLE [table] ADD COLUMN [text] TEXT NULL");
+            expect(statement[1].sql).to.equal("ALTER TABLE [table] ADD COLUMN [completed] INTEGER NULL");
+        })
     });
 });

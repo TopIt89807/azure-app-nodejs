@@ -28,32 +28,38 @@ module.exports = function (configuration) {
 
         createTable: function(table, item) {
             log.info('Creating table ' + table.name);
-            return execute(configuration, statements.createTable(table, item))
-                .then(function () {
-                    return execute(configuration, statements.createTrigger(table));
-                })
-                .then(function () {
-                    return api.createIndexes(table);
-                })
-                .then(function () {
-                    return columns.set(table, item);
-                })
-                .then(function () {
-                    return api.seedData(table);
+            return columns.discover(table, item)
+                .then(function (tableColumns) {
+                    return execute(configuration, statements.createTable(table, tableColumns))
+                        .then(function () {
+                            return execute(configuration, statements.createTrigger(table));
+                        })
+                        .then(function () {
+                            return api.createIndexes(table);
+                        })
+                        .then(function () {
+                            return columns.set(table, tableColumns);
+                        })
+                        .then(function () {
+                            return api.seedData(table);
+                        });
                 });
         },
 
         updateSchema: function(table, item) {
             log.info('Updating schema for table ' + table.name);
             return columns.for(table)
-                .then(function (columns) {
-                    return execute(configuration, statements.updateSchema(table, columns, item));
-                })
-                .then(function () {
-                    return api.createIndexes(table);
-                })
-                .then(function () {
-                    return columns.set(table, item);
+                .then(function (existingColumns) {
+                    return columns.discover(table, item)
+                        .then(function (allColumns) {
+                            return execute(configuration, statements.updateSchema(table, existingColumns, allColumns))
+                                .then(function () {
+                                    return api.createIndexes(table);
+                                })
+                                .then(function () {
+                                    return columns.set(table, allColumns);
+                                });
+                        });
                 });
         },
 
@@ -89,7 +95,7 @@ module.exports = function (configuration) {
                     properties: columns.map(function (column) {
                         return {
                             name: column.name,
-                            type: helpers.getPredefinedType(column.type)
+                            type: helpers.getColumnTypeFromSqlType(column.type)
                         };
                     })
                 };

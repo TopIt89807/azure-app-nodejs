@@ -25,6 +25,16 @@ describe('azure-mobile-apps.data.sqlite.columns', function () {
                     expect(results).to.deep.equal(tableColumns);
                 });
         });
+
+        it("returns cached columns", function () {
+            return columns().set({ name: 'columns' }, tableColumns)
+                .then(function () {
+                    return columns().for({ name: 'columns', sqliteColumns: [ { name: 'string', type: 'string '}] });
+                })
+                .then(function (results) {
+                    expect(results).to.deep.equal([ { name: 'string', type: 'string '}]);
+                });
+        })
     });
 
     describe('applyTo', function () {

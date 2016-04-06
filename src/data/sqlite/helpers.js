@@ -58,39 +58,19 @@ var helpers = module.exports = {
         return '[' + memberName + ']';
     },
 
-    getSqlType: function (value, primaryKey) {
-        if(value === undefined || value === null)
-            throw new Error('Cannot create column for null or undefined value');
-
-        switch (value.constructor) {
-            case String:
-                // 900 bytes is the maximum length for a primary key - http://stackoverflow.com/questions/10555642/varcharmax-column-not-allowed-to-be-a-primary-key-in-sql-server
-                return "TEXT";
-            case Number:
-                return primaryKey ? "INTEGER" : "REAL";
-            case Boolean:
-                return "INTEGER";
-            case Date:
-                return "TEXT";
-            default:
-                throw new Error("Unable to map value " + value.toString() + " of type " + value.constructor.name + " to a SQL type.");
-        }
-    },
-
-    getSchemaType: function (value) {
+    getColumnTypeFromValue: function (value) {
         var type = value && value.constructor;
-        // we will attempt to support unknown types. Boolean and Date properties will suffer...
         if(!type || type === String || type === Number || type === Boolean || type === Date)
             return (value === undefined || value === null) ? 'unknown' : value.constructor.name.toLowerCase();
         throw new Error("Unsupported type: " + type.name);
     },
 
-    getPredefinedColumnType: function (value) {
+    getSqlTypeFromColumnType: function (value, primaryKey) {
         switch(value) {
             case 'string':
                 return 'TEXT';
             case 'number':
-                return 'REAL';
+                return primaryKey ? 'INTEGER' : 'REAL';
             case 'boolean':
             case 'bool':
                 return 'INTEGER';
@@ -102,7 +82,7 @@ var helpers = module.exports = {
         throw new Error('Unrecognised column type: ' + value);
     },
 
-    getPredefinedType: function (value) {
+    getColumnTypeFromSqlType: function (value) {
         switch(value.toLowerCase()) {
             case 'text':
                 return 'string';
@@ -122,13 +102,5 @@ var helpers = module.exports = {
             updatedAt: "updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))",
             deleted: "deleted INTEGER NOT NULL DEFAULT 0"
         }
-    },
-
-    getSystemProperties: function () {
-        return Object.keys(helpers.getSystemPropertiesDDL());
-    },
-
-    isSystemProperty: function (property) {
-        return helpers.getSystemProperties().some(function (systemProperty) { return property === systemProperty; });
-    },
+    }
 };

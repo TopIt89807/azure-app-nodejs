@@ -17,7 +17,7 @@ module.exports = function (existingColumns, table, item) {
 
     // map out columns from item
     var itemColumns = Object.keys(item).map(function (property) {
-        return { name: property, type: helpers.getSchemaType(item[property]) };
+        return { name: property, type: helpers.getColumnTypeFromValue(item[property]) };
     });
 
     addFromObject(reservedColumns);

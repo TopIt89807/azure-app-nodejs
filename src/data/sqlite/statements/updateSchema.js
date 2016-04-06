@@ -1,58 +1,31 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var helpers = require('../helpers'),
-    assign = require('deeply');
+var helpers = require('../helpers');
 
-module.exports = function (tableConfig, existingColumns, item) {
+module.exports = function (tableConfig, existingColumns, allColumns) {
     var tableName = helpers.formatTableName(tableConfig.name),
-        columns = assign(itemColumnsSql(), predefinedColumnsSql(), systemPropertiesSql()),
-        newColumns = newColumnSql();
+        newColumns = determineNewColumns();
 
     if(newColumns.length > 0)
         return newColumns.map(function (column) {
             return {
-                sql: "ALTER TABLE " + tableName + " ADD COLUMN " + column
+                sql: "ALTER TABLE " + tableName + " ADD COLUMN " + column + " NULL"
             };
         });
     else
         return { noop: true };
 
-    function newColumnSql() {
-        return Object.keys(columns).reduce(function (sql, property) {
-            if(!existingColumns.some(function (column) { return column.name.toLowerCase() === property })) {
-                existingColumns.push({ name: property });
-                sql.push(columns[property]);
-            }
-            return sql;
+    function determineNewColumns() {
+        var existingColumnHash = existingColumns.reduce(function (columns, column) {
+            columns[column.name] = column.type;
+            return columns;
+        }, {});
+
+        return allColumns.reduce(function (columns, column) {
+            if(!existingColumnHash[column.name])
+                columns.push(helpers.formatMember(column.name) + ' ' + helpers.getSqlTypeFromColumnType(column.type));
+            return columns;
         }, []);
-    }
-
-    function systemPropertiesSql() {
-        var columns = helpers.getSystemPropertiesDDL();
-        return Object.keys(columns).reduce(function (sql, column) {
-            sql[column.toLowerCase()] = columns[column];
-            return sql;
-        }, {});
-    }
-
-    function itemColumnsSql() {
-        if(!item)
-            return {};
-
-        return Object.keys(item).reduce(function (sql, property) {
-            if(item[property] !== null && item[property] !== undefined && property !== 'id' && !helpers.isSystemProperty(property))
-                sql[property.toLowerCase()] = '[' + property + '] ' + helpers.getSqlType(item[property]) + ' NULL';
-
-            return sql;
-        }, {});
-    }
-
-    function predefinedColumnsSql() {
-        if(!tableConfig.columns) return {};
-        return Object.keys(tableConfig.columns).reduce(function (sql, columnName) {
-            sql[columnName.toLowerCase()] = '[' + columnName + '] ' + helpers.getPredefinedColumnType(tableConfig.columns[columnName]) + ' NULL';
-            return sql;
-        }, {});
     }
 };
