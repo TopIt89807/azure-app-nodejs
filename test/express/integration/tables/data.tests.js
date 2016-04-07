@@ -9,7 +9,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
+describe('azure-mobile-apps.express.integration.tables.data', function () {
     beforeEach(function (done) {
         data(mobileApps.configuration())({
             name: 'integration',

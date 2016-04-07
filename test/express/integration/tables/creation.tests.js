@@ -16,7 +16,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
 
 // these currently only work for mssql
 if(config().data.provider === 'mssql') {
-    describe('azure-mobile-apps.express.sql.integration.tables.creation', function () {
+    describe('azure-mobile-apps.express.integration.tables.creation', function () {
         beforeEach(function () {
             app = express();
             mobileApp = mobileApps();

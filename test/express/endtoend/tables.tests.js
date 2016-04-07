@@ -8,7 +8,7 @@ var expect = require('chai').expect,
     data = require('../../../src/data'),
     config = require('../../appFactory').configuration();
 
-describe('azure-mobile-apps.express.sql.integration.endtoend.tables', function () {
+describe('azure-mobile-apps.express.integration.endtoend.tables', function () {
     beforeEach(dropTable);
     afterEach(dropTable);
 

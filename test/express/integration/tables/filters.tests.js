@@ -9,7 +9,7 @@
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.sql.integration.tables.filters', function () {
+describe('azure-mobile-apps.express.integration.tables.filters', function () {
     beforeEach(function (done) {
         app = express();
         mobileApp = createMobileApp().then(function () {

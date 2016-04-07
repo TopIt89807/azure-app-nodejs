@@ -9,7 +9,7 @@
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.sql.integration.tables.initialize', function () {
+describe('azure-mobile-apps.express.integration.tables.initialize', function () {
     describe('basic initialization', function () {
         beforeEach(function () {
             setup({ string: 'string', number: 'number' });
