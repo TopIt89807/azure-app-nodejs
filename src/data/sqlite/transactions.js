@@ -1,3 +1,7 @@
+﻿// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
+
 var promises = require('../../utilities/promises');
 
 module.exports = function (configuration, connection, statements) {
