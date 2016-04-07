@@ -77,13 +77,11 @@ For steps 4-5, you can use any of the clients found in the [Client & Server Quic
 
 ## Running Tests
 
-To run the suite of unit and integration tests, clone the github repository by running
+To run the suite of unit and integration tests, execute the following commands in a console window.
 
     git clone https://github.com/Azure/azure-mobile-apps-node.git
-
-and run the npm test script
-
     cd azure-mobile-apps-node
+    npm i
     npm test
 
 This runs tests using the default embedded SQLite data provider. To execute tests
