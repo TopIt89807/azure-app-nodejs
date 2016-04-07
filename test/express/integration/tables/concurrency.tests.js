@@ -5,20 +5,17 @@ var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    data = require('../../../../src/data/mssql'),
-    config = require('../../../appFactory').configuration,
+    data = require('../../../../src/data'),
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.sql.integration.tables.concurrency', function () {
+describe('azure-mobile-apps.express.integration.tables.concurrency', function () {
     beforeEach(function () {
         app = express();
         mobileApp = mobileApps();
     });
 
-    afterEach(function (done) {
-        data(config().data).execute({ sql: 'drop table concurrency' }).then(done, done);
-    });
+    afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'concurrency' }));
 
     it('returns 409 when version columns do not match', function () {
         mobileApp.tables.add('concurrency');

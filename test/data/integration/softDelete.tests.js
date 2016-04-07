@@ -2,19 +2,21 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var config = require('../../appFactory').configuration().data,
-    execute = require('../../../src/data/mssql/execute'),
-    index = require('../../../src/data/mssql'),
     queries = require('../../../src/query'),
-    expect = require('chai').expect,
-    operations;
+    expect = require('chai').expect;
 
-describe('azure-mobile-apps.data.sql.integration.softDelete', function () {
+describe('azure-mobile-apps.data.integration.softDelete', function () {
+    var index = require('../../../src/data/' + config.provider),
+        cleanUp = require('../' + config.provider + '/integration.cleanUp'),
+        table = { name: 'softDelete', softDelete: true },
+        operations;
+
     before(function () {
-        operations = index(config)({ name: 'softDelete', softDelete: true });
+        operations = index(config)(table);
     });
 
     afterEach(function (done) {
-        execute(config, { sql: 'drop table dbo.softDelete' }).then(done, done);
+        cleanUp(config, table).then(done, done);
     });
 
     it('deleted records are not returned with normal query', function () {

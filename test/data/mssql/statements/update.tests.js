@@ -9,7 +9,7 @@ var expect = require('chai').expect,
     queries = require('../../../../src/query'),
     statements = require('../../../../src/data/mssql/statements');
 
-describe('azure-mobile-apps.data.sql.statements', function () {
+describe('azure-mobile-apps.data.mssql.statements', function () {
     describe('update', function () {
         var update = statements.update;
 

@@ -2,19 +2,26 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var config = require('../../appFactory').configuration().data,
-    execute = require('../../../src/data/mssql/execute'),
-    index = require('../../../src/data/mssql'),
     queries = require('../../../src/query'),
-    expect = require('chai').expect,
-    operations;
+    expect = require('chai').expect;
 
-describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
-    before(function () {
-        operations = index(config)({ name: 'concurrency' });
+describe('azure-mobile-apps.data.integration.concurrency', function () {
+    var index = require('../../../src/data/' + config.provider),
+        cleanUp = require('../' + config.provider + '/integration.cleanUp'),
+        table = { name: 'concurrency' },
+        operations;
+
+    before(function (done) {
+        operations = index(config)(table);
+        operations.initialize().then(done, done);
     });
 
-    afterEach(function (done) {
-        execute(config, { sql: 'drop table dbo.concurrency' }).then(done, done);
+    beforeEach(function (done) {
+        operations.truncate().then(done, done);
+    });
+
+    after(function (done) {
+        cleanUp(config, table).then(done, done);
     });
 
     it('assigns value to version column', function () {
@@ -31,7 +38,10 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
             })
             .then(function () {
                 throw new Error('Record with mismatching version was updated');
-            }, function () { });
+            }, function (error) {
+                expect(error.concurrency).to.be.true;
+                expect(error.item).to.not.be.undefined;
+            });
     });
 
     it('updates items with correct version', function () {
@@ -44,6 +54,16 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
             });
     });
 
+    it('updates version with greater value on update', function () {
+        return insert({ id: '1', value: 'test' })
+            .then(function (inserted) {
+                return update({ id: '1', value: 'test2', version: inserted.version })
+                    .then(function (updated) {
+                        expect(updated.version).to.be.greaterThan(inserted.version);
+                    });
+            });
+    });
+
     it('does not delete items with incorrect version', function () {
         return insert({ id: '1', value: 'test' })
             .then(function (inserted) {
@@ -51,7 +71,10 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
             })
             .then(function () {
                 throw new Error('Record with mismatching version was deleted');
-            }, function () { });
+            }, function (error) {
+                expect(error.concurrency).to.be.true;
+                expect(error.item).to.not.be.undefined;
+            });
     });
 
     it('deletes items with correct version', function () {
@@ -59,8 +82,8 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
             .then(function (inserted) {
                 return del('1', inserted.version);
             })
-            .then(function () { }, function () {
-                throw new Error('Record with matching version was not deleted');
+            .then(function () { }, function (error) {
+                throw new Error('Record with matching version was not deleted: ' + error.message);
             });
     });
 
@@ -71,7 +94,9 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
             })
             .then(function () {
                 throw new Error('Succeeded inserting duplicate ID');
-            }, function () {});
+            }, function (error) {
+                expect(error.duplicate).to.be.true;
+            });
     });
 
     function read() {
@@ -88,8 +113,8 @@ describe('azure-mobile-apps.data.sql.integration.concurrency', function () {
 
     function del(id, version) {
         var query = queries.create('integration').where({ id: id });
-        if(version)
-            query.where({ version: version });
-        return operations.delete(query);
+        // if(version)
+        //     query.where({ version: version });
+        return operations.delete(query, version);
     }
 });

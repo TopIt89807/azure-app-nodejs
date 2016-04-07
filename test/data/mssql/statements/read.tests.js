@@ -5,7 +5,7 @@ var expect = require('chai').expect,
     queries = require('../../../../src/query'),
     statements = require('../../../../src/data/mssql/statements');
 
-describe('azure-mobile-apps.data.sql.statements', function () {
+describe('azure-mobile-apps.data.mssql.statements', function () {
     describe('read', function () {
         it("preserves simple statement", function () {
             var statement = statements.read(queries.create('table').where({ p1: 1 }), { name: 'table' });

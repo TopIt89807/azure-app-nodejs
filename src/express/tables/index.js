@@ -55,9 +55,9 @@ module.exports = function (configuration) {
     router.configuration = configuration.tables;
 
     router.initialize = function () {
-        return promises.all(Object.keys(configuration.tables).map(function (name) {
+        return promises.series(Object.keys(configuration.tables), function (name) {
             return dataProvider(configuration.tables[name]).initialize();
-        }));
+        });
     };
 
     return router;

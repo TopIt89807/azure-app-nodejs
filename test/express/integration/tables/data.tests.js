@@ -1,33 +1,27 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var expect = require('chai')
-        .use(require('chai-subset'))
-        .expect,
+var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    config = require('../../../appFactory').configuration,
-    data = require('../../../../src/data/mssql'),
+    data = require('../../../../src/data'),
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.sql.integration.tables.data', function () {
-    before(function (done) {
-        data(config().data)({
+describe('azure-mobile-apps.express.integration.tables.data', function () {
+    beforeEach(function (done) {
+        data(mobileApps.configuration())({
             name: 'integration',
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         }).initialize().then(done);
     });
 
-    after(function (done) {
-        data(config().data).execute({ sql: 'DROP TABLE integration' }).then(done);
-    });
+    afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'integration' }));
 
-    beforeEach(function (done) {
+    beforeEach(function () {
         app = express();
         mobileApp = mobileApps();
-        data(config().data)({ name: 'integration' }).truncate().then(done);
     });
 
     it('returns inserted records', function () {

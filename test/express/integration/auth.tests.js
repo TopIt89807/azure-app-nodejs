@@ -4,7 +4,7 @@
 var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
-    mobileApps = require('../../appFactory').ignoreEnvironment,
+    mobileApps = require('../../appFactory'),
     auth = require('../../../src/auth')({ secret: 'secret' }),
     secret = 'secret',
     token = auth.sign({ "sub": "Facebook:someuserid@hotmail.com" }),
@@ -16,7 +16,7 @@ var expect = require('chai').expect,
 describe('azure-mobile-apps.express.integration.auth', function () {
     beforeEach(function () {
         app = express();
-        mobileApp = mobileApps({ auth: { secret: secret, getIdentity: getIdentity } });
+        mobileApp = mobileApps({ auth: { secret: secret, getIdentity: getIdentity }, data: { provider: 'memory' } });
     });
 
     describe('when validating tokens', function () {

@@ -5,20 +5,17 @@ var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    data = require('../../../../src/data/mssql'),
-    config = require('../../../appFactory').configuration,
+    data = require('../../../../src/data'),
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.sql.integration.tables.softDelete', function () {
+describe('azure-mobile-apps.express.integration.tables.softDelete', function () {
     beforeEach(function () {
         app = express();
         mobileApp = mobileApps();
     });
 
-    afterEach(function (done) {
-        data(config().data).execute({ sql: 'drop table softDelete' }).then(done, done);
-    });
+    afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'softDelete' }));
 
     it('deleted records are not returned', function () {
         mobileApp.tables.add('softDelete', { softDelete: true });

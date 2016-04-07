@@ -5,22 +5,17 @@
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    config = require('../../../appFactory').configuration,
-    data = require('../../../../src/data/mssql'),
     promises = require('../../../../src/utilities/promises'),
 
     app, mobileApp;
 
-// the default configuration uses the in-memory data provider - it does not (yet) support queries
-describe('azure-mobile-apps.express.sql.integration.tables.initialize', function () {
+describe('azure-mobile-apps.express.integration.tables.initialize', function () {
     describe('basic initialization', function () {
         beforeEach(function () {
             setup({ string: 'string', number: 'number' });
         });
 
-        afterEach(function (done) {
-            data(config().data).execute({ sql: 'drop table initialize' }).then(done, done);
-        });
+        afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'initialize' }));
 
         it('creates non-dynamic tables', function () {
             return supertest(app)
@@ -97,7 +92,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.initialize', function
         }
 
         function drop(id) {
-            return data(config().data).execute({ sql: 'drop table table' + id });
+            return mobileApps.cleanUp(mobileApps.configuration()).table({ name: 'table' + id });
         }
     })
 });

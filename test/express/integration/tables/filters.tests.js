@@ -3,14 +3,13 @@
 // ----------------------------------------------------------------------------
 ﻿var expect = require('chai').use(require('chai-subset')).expect,
     supertest = require('supertest-as-promised'),
-    data = require('../../../../src/data/mssql'),
+    data = require('../../../../src/data'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
-    config = require('../../../appFactory').configuration,
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.sql.integration.tables.filters', function () {
+describe('azure-mobile-apps.express.integration.tables.filters', function () {
     beforeEach(function (done) {
         app = express();
         mobileApp = createMobileApp().then(function () {
@@ -18,9 +17,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.filters', function ()
         }, done);
     });
 
-    afterEach(function (done) {
-        data(config().data).execute({ sql: 'drop table filters' }).then(done, done);
-    });
+    afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'filters' }));
 
     it('allows filters on reads', function () {
         return supertest(app)
@@ -60,7 +57,7 @@ describe('azure-mobile-apps.express.sql.integration.tables.filters', function ()
             .expect(200);
     });
 
-    it('allows filters on deletes and returns a 404 when filtered', function () {
+    it('applies filters to results of update operations', function () {
         return supertest(app)
             .delete('/tables/filters/1')
             .expect(200)

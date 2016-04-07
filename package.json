@@ -12,7 +12,7 @@
     "lint": "jshint src",
     "jsdoc": "jsdoc -c jsdoc/config.json",
     "typedoc": "typedoc --out typings/doc typings --module commonjs --theme typings/theme --includeDeclarations",
-    "testCI": "mocha -g sql.integration --invert --timeout 10000",
+    "testCI": "mocha --timeout 10000",
     "travis": "npm run lint & npm run testCI"
   },
   "dependencies": {
@@ -26,8 +26,6 @@
     "mssql": "^2.1.5",
     "node-uuid": "^1.4.3",
     "query.js": "git://github.com/Azure/queryjs.git",
-    "underscore": "^1.8.3",
-    "underscore.string": "^3.1.1",
     "winston": "^2.1.0"
   },
   "devDependencies": {
@@ -42,6 +40,8 @@
     "sinon": "^1.16.1",
     "sinon-as-promised": "4.0.0",
     "sinon-chai": "^2.8.0",
+    "sqlite3": "^3.1.2",
+    "sqlite3-transactions": "0.0.5",
     "supertest": "^1.1.0",
     "supertest-as-promised": "^2.0.1",
     "swagger-ui": "^2.1.4",

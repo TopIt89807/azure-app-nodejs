@@ -1,36 +1,26 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var index = require('../../../src/data/mssql'),
-    execute = require('../../../src/data/mssql/execute'),
-    queries = require('../../../src/query'),
+var queries = require('../../../src/query'),
     config = require('../../appFactory').configuration().data,
-    expect = require('chai')
-        .use(require('chai-subset'))
-        .use(require('chai-as-promised'))
-        .expect,
-    operations;
+    expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect;
 
-describe('azure-mobile-apps.data.sql.integration', function () {
-    before(function (done) {
-        operations = index(config)({
+describe('azure-mobile-apps.data.integration', function () {
+    var index = require('../../../src/data/' + config.provider),
+        cleanUp = require('../' + config.provider + '/integration.cleanUp'),
+        table = {
             name: 'integration',
             columns: { string: 'string', number: 'number', bool: 'boolean' }
-        });
+        },
+        operations;
 
-        operations.initialize().then(done).catch(done);
+    before(function (done) {
+        operations = index(config)(table);
+        operations.initialize().then(done, done);
     });
 
-    beforeEach(function (done) {
-        return operations.truncate().then(done).catch(done);
-    });
-
-    after(function (done) {
-        index(config).execute({ sql: 'DROP TABLE integration' }).then(done).catch(done);
-    });
-
-    it("basic connection test", function () {
-        return execute(config, { sql: 'select * from integration', parameters: [] });
+    afterEach(function (done) {
+        cleanUp(config, table).then(function (arg) { done() }, done);
     });
 
     it("basic integration test", function () {
@@ -85,17 +75,15 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         });
 
-        return operations.initialize().then(function () {
-            var item = { id: '1', string: 'test', bool: true, number: 1.1 };
-            return insert(item)
-                .then(function () {
-                    return del('1');
-                })
-                .then(function (results) {
-                    expect(results).to.containSubset(item);
-                    return expect(del('1')).to.be.rejectedWith('No records were updated');
-                });
-        });
+        var item = { id: '1', string: 'test', bool: true, number: 1.1 };
+        return insert(item)
+            .then(function () {
+                return del('1');
+            })
+            .then(function (results) {
+                expect(results).to.containSubset(item);
+                return expect(del('1')).to.be.rejectedWith('No records were updated');
+            });
     });
 
     it("handles large numeric values", function () {
@@ -180,6 +168,20 @@ describe('azure-mobile-apps.data.sql.integration', function () {
             })
             .then(function (deleted) {
                 expect(deleted.length).to.equal(2);
+            });
+    });
+
+    it("handles multiple schema updates", function () {
+        return insert({ id: '1', p1: 1.1 })
+            .then(function () {
+                return insert({ id: '2', p1: 2.2, p2: 'test2', p3: false })
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results).to.containSubset([
+                    { id: '1', p1: 1.1, p2: null, p3: null },
+                    { id: '2', p1: 2.2, p2: 'test2', p3: false }
+                ]);
             });
     });
 

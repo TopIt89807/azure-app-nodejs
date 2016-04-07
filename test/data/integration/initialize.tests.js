@@ -2,13 +2,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var config = require('../../appFactory').configuration().data,
-    data = require('../../../src/data')({ data: config }),
-    execute = require('../../../src/data/mssql/execute'),
     expect = require('chai').use(require('chai-subset')).expect;
 
-describe('azure-mobile-apps.data.sql.integration.initialize', function () {
+describe('azure-mobile-apps.data.integration.initialize', function () {
+    var index = require('../../../src/data/' + config.provider),
+        cleanUp = require('../' + config.provider + '/integration.cleanUp');
+
     afterEach(function (done) {
-        execute(config, { sql: 'drop table dbo.initialize' }).then(done, done);
+        cleanUp(config, { name: 'initialize' }).then(done, done);
     });
 
     it('creates non-dynamic tables', function () {
@@ -84,6 +85,6 @@ describe('azure-mobile-apps.data.sql.integration.initialize', function () {
     });
 
     function definition(columns, seed, dynamicSchema) {
-        return data({ name: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
+        return index(config)({ name: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
     }
 });

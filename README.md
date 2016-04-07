@@ -75,6 +75,21 @@ file using the generator at [gitignore.io](https://www.gitignore.io)
 
 For steps 4-5, you can use any of the clients found in the [Client & Server Quickstarts](https://github.com/Azure/azure-mobile-services-quickstarts) to test.
 
+## Running Tests
+
+To run the suite of unit and integration tests, execute the following commands in a console window.
+
+    git clone https://github.com/Azure/azure-mobile-apps-node.git
+    cd azure-mobile-apps-node
+    npm i
+    npm test
+
+This runs tests using the default embedded SQLite data provider. To execute tests
+against SQL Server, create a configuration file called `azureMobile.js` in the
+`test` directory that contains relevant data configuration. See then
+[API reference](http://azure.github.io/azure-mobile-apps-node/global.html#configuration)
+for more information.
+
 ## GitHub Organization
 
 Our GitHub repository has one branch with code in it - master.  Each version is tagged with

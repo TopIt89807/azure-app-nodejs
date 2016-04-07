@@ -1,17 +1,14 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var index = require('../../../src/data/mssql'),
-    queries = require('../../../src/query'),
+var queries = require('../../../src/query'),
     config = require('../../appFactory').configuration().data,
-    expect = require('chai')
-        .use(require('chai-subset'))
-        .expect,
-    operations;
+    expect = require('chai').use(require('chai-subset')).expect;
 
-describe('azure-mobile-apps.data.sql.integration.query', function () {
-    before(function (done) {
-        operations = index(config)({
+describe('azure-mobile-apps.data.integration.query', function () {
+    var index = require('../../../src/data/' + config.provider),
+        cleanUp = require('../' + config.provider + '/integration.cleanUp'),
+        table = {
             name: 'query',
             columns: { string: 'string', number: 'number', bool: 'boolean' },
             seed: [
@@ -22,15 +19,16 @@ describe('azure-mobile-apps.data.sql.integration.query', function () {
                 { id: 5, string: 'five', number: 5, bool: 1 },
                 { id: 6, string: 'six', number: 6, bool: 0 },
             ]
-        });
+        },
+        operations;
 
-        operations.initialize()
-            .then(function (inserted) { })
-            .then(done);
+    before(function (done) {
+        operations = index(config)(table);
+        operations.initialize().then(function (inserted) { }).then(done, done);
     });
 
     after(function (done) {
-        index(config).execute({ sql: 'DROP TABLE query' }).then(done);
+        cleanUp(config, table).then(done, done);
     });
 
     it("supports equality hashes", function () {

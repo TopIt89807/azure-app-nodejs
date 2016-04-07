@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
-    _ = require('underscore.string');
+    util = require('util');
 
 module.exports = function (table, item) {
     var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
@@ -20,13 +20,13 @@ module.exports = function (table, item) {
     });
 
     var sql = columnNames.length > 0
-        ? _.sprintf("INSERT INTO %s (%s) VALUES (%s); ", tableName, columnNames.join(','), valueParams.join(','))
-        : _.sprintf("INSERT INTO %s DEFAULT VALUES; ", tableName)
+        ? util.format("INSERT INTO %s (%s) VALUES (%s); ", tableName, columnNames.join(','), valueParams.join(','))
+        : util.format("INSERT INTO %s DEFAULT VALUES; ", tableName)
 
     if(table.autoIncrement)
-        sql += _.sprintf('SELECT * FROM %s WHERE [id] = SCOPE_IDENTITY()', tableName);
+        sql += util.format('SELECT * FROM %s WHERE [id] = SCOPE_IDENTITY()', tableName);
     else
-        sql += _.sprintf('SELECT * FROM %s WHERE [id] = @id', tableName);
+        sql += util.format('SELECT * FROM %s WHERE [id] = @id', tableName);
 
     function transformResult(results) {
         return helpers.statements.translateVersion(results[0]);

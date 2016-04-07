@@ -13,7 +13,7 @@ var expect = require('chai').expect,
     mobileApp.api.import('express/files/tables');
     app.use(mobileApp);
 
-describe('azure-mobile-apps.express.sql.integration.tables.import', function () {
+describe('azure-mobile-apps.express.integration.tables.import', function () {
     it('handles multiple import calls correctly', function () {
         app = express();
         mobileApp = mobileApps();
