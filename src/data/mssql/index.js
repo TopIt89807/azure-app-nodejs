@@ -56,7 +56,10 @@ module.exports = function (configuration) {
                 return execute(configuration, statements.truncate(table));
             },
             initialize: function () {
-                return schema(configuration).initialize(table);
+                return schema(configuration).initialize(table).catch(function (error) {
+                    log.error('Error occurred during table initialization', error);
+                    throw error;
+                });
             },
             schema: function () {
                 return schema(configuration).get(table);
