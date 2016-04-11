@@ -25,7 +25,7 @@
     "quotmark": false,
     "regexp": true,
     "singleGroups": false,
-    "strict": false,
+    "strict": "implied",
     "sub": true,
     "trailing": true,
     "undef": true,
