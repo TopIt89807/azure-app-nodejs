@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
-    assign = require('deeply');
+    assign = require('../../../utilities/assign');
 
 module.exports = function (tableConfig, existingColumns, item) {
     var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),

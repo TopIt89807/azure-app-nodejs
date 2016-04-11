@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var clone = require('deeply'),
+var clone = require('../../utilities/assign'),
     path = require('path');
 
 module.exports = function (configuration) {

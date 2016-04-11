@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var queries = require('../../query'),
-    assign = require('deeply'),
+    assign = require('../../utilities/assign'),
     formatUrl = require('url').format;
 
 var nextLink = module.exports = function (req, res, next) {

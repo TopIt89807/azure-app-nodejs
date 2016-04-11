@@ -22,7 +22,7 @@
  * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
  */
 var connectionString = require('../connectionString'),
-    merge = require('deeply');
+    merge = require('../../utilities/assign');
 
 // determine various configuration information from environment such as web.config settings, etc.
 module.exports = function (configuration, environment) {

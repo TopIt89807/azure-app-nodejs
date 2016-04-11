@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var merge = require('deeply'),
+var merge = require('../../utilities/assign'),
     path = require('path');
 
 module.exports = function (configuration, filePath) {

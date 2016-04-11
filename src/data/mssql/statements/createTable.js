@@ -2,8 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
-    utilities = require('../../../utilities'),
-    assign = require('deeply');
+    utilities = require('../../../utilities');
 
 module.exports = function (tableConfig, item) {
     var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),
@@ -12,7 +11,7 @@ module.exports = function (tableConfig, item) {
         pkColumnSql = '[id] ' + pkType + ' NOT NULL' + (tableConfig.autoIncrement ? ' IDENTITY (1, 1)' : '') + ' PRIMARY KEY',
 
         systemProperties = [pkColumnSql].concat(utilities.object.values(helpers.getSystemPropertiesDDL())),
-        columns = assign(itemColumnsSql(), predefinedColumnsSql()),
+        columns = utilities.assign(itemColumnsSql(), predefinedColumnsSql()),
         columnSql = systemProperties.concat(utilities.object.values(columns)).join(',');
 
     return {

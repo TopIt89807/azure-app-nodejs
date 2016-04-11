@@ -5,7 +5,7 @@ var tableDefinition = require('./tableDefinition'),
     tablePaths = require('./tablePaths'),
     tableTag = require('./tableTag'),
     object = require('../utilities/object'),
-    merge = require('deeply');
+    merge = require('../utilities/assign');
 
 module.exports = function (configuration) {
     var createTableDefinition = tableDefinition(configuration),
