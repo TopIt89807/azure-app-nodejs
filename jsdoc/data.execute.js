@@ -12,6 +12,38 @@ req.azureMobile.data.execute
 Execute a SQL query directly against the data source
 @param {sqlQuery} statement A SQL query object, or array of query objects
 @returns A promise that yields the results of the query.
+@example
+<caption>Standard Query From a Table</caption>
+table.insert(function (context) {
+    var query = {
+        sql: 'UPDATE TodoItem SET complete = @completed',
+        parameters: [
+            { name: 'completed', value: request.query.completed }
+        ]
+    };
+
+    context.data.execute(query)
+        .then(function (results) {
+            response.json(results);
+        });
+})
+@example
+<caption>Executing a Stored Procedure From a Custom API</caption>
+module.exports = {
+    post: function (req, res, next) {
+        var query = {
+            sql: 'EXEC completeAllStoredProcedure @completed',
+            parameters: [
+                { name: 'completed', value: request.query.completed }
+            ]
+        };
+
+        req.azureMobile.data.execute(query)
+            .then(function (results) {
+                response.json(results);
+            });
+    }
+};
 */
 function execute(statement) {}
 

@@ -9,9 +9,9 @@ var api = {
         };
 
         request.azureMobile.data.execute(query)
-        .then(function (results) {
-            response.json(results);
-        });
+            .then(function (results) {
+                response.json(results);
+            });
     },
     // an example of executing a stored procedure
     post: (request, response, next) => {
@@ -23,9 +23,9 @@ var api = {
         };
 
         request.azureMobile.data.execute(query)
-        .then(function (results) {
-            response.json(results);
-        });
+            .then(function (results) {
+                response.json(results);
+            });
     }
 };
 
