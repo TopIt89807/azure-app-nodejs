@@ -1,5 +1,7 @@
 
 [![Build Status](https://travis-ci.org/Azure/azure-mobile-apps-node.svg?branch=master)](https://travis-ci.org/Azure/azure-mobile-apps-node)
+[![Dependency Status](https://david-dm.org/Azure/azure-mobile-apps-node.svg)](https://david-dm.org/Azure/azure-mobile-apps-node)
+[![devDependency Status](https://david-dm.org/Azure/azure-mobile-apps-node/dev-status.svg)](https://david-dm.org/Azure/azure-mobile-apps-node#info=devDependencies)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Azure/azure-mobile-apps-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Azure Mobile Apps - Node SDK
