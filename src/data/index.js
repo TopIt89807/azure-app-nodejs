@@ -13,7 +13,9 @@ Create an instance of the data provider specified in the configuration.
 @param {dataConfiguration} configuration - The data provider configuration
 @returns A function that accepts either a {@link tableDefinition} or
 {@link module:azure-mobile-apps/express/tables/table table object} and returns an
-object with the members described below.
+object with the members described below. The function also has an
+{@link module:azure-mobile-apps/data/execute execute} function attached that can
+be used to execute raw SQL queries.
 */
 module.exports = function (configuration) {
     var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
