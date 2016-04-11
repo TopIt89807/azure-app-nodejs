@@ -1,12 +1,12 @@
 module.exports = function assign() {
-    var o,
-        prop,
-        result = {},
+    var result = {},
         args = Array.prototype.slice.call(arguments),
         reduceArrays = typeof args[args.length - 1] == 'function' ? args.pop() : undefined;
 
-    while (o = args.shift()) {
-        for (prop in o) {
+    for(var i = 0, l = args.length; i < l; i++) {
+        var o = args[i];
+
+        for (var prop in o) {
             if (!o.hasOwnProperty(prop))
                 continue;
 
@@ -15,6 +15,7 @@ module.exports = function assign() {
 
             else if (reduceArrays && typeOf(o[prop]) == 'array')
                 result[prop] = reduceArrays(result[prop] || [], Array.prototype.slice.call(o[prop]));
+                
             else
                 result[prop] = o[prop];
         }
