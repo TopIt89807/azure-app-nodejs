@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var sqlite3 = require('sqlite3'),
-    TransactionDatabase = require('sqlite3-transactions').TransactionDatabase,
+    // TransactionDatabase = require('sqlite3-transactions').TransactionDatabase,
     transactions = require('./transactions'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
@@ -12,7 +12,8 @@ var sqlite3 = require('sqlite3'),
     connection;
 
 module.exports = function (config, statements, transaction) {
-    connection = connection || new TransactionDatabase(new sqlite3.Database(config.filename || ':memory:'));
+    // connection = connection || new TransactionDatabase(new sqlite3.Database(config.filename || ':memory:'));
+    connection = connection || new sqlite3.Database(config.filename || ':memory:');
 
     if(statements.constructor === Array)
         return transactions(config, connection, statements);
