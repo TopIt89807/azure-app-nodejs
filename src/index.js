@@ -26,7 +26,7 @@ Express 4.x is currently the only supported platform.
 @returns {module:azure-mobile-apps/express}
 */
 module.exports = function (configuration, environment) {
-    return api.create(loadConfiguration.from()
+    return module.exports.create(loadConfiguration.from()
         .defaults(configuration)
         .file()
         .environment(environment)
