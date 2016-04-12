@@ -10,24 +10,32 @@ module.exports = function (configuration, connection, statements) {
 
     return promises.create(function (resolve, reject) {
         connection.serialize(function () {
+            connection.run('BEGIN TRANSACTION');
             return promises.all(statements.map(function (statement) {
-                return execute(configuration, statement)
+                return execute(configuration, statement, connection)
                     .then(function (result) {
                         if(result)
                             results = result;
                     });
             }))            
             .then(function () {
-                resolve(results);
+                connection.run('COMMIT TRANSACTION', function (err) {
+                    if(err)
+                        reject(err);
+                    else
+                        resolve(results);                    
+                });
             })
             .catch(function (err) {
-                reject(err);
+                connection.run('ROLLBACK TRANSACTION', function () {
+                    reject(err);                    
+                });
             });
         });
         
         // the sqlite3-transactions module hacks in "transactions" by preventing other
         // statements from executing until the transaction has completed, but the 
-        // package is somewhat immature
+        // package is somewhat immature and unmaintained
         
         // connection.beginTransaction(function (err, transaction) {
         //     if(err) reject(err);

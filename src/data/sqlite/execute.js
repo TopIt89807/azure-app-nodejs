@@ -1,19 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var sqlite3 = require('sqlite3'),
-    // TransactionDatabase = require('sqlite3-transactions').TransactionDatabase,
-    transactions = require('./transactions'),
+var transactions = require('./transactions'),
     helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
     errors = require('../../utilities/errors'),
     errorTypes = require('./errorTypes'),
     log = require('../../logger'),
-    connection;
+    connections = require('./connections');
 
 module.exports = function (config, statements, transaction) {
-    // connection = connection || new TransactionDatabase(new sqlite3.Database(config.filename || ':memory:'));
-    connection = connection || new sqlite3.Database(config.filename || ':memory:');
+    var connection = connections.obtain(config);
 
     if(statements.constructor === Array)
         return transactions(config, connection, statements);
@@ -50,20 +47,30 @@ module.exports = function (config, statements, transaction) {
                         log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
                         if(errorTypes.isUniqueViolation(err))
-                            reject(errors.duplicate('An item with the same ID already exists'));
+                            error(errors.duplicate('An item with the same ID already exists'));
 
                         else if(errorTypes.isInvalidDataType(err))
-                            reject(errors.badRequest('Invalid data type provided'));
+                            error(errors.badRequest('Invalid data type provided'));
 
                         else
-                            reject(err);
+                            error(err);
                     } else {
-                        resolve(statement.transform ? statement.transform(rows) : rows);
+                        success(statement.transform ? statement.transform(rows) : rows);
                     }
                 } catch(err) {
-                    reject(err);
+                    error(err);
                 }
             });
+            
+            function success(results) {
+                connections.release(connection);
+                resolve(results);
+            }
+            
+            function error(err) {
+                connections.release(connection);
+                reject(err);
+            }
         });
     }
 };
