@@ -25,7 +25,7 @@ Express 4.x is currently the only supported platform.
 @param {object} environment=process.env An object containing the environment to load configuration from
 @returns {module:azure-mobile-apps/express}
 */
-var api = module.exports = function (configuration, environment) {
+module.exports = function (configuration, environment) {
     return api.create(loadConfiguration.from()
         .defaults(configuration)
         .file()
@@ -36,14 +36,25 @@ var api = module.exports = function (configuration, environment) {
         .apply());
 };
 
-api.create = function (configuration) {
+module.exports.create = function (configuration) {
     return platforms[configuration.platform](configuration);
 };
 
-api.table = table;
-api.logger = logger;
-api.query = query;
-api.promises = promises;
+/**
+@function table
+@description Creates an instance of a table definition object
+@returns {module:azure-mobile-apps/express/tables/table}
+*/
+module.exports.table = table;
+
+/** @type {module:azure-mobile-apps/logger} */
+module.exports.logger = logger;
+
+/** @type {module:azure-mobile-apps/query} */
+module.exports.query = query;
+
+/** @type {module:azure-mobile-apps/utilities/promises} */
+module.exports.promises = promises;
 
 // this is purely a helper function to allow intellisense for custom API definitions
-api.api = function (definition) { return definition; };
+module.exports.api = function (definition) { return definition; };
