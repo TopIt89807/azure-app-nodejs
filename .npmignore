@@ -1,5 +1,5 @@
-e2etest
-jsdoc
-migrate
-samples
-test
+e2etest/
+jsdoc/
+migrate/
+samples/
+test/
