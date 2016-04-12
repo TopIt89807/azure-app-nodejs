@@ -25,6 +25,10 @@ module.exports = function (configuration, connection, statements) {
             });
         });
         
+        // the sqlite3-transactions module hacks in "transactions" by preventing other
+        // statements from executing until the transaction has completed, but the 
+        // package is somewhat immature
+        
         // connection.beginTransaction(function (err, transaction) {
         //     if(err) reject(err);
 
