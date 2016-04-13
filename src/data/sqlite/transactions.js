@@ -1,67 +1,44 @@
 ﻿// ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var promises = require('../../utilities/promises');
+var connectionPool = require('./connectionPool'),
+    execute = require('./execute'),
+    promises = require('../../utilities/promises');
 
-module.exports = function (configuration, connection, statements) {
-    // require here to avoid circular reference
-    var execute = require('./execute'),
-        results;
-
-    return promises.create(function (resolve, reject) {
-        connection.serialize(function () {
-            connection.run('BEGIN TRANSACTION');
-            return promises.all(statements.map(function (statement) {
-                return execute(configuration, statement, connection)
-                    .then(function (result) {
-                        if(result)
-                            results = result;
+module.exports = function (configuration) {
+    var pool = connectionPool(configuration);
+    
+    return function (statements) {
+        return promises.create(function (resolve, reject) {
+            var connection = pool.obtain(),
+                results;
+                
+            connection.serialize(function () {
+                connection.run('BEGIN TRANSACTION');
+                
+                return promises.all(statements.map(function (statement) {
+                    return execute(connection, statement)
+                        .then(function (result) {
+                            if(result)
+                                results = result;
+                        });
+                }))            
+                .then(function () {
+                    connection.run('COMMIT TRANSACTION', function (err) {
+                        pool.release(connection);
+                        if(err)
+                            reject(err);
+                        else
+                            resolve(results);
                     });
-            }))            
-            .then(function () {
-                connection.run('COMMIT TRANSACTION', function (err) {
-                    if(err)
+                })
+                .catch(function (err) {
+                    connection.run('ROLLBACK TRANSACTION', function () {
+                        pool.release(connection);
                         reject(err);
-                    else
-                        resolve(results);                    
-                });
-            })
-            .catch(function (err) {
-                connection.run('ROLLBACK TRANSACTION', function () {
-                    reject(err);                    
+                    });
                 });
             });
         });
-        
-        // the sqlite3-transactions module hacks in "transactions" by preventing other
-        // statements from executing until the transaction has completed, but the 
-        // package is somewhat immature and unmaintained
-        
-        // connection.beginTransaction(function (err, transaction) {
-        //     if(err) reject(err);
-
-        //     var results;
-
-        //     promises.series(statements, function (statement) {
-        //         return execute(configuration, statement, transaction)
-        //             .then(function (result) {
-        //                 if(result)
-        //                     results = result;
-        //             });
-        //     })
-        //     .then(function () {
-        //         transaction.commit(function (err) {
-        //             if(err)
-        //                 reject(err);
-        //             else
-        //                 resolve(results);
-        //         });
-        //     })
-        //     .catch(function (err) {
-        //         transaction.rollback(function () {
-        //             reject(err);
-        //         });
-        //     });
-        // });
-    });
+    };
 };

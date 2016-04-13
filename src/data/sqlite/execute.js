@@ -1,76 +1,55 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var transactions = require('./transactions'),
-    helpers = require('./helpers'),
+var helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
     errors = require('../../utilities/errors'),
     errorTypes = require('./errorTypes'),
-    log = require('../../logger'),
-    connections = require('./connections');
+    log = require('../../logger');
 
-module.exports = function (config, statements, transaction) {
-    var connection = connections.obtain(config);
+module.exports = function (connection, statement) {
+    if(statement.noop)
+        return promises.resolved();
 
-    if(statements.constructor === Array)
-        return transactions(config, connection, statements);
-    else
-        return executeSingleStatement(statements);
+    var parameters = {};
 
-    function executeSingleStatement(statement) {
-        if(statement.noop)
-            return promises.resolved();
+    if(statement.parameters) {
+        // support being passed mssql style parameters
+        if(statement.parameters.constructor === Array)
+            statement = {
+                sql: statement.sql,
+                parameters: helpers.mapParameters(statement.parameters),
+                transform: statement.transform
+            };
 
-        var parameters = {};
+        // SQLite expects the '@' symbol prefix for each parameter
+        Object.keys(statement.parameters).forEach(function (parameterName) {
+            parameters['@' + parameterName] = statement.parameters[parameterName];
+        });
+    }
 
-        if(statement.parameters) {
-            // support being passed mssql style parameters
-            if(statement.parameters.constructor === Array)
-                statement = {
-                    sql: statement.sql,
-                    parameters: helpers.mapParameters(statement.parameters),
-                    transform: statement.transform
-                };
+    log.silly('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
-            // SQLite expects the '@' symbol prefix for each parameter
-            Object.keys(statement.parameters).forEach(function (parameterName) {
-                parameters['@' + parameterName] = statement.parameters[parameterName];
-            });
-        }
+    return promises.create(function (resolve, reject) {
+        connection.all(statement.sql, parameters, function (err, rows) {
+            try {
+                if(err) {
+                    log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
-        log.silly('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
+                    if(errorTypes.isUniqueViolation(err))
+                        reject(errors.duplicate('An item with the same ID already exists'));
 
-        return promises.create(function (resolve, reject) {
-            (transaction || connection).all(statement.sql, parameters, function (err, rows) {
-                try {
-                    if(err) {
-                        log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
+                    else if(errorTypes.isInvalidDataType(err))
+                        reject(errors.badRequest('Invalid data type provided'));
 
-                        if(errorTypes.isUniqueViolation(err))
-                            error(errors.duplicate('An item with the same ID already exists'));
-
-                        else if(errorTypes.isInvalidDataType(err))
-                            error(errors.badRequest('Invalid data type provided'));
-
-                        else
-                            error(err);
-                    } else {
-                        success(statement.transform ? statement.transform(rows) : rows);
-                    }
-                } catch(err) {
-                    error(err);
+                    else
+                        reject(err);
+                } else {
+                    resolve(statement.transform ? statement.transform(rows) : rows);
                 }
-            });
-            
-            function success(results) {
-                connections.release(connection);
-                resolve(results);
-            }
-            
-            function error(err) {
-                connections.release(connection);
+            } catch(err) {
                 reject(err);
             }
         });
-    }
+    });
 };
