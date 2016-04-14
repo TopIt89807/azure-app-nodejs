@@ -7,6 +7,7 @@ var queries = require('../../../src/query'),
 
 describe('azure-mobile-apps.data.integration.query', function () {
     var index = require('../../../src/data/' + config.provider),
+        data = index(config),
         cleanUp = require('../' + config.provider + '/integration.cleanUp'),
         table = {
             name: 'query',
@@ -23,12 +24,12 @@ describe('azure-mobile-apps.data.integration.query', function () {
         operations;
 
     before(function (done) {
-        operations = index(config)(table);
+        operations = data(table);
         operations.initialize().then(function (inserted) { }).then(done, done);
     });
 
     after(function (done) {
-        cleanUp(config, table).then(done, done);
+        cleanUp(data, table).then(done, done);
     });
 
     it("supports equality hashes", function () {

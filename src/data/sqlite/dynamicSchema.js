@@ -1,21 +1,23 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var execute = require('./execute'),
+var serializeModule = require('./serialize'),
     promises = require('../../utilities/promises'),
-    schemas = require('./schema'),
+    schemaModule = require('./schema'),
     errorTypes = require('./errorTypes');
 
-module.exports = function (table) {
+module.exports = function (connection, table) {
+    var serialize = serializeModule(connection),
+        schema = schemaModule(connection);
+    
     var api = {
-        execute: function (config, statement, item, attempt) {
-            var schema = schemas(config);
+        execute: function (statements, item, attempt) {
             attempt = attempt || 1;
 
-            return execute(config, statement)
+            return serialize(statements)
                 .catch(function (err) {
                     return handleError(err).then(function () {
-                        return api.execute(table, statement, item, attempt + 1);
+                        return api.execute(statements, item, attempt + 1);
                     });
                 });
 
@@ -31,8 +33,8 @@ module.exports = function (table) {
                 return promises.rejected(err);
             }
         },
-        read: function (config, statement) {
-            return execute(config, statement)
+        read: function (statement) {
+            return serialize(statement)
                 .catch(function (err) {
                     // if dynamic schema is enabled and the error is invalid column, it is likely that the schema has not been
                     // updated to include the column. V1 behavior is to return an empty array, maintain this behavior.

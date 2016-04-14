@@ -1,44 +1,44 @@
 ﻿// ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var connectionPool = require('./connectionPool'),
-    execute = require('./execute'),
+var executeModule = require('./execute'),
     promises = require('../../utilities/promises');
 
-module.exports = function (configuration) {
-    var pool = connectionPool(configuration);
+module.exports = function (connection) {
+    var execute = executeModule(connection);
     
     return function (statements) {
         return promises.create(function (resolve, reject) {
-            var connection = pool.obtain(),
-                results;
+            var results;
                 
-            connection.serialize(function () {
-                connection.run('BEGIN TRANSACTION');
-                
-                return promises.all(statements.map(function (statement) {
-                    return execute(connection, statement)
-                        .then(function (result) {
-                            if(result)
-                                results = result;
-                        });
-                }))            
+            execute({ sql: 'BEGIN TRANSACTION' })
                 .then(function () {
-                    connection.run('COMMIT TRANSACTION', function (err) {
-                        pool.release(connection);
-                        if(err)
-                            reject(err);
-                        else
-                            resolve(results);
+                    return promises.series(statements, function (statement) {
+                        return execute(statement)
+                            .then(function (result) {
+                                if(result)
+                                    results = result;
+                            });
                     });
                 })
+                .then(function () {
+                    execute({ sql: 'COMMIT TRANSACTION' })
+                        .then(function () {
+                            resolve(results);
+                        })
+                        .catch(function (err) {
+                            reject(err);
+                        });
+                })
                 .catch(function (err) {
-                    connection.run('ROLLBACK TRANSACTION', function () {
-                        pool.release(connection);
-                        reject(err);
-                    });
+                    execute({ sql: 'ROLLBACK TRANSACTION' })
+                        .then(function () {
+                            reject(err);
+                        })
+                        .catch(function () {
+                            reject(err);
+                        });
                 });
-            });
         });
     };
 };

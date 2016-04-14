@@ -7,6 +7,7 @@ var queries = require('../../../src/query'),
 
 describe('azure-mobile-apps.data.integration', function () {
     var index = require('../../../src/data/' + config.provider),
+        data = index(config),
         cleanUp = require('../' + config.provider + '/integration.cleanUp'),
         table = {
             name: 'integration',
@@ -15,12 +16,12 @@ describe('azure-mobile-apps.data.integration', function () {
         operations;
 
     before(function (done) {
-        operations = index(config)(table);
+        operations = data(table);
         operations.initialize().then(done, done);
     });
 
     afterEach(function (done) {
-        cleanUp(config, table).then(function (arg) { done() }, done);
+        cleanUp(data, table).then(function (arg) { done() }, done);
     });
 
     it("basic integration test", function () {
@@ -69,7 +70,7 @@ describe('azure-mobile-apps.data.integration', function () {
     });
 
     it("returns softDeleted record", function () {
-        operations = index(config)({
+        operations = data({
             name: 'integration',
             softDelete: true,
             columns: { string: 'string', number: 'number', bool: 'boolean' }

@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-module.exports = function (configuration) {
+module.exports = function (connection) {
     // these require statements must appear within this function to avoid circular reference issues between dynamicSchema and schema
     var statements = require('./statements'),
-        execute = require('./execute'),
+        serialize = require('./serialize')(connection),
         dynamicSchema = require('./dynamicSchema'),
-        columns = require('./columns')(configuration),
+        columns = require('./columns')(connection),
         promises = require('../../utilities/promises'),
         log = require('../../logger');
 
@@ -29,9 +29,9 @@ module.exports = function (configuration) {
             log.info('Creating table ' + table.name);
             return columns.discover(table, item)
                 .then(function (tableColumns) {
-                    return execute(configuration, statements.createTable(table, tableColumns))
+                    return serialize(statements.createTable(table, tableColumns))
                         .then(function () {
-                            return execute(configuration, statements.createTrigger(table));
+                            return serialize(statements.createTrigger(table));
                         })
                         .then(function () {
                             return api.createIndexes(table);
@@ -51,7 +51,7 @@ module.exports = function (configuration) {
                 .then(function (existingColumns) {
                     return columns.discover(table, item)
                         .then(function (allColumns) {
-                            return execute(configuration, statements.updateSchema(table, existingColumns, allColumns))
+                            return serialize(statements.updateSchema(table, existingColumns, allColumns))
                                 .then(function () {
                                     return api.createIndexes(table);
                                 })
@@ -68,7 +68,7 @@ module.exports = function (configuration) {
                     log.info('Creating indexes for table ' + table.name);
                     return promises.all(
                         table.indexes.map(function (indexConfig) {
-                            return execute(configuration, statements.createIndex(table, indexConfig));
+                            return serialize(statements.createIndex(table, indexConfig));
                         })
                     );
                 } else {
@@ -83,7 +83,7 @@ module.exports = function (configuration) {
             return promises.series(table.seed, insert);
 
             function insert(item) {
-                return dynamicSchema(table).execute(configuration, statements.insert(table, item), item);
+                return dynamicSchema(connection, table).execute(statements.insert(table, item), item);
             }
         },
 

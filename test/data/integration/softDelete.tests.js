@@ -7,16 +7,17 @@ var config = require('../../appFactory').configuration().data,
 
 describe('azure-mobile-apps.data.integration.softDelete', function () {
     var index = require('../../../src/data/' + config.provider),
+        data = index(config),
         cleanUp = require('../' + config.provider + '/integration.cleanUp'),
         table = { name: 'softDelete', softDelete: true },
         operations;
 
     before(function () {
-        operations = index(config)(table);
+        operations = data(table);
     });
 
     afterEach(function (done) {
-        cleanUp(config, table).then(done, done);
+        cleanUp(data, table).then(done, done);
     });
 
     it('deleted records are not returned with normal query', function () {
@@ -80,15 +81,11 @@ describe('azure-mobile-apps.data.integration.softDelete', function () {
 
     function del(id, version) {
         var query = queries.create('integration').where({ id: id });
-        if(version)
-            query.where({ version: version });
-        return operations.delete(query);
+        return operations.delete(query, version);
     }
 
     function undelete(id, version) {
         var query = queries.create('integration').where({ id: id });
-        if(version)
-            query.where({ version: version });
         return operations.undelete(query, version);
     }
 });

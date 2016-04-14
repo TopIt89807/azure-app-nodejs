@@ -1,15 +1,14 @@
 ﻿// ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-
 var combine = require('./combine'),
-    execute = require('../execute'),
+    serializeModule = require('../serialize'),
     statements = require('../statements'),
     convert = require('../convert'),
     promises = require('../../../utilities/promises');
 
-module.exports = function (configuration) {
-    configuration = configuration || {};
+module.exports = function (connection) {
+    var serialize = serializeModule(connection);
 
     var api = {
         for: get,
@@ -33,9 +32,9 @@ module.exports = function (configuration) {
         if(table.sqliteColumns)
             return promises.resolved(table.sqliteColumns);
 
-        var statement = { sql: "SELECT [name], [type] FROM [__types] WHERE [table] = @table", parameters: { table: table.name } };
+        var statement = [{ sql: "SELECT [name], [type] FROM [__types] WHERE [table] = @table", parameters: { table: table.name } }];
 
-        return execute(configuration, statement)
+        return serialize(statement)
             .then(function (columns) {
                 table.sqliteColumns = columns;
                 return columns;
@@ -48,11 +47,11 @@ module.exports = function (configuration) {
 
     function set(table, columns) {
         var setStatements = statements.columns.set(table, columns);
-        return execute(configuration, setStatements)
+        return serialize(setStatements)
             .catch(function (error) {
                 return initialize(table).then(function () {
                     // if we fail this time, we're borked
-                    return execute(configuration, setStatements);
+                    return serialize(setStatements);
                 });
             })
             .then(function () {
@@ -61,6 +60,6 @@ module.exports = function (configuration) {
     }
 
     function initialize(table) {
-        return execute(configuration, statements.columns.createTable(table));
+        return serialize([statements.columns.createTable(table)]);
     }
 };
