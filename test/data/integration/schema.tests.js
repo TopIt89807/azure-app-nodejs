@@ -7,9 +7,10 @@ var config = require('../../appFactory').configuration().data,
 
 describe('azure-mobile-apps.data.integration.schema', function () {
     var index = require('../../../src/data/' + config.provider),
+        data = index(config),
         cleanUp = require('../' + config.provider + '/integration.cleanUp'),
         table = { name: 'schemaTest', seed: [{ id: '1' }, { id: '2' }] },
-        operations = index(config)(table);
+        operations = data(table);
 
     afterEach(function (done) {
         cleanUp(config, table).then(done, done);

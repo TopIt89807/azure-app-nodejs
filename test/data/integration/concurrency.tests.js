@@ -7,12 +7,13 @@ var config = require('../../appFactory').configuration().data,
 
 describe('azure-mobile-apps.data.integration.concurrency', function () {
     var index = require('../../../src/data/' + config.provider),
+        data = index(config), 
         cleanUp = require('../' + config.provider + '/integration.cleanUp'),
         table = { name: 'concurrency' },
         operations;
 
     before(function (done) {
-        operations = index(config)(table);
+        operations = data(table);
         operations.initialize().then(done, done);
     });
 
@@ -113,8 +114,6 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
 
     function del(id, version) {
         var query = queries.create('integration').where({ id: id });
-        // if(version)
-        //     query.where({ version: version });
         return operations.delete(query, version);
     }
 });

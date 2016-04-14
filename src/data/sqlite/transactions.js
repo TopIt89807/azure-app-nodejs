@@ -1,39 +1,44 @@
 ﻿// ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+var executeModule = require('./execute'),
+    promises = require('../../utilities/promises');
 
-var promises = require('../../utilities/promises');
-
-module.exports = function (configuration, connection, statements) {
-    // require here to avoid circular reference
-    var execute = require('./execute');
-
-    return promises.create(function (resolve, reject) {
-        connection.beginTransaction(function (err, transaction) {
-            if(err) reject(err);
-
+module.exports = function (connection) {
+    var execute = executeModule(connection);
+    
+    return function (statements) {
+        return promises.create(function (resolve, reject) {
             var results;
-
-            promises.series(statements, function (statement) {
-                return execute(configuration, statement, transaction)
-                    .then(function (result) {
-                        if(result)
-                            results = result;
+                
+            execute({ sql: 'BEGIN TRANSACTION' })
+                .then(function () {
+                    return promises.series(statements, function (statement) {
+                        return execute(statement)
+                            .then(function (result) {
+                                if(result)
+                                    results = result;
+                            });
                     });
-            })
-            .then(function () {
-                transaction.commit(function (err) {
-                    if(err)
-                        reject(err);
-                    else
-                        resolve(results);
+                })
+                .then(function () {
+                    execute({ sql: 'COMMIT TRANSACTION' })
+                        .then(function () {
+                            resolve(results);
+                        })
+                        .catch(function (err) {
+                            reject(err);
+                        });
+                })
+                .catch(function (err) {
+                    execute({ sql: 'ROLLBACK TRANSACTION' })
+                        .then(function () {
+                            reject(err);
+                        })
+                        .catch(function () {
+                            reject(err);
+                        });
                 });
-            })
-            .catch(function (err) {
-                transaction.rollback(function () {
-                    reject(err);
-                });
-            });
         });
-    });
+    };
 };

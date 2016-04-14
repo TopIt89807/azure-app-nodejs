@@ -1,12 +1,14 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿var expect = require('chai').expect,
+var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory'),
     promises = require('../../../../src/utilities/promises'),
-
+    config = require('../../../appFactory').configuration,
+    data = require('../../../../src/data'),
+    
     app, mobileApp;
 
 describe('azure-mobile-apps.express.integration.tables.initialize', function () {
@@ -72,6 +74,8 @@ describe('azure-mobile-apps.express.integration.tables.initialize', function () 
 
     describe('concurrent initialization', function () {
         it('successfully initializes multiple tables concurrently', function () {
+            var execute  = data(config()).execute;
+            
             app = express();
             mobileApp = mobileApps();
 
@@ -81,18 +85,24 @@ describe('azure-mobile-apps.express.integration.tables.initialize', function () 
 
             tables.forEach(create);
 
+            // this is going to be a problem when we introduce a non-SQL data provider
             return mobileApp.tables.initialize()
                 .then(function () {
-                    return promises.all(tables.map(drop));
-                });
+                    return execute({ sql: 'drop table __types '});
+                })
+                // providers other than SQLite do not have this table, ignore failures
+                .catch(function () {})
+                .then(function () {
+                    return promises.series(tables, drop);
+                })
+
+            function create(id) {
+                mobileApp.tables.add('table' + id);
+            }
+
+            function drop(id) {
+                return execute({ sql: 'drop table table' + id });
+            }
         });
-
-        function create(id) {
-            mobileApp.tables.add('table' + id);
-        }
-
-        function drop(id) {
-            return mobileApps.cleanUp(mobileApps.configuration()).table({ name: 'table' + id });
-        }
     })
 });

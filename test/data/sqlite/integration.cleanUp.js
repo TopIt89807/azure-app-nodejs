@@ -1,11 +1,14 @@
-var execute = require('../../../src/data/sqlite/execute');
+var provider = require('../../../src/data/sqlite');
 
-module.exports = function (config, table) {
+module.exports = function (configuration, table) {
+    var data = provider(configuration);
+    
     table.sqliteColumns = undefined;
 
-    return execute(config, { sql: 'DROP TABLE __types' })
+    return data.execute({ sql: 'DROP TABLE __types' })
+        .catch(function () {})
         .then(function () {
-            return execute(config, { sql: 'DROP TABLE ' + table.name });
+            return data.execute({ sql: 'DROP TABLE ' + table.name });
         })
         .then(function () {})
         .catch(function () {});

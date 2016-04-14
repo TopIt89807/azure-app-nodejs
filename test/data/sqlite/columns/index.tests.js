@@ -1,4 +1,5 @@
 var columns = require('../../../../src/data/sqlite/columns'),
+    sqlite3 = require('sqlite3'),
     expect = require('chai').expect;
 
 describe('azure-mobile-apps.data.sqlite.columns', function () {
@@ -11,18 +12,19 @@ describe('azure-mobile-apps.data.sqlite.columns', function () {
 
     describe('for', function () {
         it("returns empty array for unknown table", function () {
-            return columns().for({}).then(function (result) {
+            return columns(new sqlite3.Database(':memory:')).for({}).then(function (result) {
                 expect(result).to.deep.equal([]);
             });
         });
 
         it("returns set columns", function () {
-            return columns().set({ name: 'columns1' }, tableColumns)
+            var connection = new sqlite3.Database(':memory:');
+            return columns(connection).set({ name: 'columns1' }, tableColumns)
                 .then(function () {
-                    return columns().set({ name: 'columns2' }, tableColumns)
+                    return columns(connection).set({ name: 'columns2' }, tableColumns)
                 })
                 .then(function () {
-                    return columns().for({ name: 'columns1' });
+                    return columns(connection).for({ name: 'columns1' });
                 })
                 .then(function (results) {
                     expect(results).to.deep.equal(tableColumns);
@@ -30,7 +32,7 @@ describe('azure-mobile-apps.data.sqlite.columns', function () {
         });
 
         it("returns cached columns", function () {
-            return columns().set({ name: 'columns' }, tableColumns)
+            return columns(new sqlite3.Database(':memory:')).set({ name: 'columns' }, tableColumns)
                 .then(function () {
                     return columns().for({ name: 'columns', sqliteColumns: [ { name: 'string', type: 'string '}] });
                 })
@@ -42,9 +44,11 @@ describe('azure-mobile-apps.data.sqlite.columns', function () {
 
     describe('applyTo', function () {
         it("applies column types to items", function () {
-            return columns().set({ name: 'columns' }, tableColumns)
+            var connection = new sqlite3.Database(':memory:');
+            
+            return columns(connection).set({ name: 'columns' }, tableColumns)
                 .then(function () {
-                    return columns().applyTo({ name: 'columns' }, [
+                    return columns(connection).applyTo({ name: 'columns' }, [
                         { number: 2, string: 'test2', boolean: 1, date: '2016-03-31T17:00:00.000Z' },
                         { number: 3, string: 'test3', boolean: 0, date: '2017-04-01T17:01:00.000Z' }
                     ]);

@@ -6,6 +6,7 @@ var config = require('../../appFactory').configuration().data,
 
 describe('azure-mobile-apps.data.integration.initialize', function () {
     var index = require('../../../src/data/' + config.provider),
+        data = index(config),
         cleanUp = require('../' + config.provider + '/integration.cleanUp');
 
     afterEach(function (done) {
@@ -85,6 +86,6 @@ describe('azure-mobile-apps.data.integration.initialize', function () {
     });
 
     function definition(columns, seed, dynamicSchema) {
-        return index(config)({ name: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
+        return data({ name: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
     }
 });

@@ -1,25 +1,14 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var sqlite3 = require('sqlite3'),
-    TransactionDatabase = require('sqlite3-transactions').TransactionDatabase,
-    transactions = require('./transactions'),
-    helpers = require('./helpers'),
+var helpers = require('./helpers'),
     promises = require('../../utilities/promises'),
     errors = require('../../utilities/errors'),
     errorTypes = require('./errorTypes'),
-    log = require('../../logger'),
-    connection;
+    log = require('../../logger');
 
-module.exports = function (config, statements, transaction) {
-    connection = connection || new TransactionDatabase(new sqlite3.Database(config.filename || ':memory:'));
-
-    if(statements.constructor === Array)
-        return transactions(config, connection, statements);
-    else
-        return executeSingleStatement(statements);
-
-    function executeSingleStatement(statement) {
+module.exports = function (connection) {
+    return function (statement) {
         if(statement.noop)
             return promises.resolved();
 
@@ -43,7 +32,7 @@ module.exports = function (config, statements, transaction) {
         log.silly('Executing SQL statement ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
 
         return promises.create(function (resolve, reject) {
-            (transaction || connection).all(statement.sql, parameters, function (err, rows) {
+            connection.all(statement.sql, parameters, function (err, rows) {
                 try {
                     if(err) {
                         log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
@@ -64,5 +53,5 @@ module.exports = function (config, statements, transaction) {
                 }
             });
         });
-    }
+    };
 };
