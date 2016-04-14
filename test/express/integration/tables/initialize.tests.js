@@ -85,10 +85,12 @@ describe('azure-mobile-apps.express.integration.tables.initialize', function () 
 
             tables.forEach(create);
 
+            // this is going to be a problem when we introduce a non-SQL data provider
             return mobileApp.tables.initialize()
                 .then(function () {
                     return execute({ sql: 'drop table __types '});
                 })
+                // providers other than SQLite do not have this table, ignore failures
                 .catch(function () {})
                 .then(function () {
                     return promises.series(tables, drop);
@@ -99,7 +101,6 @@ describe('azure-mobile-apps.express.integration.tables.initialize', function () 
             }
 
             function drop(id) {
-                // return mobileApps.cleanUp(mobileApps.configuration()).table({ name: 'table' + id });
                 return execute({ sql: 'drop table table' + id });
             }
         });
