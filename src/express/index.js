@@ -11,6 +11,7 @@ when the configuration passed specifies the express platform.
 var express = require('express'),
     customApi = require('./api'),
     tables = require('./tables'),
+    dataProvider = require('../data'),
     table = require('./tables/table'),
     log = require('../logger');
 
@@ -33,7 +34,8 @@ module.exports = function (configuration) {
 
     log.silly("Configured with the following values:\n" + JSON.stringify(configuration, null, 2));
 
-    var tableMiddleware = tables(configuration),
+    var data = dataProvider(configuration),
+        tableMiddleware = tables(configuration, data),
         apiMiddleware = customApi(configuration),
         customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();

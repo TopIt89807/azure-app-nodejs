@@ -6,17 +6,17 @@ var statements = require('./statements'),
     dynamicSchemaModule = require('./dynamicSchema'),
     schemaModule = require('./schema'),
     columnsModule = require('./columns'),
+    connections = require('./connections'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
     promises = require('../../utilities/promises'),
     queries = require('../../query'),
-    sqlite3 = require('sqlite3'),
     uuid = require('node-uuid');
 
 module.exports = function (configuration) {
     configuration = configuration || {};
     
-    var connection = new sqlite3.Database(configuration.filename || ':memory:'),
+    var connection = connections(configuration),
         serialize = serializeModule(connection),
         schema = schemaModule(connection),
         columns = columnsModule(connection);

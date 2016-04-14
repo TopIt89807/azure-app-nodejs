@@ -12,7 +12,7 @@ var express = require('express'),
     table = require('./table'),
     logger = require('../../logger'),
     tableRouter = require('./tableRouter'),
-    data = require('../../data'),
+    dataModule = require('../../data'),
     assert = require('../../utilities/assert').argument,
     promises = require('../../utilities/promises');
 
@@ -21,11 +21,11 @@ Create an instance of an express router for routing and handling table requests.
 @param {configuration} configuration
 @returns An express router with additional members described below.
 */
-module.exports = function (configuration) {
+module.exports = function (configuration, data) {
     configuration.tables = configuration.tables || {};
 
     var router = express.Router(),
-        dataProvider = data(configuration);
+        dataProvider = data || dataModule(configuration);
 
     /**
     Register a single table with the specified definition.

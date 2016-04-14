@@ -21,7 +21,7 @@ describe('azure-mobile-apps.data.integration', function () {
     });
 
     afterEach(function (done) {
-        cleanUp(data, table).then(function (arg) { done() }, done);
+        cleanUp(config, table).then(function (arg) { done() }, done);
     });
 
     it("basic integration test", function () {

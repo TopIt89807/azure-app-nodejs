@@ -13,7 +13,7 @@ describe('azure-mobile-apps.data.integration.schema', function () {
         operations = data(table);
 
     afterEach(function (done) {
-        cleanUp(data, table).then(done, done);
+        cleanUp(config, table).then(done, done);
     });
 
     it("initialize creates table and seeds", function () {

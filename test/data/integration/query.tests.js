@@ -29,7 +29,7 @@ describe('azure-mobile-apps.data.integration.query', function () {
     });
 
     after(function (done) {
-        cleanUp(data, table).then(done, done);
+        cleanUp(config, table).then(done, done);
     });
 
     it("supports equality hashes", function () {

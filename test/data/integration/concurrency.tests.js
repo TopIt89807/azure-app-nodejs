@@ -22,7 +22,7 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
     });
 
     after(function (done) {
-        cleanUp(data, table).then(done, done);
+        cleanUp(config, table).then(done, done);
     });
 
     it('assigns value to version column', function () {

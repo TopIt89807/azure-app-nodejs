@@ -10,7 +10,7 @@ describe('azure-mobile-apps.data.integration.initialize', function () {
         cleanUp = require('../' + config.provider + '/integration.cleanUp');
 
     afterEach(function (done) {
-        cleanUp(data, { name: 'initialize' }).then(done, done);
+        cleanUp(config, { name: 'initialize' }).then(done, done);
     });
 
     it('creates non-dynamic tables', function () {

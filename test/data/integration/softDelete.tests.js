@@ -17,7 +17,7 @@ describe('azure-mobile-apps.data.integration.softDelete', function () {
     });
 
     afterEach(function (done) {
-        cleanUp(data, table).then(done, done);
+        cleanUp(config, table).then(done, done);
     });
 
     it('deleted records are not returned with normal query', function () {
