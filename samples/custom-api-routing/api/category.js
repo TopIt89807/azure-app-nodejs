@@ -23,7 +23,8 @@ router.post('/:category/:id', bodyParser.json(), (req, res, next) => {
         content: JSON.stringify(req.body)
     };
             
-    req.azureMobile.tables('items').insert(item)
+    req.azureMobile.tables('items')
+        .insert(item)
         .then(() => res.status(201).send('Success!'))
         .catch(next);
 });
