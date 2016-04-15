@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
+    transforms = require('./transforms'),
     format = require('azure-odata-sql').format,
     queries = require('../../../query'),
     errors = require('../../../utilities/errors');
@@ -13,13 +14,13 @@ module.exports = function (table, query, version) {
         deleteStmt = {
             sql: "DELETE FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
-            transform: helpers.transforms.ignoreResults
+            transform: transforms.ignoreResults
         },
         selectStmt = {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
             transform: function (rows) {
-                result = helpers.transforms.prepareItems(table)(rows);
+                result = transforms.prepareItems(table)(rows);
             }
         },
         countStmt = {
@@ -39,7 +40,7 @@ module.exports = function (table, query, version) {
 
     if (version) {
         deleteStmt.sql += " AND [version] = @version";
-        deleteStmt.parameters.version = version;
+        deleteStmt.parameters.version = helpers.fromBase64(version);
     }
 
     // if we are soft deleting, we can select the row back out after deletion and get up to date versions, etc.

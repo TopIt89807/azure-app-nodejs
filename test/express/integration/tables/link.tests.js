@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿var expect = require('chai').expect,
+var expect = require('chai').expect,
     supertest = require('supertest-as-promised'),
     express = require('express'),
     mobileApps = require('../../../appFactory').ignoreEnvironment,
@@ -17,7 +17,7 @@ describe('azure-mobile-apps.express.integration.tables.link', function () {
     });
 
     it('adds Link header when top > pageSize & results.length === pageSize', function () {
-        mobileApp = mobileApps({ pageSize: 1 });
+        mobileApp = mobileApps({ pageSize: 1, data: { provider: 'memory' } });
         mobileApp.tables.add('headers');
         app.use(mobileApp);
         return supertest(app)

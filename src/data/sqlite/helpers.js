@@ -3,12 +3,9 @@
 // ----------------------------------------------------------------------------
 
 var types = require('../../utilities/types'),
-    strings = require('../../utilities/strings'),
-    transforms = require('./statements/transforms');
+    strings = require('../../utilities/strings');
 
 module.exports = {
-    transforms: transforms,
-
     mapParameters: function (parameters) {
         return parameters.reduce(function (result, parameter) {
             result[parameter.name] = parameter.value;
@@ -101,5 +98,13 @@ module.exports = {
             updatedAt: "updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))",
             deleted: "deleted INTEGER NOT NULL DEFAULT 0"
         }
+    },
+    
+    toBase64: function(value) {
+        return (new Buffer(value)).toString("base64");
+    },
+    
+    fromBase64: function(value) {
+        return (new Buffer(value, "base64")).toString("ascii");
     }
 };

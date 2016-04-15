@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
+    transforms = require('./transforms'),
     format = require('azure-odata-sql').format,
     errors = require('../../../utilities/errors'),
     queries = require('../../../query');
@@ -24,7 +25,7 @@ module.exports = function (table, query, version) {
             sql: "SELECT * FROM " + tableName + " WHERE " + filterClause.sql,
             parameters: helpers.mapParameters(filterClause.parameters),
             transform: function (rows) {
-                var result = helpers.transforms.prepareItems(table)(rows);
+                var result = transforms.prepareItems(table)(rows);
                 if(recordsAffected === 0) {
                     var error = errors.concurrency('No records were updated');
                     error.item = result;
@@ -36,7 +37,7 @@ module.exports = function (table, query, version) {
 
     if (version) {
         undeleteStatement.sql += " AND [version] = @version";
-        undeleteStatement.parameters.version = version;
+        undeleteStatement.parameters.version = helpers.fromBase64(version);
     }
 
     return [undeleteStatement, countStatement, selectStatement];

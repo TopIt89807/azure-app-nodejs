@@ -21,17 +21,22 @@ module.exports = function (configuration) {
 };
 ````
 
-The top level function should accept a dataConfiguration object and return a factory function that accepts a tableConfiguration object and returns a table access object as described.
+The top level function should accept a dataConfiguration object and return a factory function that 
+accepts a tableConfiguration object and returns a table access object as described.
 
-All functions should return a promise, as constructed by the `create` function in the `azure-mobile-apps/src/utilities/promises` module.
+All functions should return a promise, as constructed by the `create` function in the 
+`azure-mobile-apps/src/utilities/promises` module.
 
 ### read
 
     function (query) { }
 
-The `query` parameter is a [queryjs Query object][queryjs]. It exposes a LINQ style API and exposes a comprehensive expression tree through the `getComponents` function.
+The `query` parameter is a [queryjs Query object][queryjs]. It exposes a LINQ style API and 
+exposes a comprehensive expression tree through the `getComponents` function.
 
-Support for conversion to other formats is currently limited to an OData object representation. This can be done using the `toOData` function exposed by the `azure-mobile-apps/src/query` module. See [the source][toOData].
+Support for conversion to other formats is currently limited to an OData object representation. 
+This can be done using the `toOData` function exposed by the `azure-mobile-apps/src/query` module. 
+See [the source][toOData].
 
 The read function should resolve to an array of results.
 
@@ -40,6 +45,7 @@ The read function should resolve to an array of results.
   without a result size limit.
 - When the provided query has the `includeDeleted` property set, the results should include
   soft deleted items.
+- All version values, when retrieved should be Base64 encoded.
 
 ### insert
 
@@ -64,8 +70,7 @@ and resolve to the updated item.
 - If the `query` parameter is specified, it should only update the record if the query
   returns the record being updated.
 - If the `version` property does not match or the `query` does not return the record, an
-  `Error` should be thrown with the `concurrency`
-  property set to true.
+  `Error` should be thrown with the `concurrency` property set to true.
 - The `updatedAt` property should be updated to the current date and time.
 - The `version` property should be updated to a new unique value.
 
@@ -89,7 +94,9 @@ The delete function should delete records matching the provided query.
   recoverable by calling undelete, and should be queryable by specifying the `includeDeleted`
   option on read queries.
 
-The query object is in the format described in the read section. For simple data provider scenarios, the query object has an `id` property corresponding with the value passed in the querystring of delete requests.
+The query object is in the format described in the read section. For simple data provider 
+scenarios, the query object has an `id` property corresponding with the value passed in the 
+querystring of delete requests.
 
 ### undelete
 
@@ -107,7 +114,9 @@ The undelete function should restore records matching the provided query.
 - If the `softDelete` option is not specified on the table configuration, this function
   should have no effect and resolve to undefined.
 
-The query object is in the format described in the read section. For simple data provider scenarios, the query object has an `id` property corresponding with the value passed in the querystring of undelete requests.
+The query object is in the format described in the read section. For simple data provider 
+scenarios, the query object has an `id` property corresponding with the value passed in the 
+querystring of undelete requests.
 
 ### truncate
 
@@ -145,7 +154,9 @@ The schema function is currently only required to support swagger functionality.
 
 ## Consuming the Data Provider
 
-Set the top level factory function to the `data.provider` configuration option. The `data` object is passed as the `configuration` parameter to the factory function to allow additional configuration options to be specified.
+Set the top level factory function to the `data.provider` configuration option. The `data` 
+object is passed as the `configuration` parameter to the factory function to allow additional 
+configuration options to be specified.
 
 ## Testing
 

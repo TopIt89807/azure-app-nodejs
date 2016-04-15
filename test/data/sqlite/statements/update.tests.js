@@ -35,7 +35,7 @@ describe('azure-mobile-apps.data.sqlite.statements', function () {
         });
 
         it('creates concurrency clause', function () {
-            var statement = update({ name: 'table' }, { id: 'id', p1: 'value', p2: 2.2, version: '1' });
+            var statement = update({ name: 'table' }, { id: 'id', p1: 'value', p2: 2.2, version: 'MQ==' });
             expect(statement[0].sql).to.equal('UPDATE [table] SET [p1] = @p1,[p2] = @p2 WHERE [id] = @id AND [version] = @version');
             expect(statement[0].parameters).to.deep.equal({ p1: 'value', p2: 2.2, id: 'id', version: '1' });
         });

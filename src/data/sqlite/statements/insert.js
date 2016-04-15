@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var helpers = require('../helpers'),
+    transforms = require('./transforms'),
     util = require('util');
 
 module.exports = function (table, item) {
@@ -28,6 +29,6 @@ module.exports = function (table, item) {
         parameters: parameters
     }, {
         sql: util.format("SELECT * FROM %s WHERE [rowid] = last_insert_rowid();", tableName),
-        transform: helpers.transforms.prepareItems(table)
+        transform: transforms.prepareItems(table)
     }];
 }

@@ -60,7 +60,7 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
             .then(function (inserted) {
                 return update({ id: '1', value: 'test2', version: inserted.version })
                     .then(function (updated) {
-                        expect(updated.version).to.be.greaterThan(inserted.version);
+                        expect(decodeBase64(updated.version)).to.be.greaterThan(decodeBase64(inserted.version));
                     });
             });
     });
@@ -115,5 +115,9 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
     function del(id, version) {
         var query = queries.create('integration').where({ id: id });
         return operations.delete(query, version);
+    }
+    
+    function decodeBase64(value) {
+        return new Buffer(value, 'base64').toString("ascii");
     }
 });
