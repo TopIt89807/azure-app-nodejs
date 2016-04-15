@@ -24,7 +24,7 @@
     "express": "^4.12.4",
     "jsonwebtoken": "^5.0.2",
     "mssql": "^3.2.0",
-    "node-uuid": "^1.4.3",
+    "node-uuid": "^1.4.7",
     "winston": "^2.1.0"
   },
   "devDependencies": {
