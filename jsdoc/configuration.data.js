@@ -113,7 +113,7 @@ app.use(mobileApp);
 app.listen(process.env.PORT || 3000);
 ```
 
-### Configuration to a persistent file
+#### Configuration to a persistent file
 This file should be called `azureMobile.js` in the root directory of your app.
 ```Javascript
 module.exports = {
