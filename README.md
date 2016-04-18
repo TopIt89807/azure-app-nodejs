@@ -88,7 +88,7 @@ To run the suite of unit and integration tests, execute the following commands i
 
 This runs tests using the default embedded SQLite data provider. To execute tests
 against SQL Server, create a configuration file called `azureMobile.js` in the
-`test` directory that contains relevant data configuration. See then
+`test` directory that contains relevant data configuration. See the
 [API reference](http://azure.github.io/azure-mobile-apps-node/global.html#configuration)
 for more information.
 
