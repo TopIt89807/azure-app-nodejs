@@ -7,13 +7,13 @@ var table = azureMobileApps.table();
 // When adding record, send a push notification via WNS
 // For this to work, you must have a WNS Hub already configured
 table.insert(function (context) {
-    // For details of the Notification Hubs JavaScript SDK, 
+    // For details of the Notification Hubs JavaScript SDK,
     // see https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-nodejs-how-to-use-notification-hubs/
     logger.silly('Running TodoItem.insert');
-    
-    // This push uses a template mechanism, so we need a template/
+
+    // This push uses a template mechanism, so we need a template
     var payload = '<toast><visual><binding template="Toast01"><text id="1">INSERT</text></binding></visual></toast>';
-    
+
     // Execute the insert.  The insert returns the results as a Promise,
     // Do the push as a post-execute action within the promise flow.
     return context.execute()

@@ -14,14 +14,9 @@ table.dynamicSchema = false;
 // Must be authenticated for this to work
 table.access = 'authenticated';
 
-/**
- * Limit the viewable records to those that the user created.  This
- * is used in the individual read, update and delete operations to
- * ensure that one user cannot touch another users records
- *
- * @param {Context} context - the request context
- * @returns {Response} the response from the execution
- */
+// Limit the viewable records to those that the user created.  This
+// is used in the individual read, update and delete operations to
+// ensure that one user cannot touch another users records
 function limitToAuthenticatedUser(context) {
     context.query.where({ userId: context.user.id });
     return context.execute();
