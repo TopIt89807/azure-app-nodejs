@@ -44,8 +44,6 @@ module.exports = function (config, statement) {
                 return statement.transform ? statement.transform(results) : results;
             })
             .catch(function (err) {
-                log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(statement.parameters));
-
                 if(err.number === errorCodes.UniqueConstraintViolation)
                     throw errors.duplicate('An item with the same ID already exists');
 

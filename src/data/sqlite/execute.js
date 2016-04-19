@@ -35,8 +35,6 @@ module.exports = function (connection) {
             connection.all(statement.sql, parameters, function (err, rows) {
                 try {
                     if(err) {
-                        log.debug('SQL statement failed - ' + err.message + ': ' + statement.sql + ' with parameters ' + JSON.stringify(parameters));
-
                         if(errorTypes.isUniqueViolation(err))
                             reject(errors.duplicate('An item with the same ID already exists'));
 
