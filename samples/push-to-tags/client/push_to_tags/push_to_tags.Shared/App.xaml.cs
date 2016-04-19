@@ -18,10 +18,9 @@ namespace push_to_tags
     sealed partial class App : Application
     {
 
-        // This MobileServiceClient has been configured to communicate with the Azure Mobile App.
-        // You're all set to start working with your Mobile App!
+        // This MobileServiceClient has been configured to communicate with a local debug server.
+        // To change this, set the URL below to the URL of your hosted Azure Mobile App.
         public static MobileServiceClient MobileService = new MobileServiceClient(
-            //"https://da210.azurewebsites.net"
             "http://localhost:3000"
         );
 
