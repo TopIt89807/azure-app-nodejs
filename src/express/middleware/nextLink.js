@@ -1,10 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/express/middleware/nextLink
+@description Creates middleware that adds a HTTP response header called "Link"
+that contains a URL to retrieve the next page of data.
+*/
 var queries = require('../../query'),
     assign = require('../../utilities/assign'),
     formatUrl = require('url').format;
 
+/** The module directly exports an instance of the middleware */
 var nextLink = module.exports = function (req, res, next) {
     if (req.azureMobile.query && res.results) {
         // res.results is default, res.results.results if total count requested

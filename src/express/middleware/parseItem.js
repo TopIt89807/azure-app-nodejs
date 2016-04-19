@@ -1,11 +1,21 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/express/middleware/parseItem
+@description Parses an incoming item from the request body and attaches it to the
+request object. Content type is set to application/json by default.
+*/
+
 var bodyParser = require('body-parser'),
     errors = require('../../utilities/errors'),
     strings = require('../../utilities/strings'),
     types = require('../../utilities/types');
 
+/**
+Create a new instance of the parseItem middleware
+@param {tableDefinition} table The table that is being queried
+*/
 module.exports = function(table) {
     return [
         attachTableContext,

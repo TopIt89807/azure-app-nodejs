@@ -1,8 +1,17 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/express/middleware/renderResults
+@description Creates middleware that renders the results of table operations
+to the response in a format that the Azure Mobile Apps client expects.
+*/
 var errors = require('../../utilities/errors');
 
+/**
+Create a new instance of the renderResults middleware
+@param {configuration} configuration The mobile app configuration
+*/
 module.exports = function (configuration) {
     return function (req, res, next) {
         var single = req.method === 'GET' && req.azureMobile.query && req.azureMobile.query.single,

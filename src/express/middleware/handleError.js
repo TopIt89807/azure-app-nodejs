@@ -1,9 +1,18 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/express/middleware/handleError
+@description Creates middleware for handling and logging errors that occur
+within the SDK and user application.
+*/
 var log = require('../../logger'),
     strings = require('../../utilities/strings');
 
+/**
+Create a new instance of the handleError middleware
+@param {configuration} configuration The mobile app configuration
+*/
 module.exports = function (configuration) {
     return function (err, req, res, next) {
         if(err.concurrency)

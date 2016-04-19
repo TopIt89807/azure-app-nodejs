@@ -1,10 +1,20 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/express/middleware/apiVersionCheck
+@description Ensures that the API version that the client understands is compatible
+with the API version that the server understands.
+*/
+
 var errors = require('../../utilities/errors'),
     acceptedVersionRegex = /^2[.]0[.]\d+$/,
     acceptedVersion = '2.0.0';
 
+/**
+Create a new instance of the apiVersionCheck middleware
+@param {configuration} configuration The mobile app configuration
+*/
 module.exports = function (configuration) {
     return function (req, res, next) {
         if(!configuration.skipVersionCheck && req.method.toUpperCase() !== 'OPTIONS') {

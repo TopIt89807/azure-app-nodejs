@@ -1,9 +1,18 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/express/middleware/swagger-ui
+@description Creates middleware that renders swagger UI. Intended to be consumed
+by the {@link module:azure-mobile-apps/express/middleware/swagger swagger middleware}.
+*/
 var express = require('express'),
     path = require('path');
 
+/**
+Create a new instance of the swagger-ui middleware
+@param {configuration} configuration The mobile app configuration
+*/
 module.exports = function(configuration) {
     var swaggerPath = resolveSwaggerUi(),
         middleware = swaggerPath && express.static(swaggerPath);
