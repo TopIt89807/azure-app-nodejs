@@ -7,6 +7,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Newtonsoft.Json.Linq;
 
 // To add offline sync support, add the NuGet package Microsoft.WindowsAzure.MobileServices.SQLiteStore
 // to your project. Then, uncomment the lines marked // offline sync
@@ -106,8 +107,7 @@ namespace push_to_tags
 
         private async void ButtonRegisterTag_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            await InsertTag(new Tags { Tag = TagInput.Text });
-            await App.RefreshPushChannel();
+            await App.MobileService.InvokeApiAsync("registerTag", new JObject { { "tag", TagInput.Text } });
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

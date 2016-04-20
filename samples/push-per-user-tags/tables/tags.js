@@ -3,15 +3,15 @@
 // ----------------------------------------------------------------------------
 var table = require('azure-mobile-apps').table();
 
+table.access = 'authenticated';
 table.columns = {
-    "installationId": "string",
+    "userId": "string",
     "tag": "string"
 };
 
 table.insert(function (context) {
     // we can perform validation here, e.g. that the user is allowed to register for the tag
-    // we could also combine authentication here and store per-user tags instead of per-installation
-    context.item.installationId = context.req.get('X-ZUMO-INSTALLATION-ID');
+    context.item.userId = context.user.id;
     return context.execute();
 });
 

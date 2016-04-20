@@ -16,7 +16,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="push_to_tags.App">
       <m2:VisualElements DisplayName="pushtotags" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="push_to_tags" ForegroundText="light" BackgroundColor="#464646">
-        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+        <m2:SplashScreen Image="Assets\splash.png" BackgroundColor="black" />
       </m2:VisualElements>
     </Application>
   </Applications>

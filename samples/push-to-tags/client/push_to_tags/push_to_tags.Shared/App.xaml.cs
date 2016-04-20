@@ -24,9 +24,6 @@ namespace push_to_tags
             "http://localhost:3000"
         );
 
-        // Keep a reference to our push channel so we can refresh when tags are registered
-        public static PushNotificationChannel PushChannel;
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -37,7 +34,7 @@ namespace push_to_tags
             this.Suspending += OnSuspending;
 
 #if !WINDOWS_PHONE_APP
-                RequestedTheme = ApplicationTheme.Light;    
+                RequestedTheme = ApplicationTheme.Light;
 #endif
         }
 
@@ -110,20 +107,10 @@ namespace push_to_tags
         private async Task InitNotificationsAsync()
         {
             // Get a channel URI from WNS.
-            PushChannel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+            var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
 
-            // Update our push registration
-            await App.RefreshPushChannel();
-        }
-
-        /// <summary>
-        /// Expose a static method for updating our push registration
-        /// </summary>
-        /// <returns></returns>
-        public static async Task RefreshPushChannel()
-        {
-            // Instead of the usual GetPush().RegisterAsync(), call our custom registration API that includes tags
-            await App.MobileService.InvokeApiAsync("register", new JObject { { "pushChannel", PushChannel.Uri } });
+            // Register the channel URI with Notification Hubs.
+            await App.MobileService.GetPush().RegisterAsync(channel.Uri);
         }
     }
 }

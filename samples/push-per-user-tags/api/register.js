@@ -11,7 +11,7 @@ module.exports = {
 
         // retrieve the list of tags that this installation has registered for
         context.tables('tags')
-            .where({ installationId: installationId })
+            .where({ userId: context.user.id })
             .read()
             .then(function (tagRows) {
                 // create an installation object that notification hubs accepts
@@ -33,4 +33,6 @@ module.exports = {
             })
             .catch(next);
     }
-}
+};
+
+module.exports.post.authenticated = true;

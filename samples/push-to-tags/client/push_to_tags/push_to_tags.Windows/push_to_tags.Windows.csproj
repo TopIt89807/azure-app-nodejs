@@ -120,7 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Package.StoreAssociation.xml" />
-    <None Include="push_to_tags.Windows_StoreKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Common\QuickStartTask.xaml">
@@ -151,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\splash.png" />
   </ItemGroup>
   <Import Project="..\push_to_tags.Shared\push_to_tags.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
