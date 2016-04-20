@@ -1,9 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/src/utilities/object
+@description Provides utilities for manipulating Javascript objects
+*/
 var types = require('./types');
 
 module.exports = {
+    /** Returns an array with the values from the source object
+    @param source {object} The object to extract values from
+    */
     values: function (source) {
         return Object.keys(source).map(function (property) {
             return source[property];

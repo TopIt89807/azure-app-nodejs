@@ -1,6 +1,11 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/src/utilities/types
+@description Provides utility functions for working with Javascript types
+*/
+
 var types = module.exports = {
     curry: function (fn) {
         var slice = Array.prototype.slice,

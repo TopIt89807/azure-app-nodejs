@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/auth/user
+@module azure-mobile-apps/src/auth/user
 @description Encapsulates functionality for authenticated users
 */
 var defaultGetIdentity = require('./getIdentity');

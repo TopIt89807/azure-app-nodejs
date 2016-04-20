@@ -1,10 +1,18 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/src/express/middleware/parseQuery
+@description Creates middleware that parses an OData query from the querystring
+into a queryjs query object and attach to request object.
+*/
 var queries = require('../../query'),
     errors = require('../../utilities/errors');
 
-// parse OData query from querystring into queryjs query object and attach to request object
+/**
+Create a new instance of the parseQuery middleware
+@param {tableDefinition} table The table that is being queried
+*/
 module.exports = function (table) {
     return function (req, res, next) {
         var context = req.azureMobile;

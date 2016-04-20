@@ -1,10 +1,19 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/src/express/middleware/executeOperation
+@description Creates middleware that executes data operations against tables
+and handles the result if it is asynchronous (i.e. returns a promise)
+*/
 var promises = require('../../utilities/promises'),
     dataOperations = require('../tables/operations');
 
 // execute the requested operation and attach the results to res
+/**
+Create a new instance of the executeOperation middleware
+@param {object} operations A hash of the customised table operations
+*/
 module.exports = function (operations) {
     return function (req, res, next) {
         var verb = req.method.toLowerCase(),

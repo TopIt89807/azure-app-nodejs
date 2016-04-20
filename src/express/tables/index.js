@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/tables
+@module azure-mobile-apps/src/express/tables
 @description This module contains functionality for adding tables to an Azure
 Mobile App. It returns a router that can be attached to an express app with
 some additional functions for registering tables.
@@ -31,7 +31,7 @@ module.exports = function (configuration, data) {
     Register a single table with the specified definition.
     @function add
     @param {string} name - The name of the table. HTTP operations will be exposed on this route.
-    @param {tableDefinition|module:azure-mobile-apps/express/tables/table} definition - The definition for the table.
+    @param {tableDefinition|module:azure-mobile-apps/src/express/tables/table} definition - The definition for the table.
     */
     router.add = function (name, definition) {
         assert(name, 'A table name was not specified');
@@ -45,7 +45,7 @@ module.exports = function (configuration, data) {
     Import a file or folder of modules containing table definitions
     @function import
     @param {string} path Path to a file or folder containing modules that export either a {@link tableDefinition} or
-    {@link module:azure-mobile-apps/express/tables/table table object}.
+    {@link module:azure-mobile-apps/src/express/tables/table table object}.
     The path is relative to configuration.basePath that defaults to the location of your startup module.
     The table name will be derived from the physical file name.
     */

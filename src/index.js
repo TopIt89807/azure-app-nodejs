@@ -23,7 +23,7 @@ The top level exported function creates an instance ready for local debugging an
 Express 4.x is currently the only supported platform.
 @param {configuration} configuration Top level configuration for all aspects of the mobile app
 @param {object} environment=process.env An object containing the environment to load configuration from
-@returns {module:azure-mobile-apps/express}
+@returns {module:azure-mobile-apps/src/express}
 */
 module.exports = function (configuration, environment) {
     return module.exports.create(loadConfiguration.from()
@@ -43,17 +43,17 @@ module.exports.create = function (configuration) {
 /**
 @function table
 @description Creates an instance of a table definition object
-@returns {module:azure-mobile-apps/express/tables/table}
+@returns {module:azure-mobile-apps/src/express/tables/table}
 */
 module.exports.table = table;
 
-/** @type {module:azure-mobile-apps/logger} */
+/** @type {module:azure-mobile-apps/src/logger} */
 module.exports.logger = logger;
 
-/** @type {module:azure-mobile-apps/query} */
+/** @type {module:azure-mobile-apps/src/query} */
 module.exports.query = query;
 
-/** @type {module:azure-mobile-apps/utilities/promises} */
+/** @type {module:azure-mobile-apps/src/utilities/promises} */
 module.exports.promises = promises;
 
 // this is purely a helper function to allow intellisense for custom API definitions

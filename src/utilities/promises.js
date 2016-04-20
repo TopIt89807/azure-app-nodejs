@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/promises
+@module azure-mobile-apps/src/utilities/promises
 @description
 Provides a wrapper around standard promise libraries along with a number of helper
 functions, allowing substitution of ES6 compliant promise implementations.

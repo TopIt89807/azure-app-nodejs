@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/data/execute
+@module azure-mobile-apps/src/data/execute
 @description Provides an API for defining queries against arbitrary data sources.
 This function is attached to the data object and can be accessed through
 req.azureMobile.data.execute

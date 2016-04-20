@@ -1,10 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/src/express/middleware/checkReservedProperties
+@description The checkReservedProperties middleware ensures that objects
+with reserved properties are not presented to the REST API. These properties
+are stripped out by the client SDK before transmitting to the server.
+*/
 var errors = require('../../utilities/errors'),
-
     reservedProperties = ['createdat', 'updatedat', 'deleted'];
 
+/** The module directly exports an instance of the middleware */
 module.exports = function (req, res, next) {
     var properties = Object.keys(req.azureMobile.item),
         propertyName;

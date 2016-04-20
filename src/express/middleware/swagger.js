@@ -1,11 +1,21 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/src/express/middleware/swagger
+@description Creates an express router that exposes swagger metadata and the
+swagger UI (if the module is installed). The swagger ui middleware is mounted
+on the '/ui' route.
+*/
 var swaggerui = require('./swagger-ui'),
     swagger = require('../../swagger'),
     promises = require('../../utilities/promises'),
     express = require('express');
 
+/**
+Create a new instance of the swagger middleware
+@param {configuration} configuration The mobile app configuration
+*/
 module.exports = function(configuration) {
     var router = express.Router();
 
@@ -24,7 +34,7 @@ module.exports = function(configuration) {
                     res.json(swagger(configuration)('/', host, schemas, [scheme()]));
                 })
                 .catch(next);
-                
+
         } else {
             res.status(404).send("To access swagger definitions, you must enable swagger support by adding swagger: true to your configuration")
         }

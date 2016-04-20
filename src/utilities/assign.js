@@ -1,3 +1,13 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/src/utilities/assign
+*/
+/**
+Recursively assign properties from provided objects. Arguments are processed right to left.
+@param {object} source Any number of objects to assign
+*/
 module.exports = function assign() {
     var result = {},
         args = Array.prototype.slice.call(arguments),
@@ -15,7 +25,7 @@ module.exports = function assign() {
 
             else if (reduceArrays && typeOf(o[prop]) == 'array')
                 result[prop] = reduceArrays(result[prop] || [], Array.prototype.slice.call(o[prop]));
-                
+
             else
                 result[prop] = o[prop];
         }

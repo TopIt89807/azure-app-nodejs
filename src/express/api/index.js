@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/api
+@module azure-mobile-apps/src/express/api
 @description This module contains functionality for adding custom apis to an Azure
 Mobile App. It returns a router that can be attached to an express app with
 some additional functions for registering apis.

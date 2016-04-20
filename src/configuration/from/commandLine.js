@@ -5,7 +5,7 @@
 Azure Mobile Apps can be configured by providing command line arguments.
 Arguments should be prefixed with three dashes (`---`) with the value
 in the next agrument. Command line arguments override all other options.
-@module azure-mobile-apps/configuration/Command Line
+@module azure-mobile-apps/src/configuration/Command Line
 @param {string} logging.level Sets the minimum level for log statements to be logged. Valid values are 'error', 'warn', 'info', 'verbose', 'debug' and 'silly'.
 @param {string} promiseConstructor=native Sets the promise library being used. Valid vallues are 'q' and 'native'.
 */

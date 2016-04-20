@@ -43,8 +43,7 @@ Data configuration. See {@link sqlServerDataConfiguration} for details on config
 */
 
 /**
-SQL Server data configuration
-SQL Server data configuration.  Can specify a connection with user/password/server/etc or a connectionString
+SQL Server data configuration.  Can specify a connection with user, password, server and database or a connectionString
 @typedef sqlServerDataConfiguration
 @property {string} user - User name to connect with
 @property {string} password - Password for user
@@ -56,6 +55,12 @@ SQL Server data configuration.  Can specify a connection with user/password/serv
 @property {Object} options - Additional options
 @property {bool} options.encrypt - Encrypt the connection. Required and turned on automatically for SQL Azure
 @see {@link https://www.npmjs.com/package/mssql}
+*/
+
+/**
+SQLite data configuration.
+@typedef sqliteDataConfiguration
+@property {string} filename - The file name to use to persist data
 */
 
 /**

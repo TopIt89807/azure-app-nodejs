@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/cors
+@module azure-mobile-apps/src/cors
 @description Helper functions for negotiating cross-origin resource sharing requests
 */
 var url = require('url');

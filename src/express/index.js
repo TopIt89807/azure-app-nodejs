@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express
+@module azure-mobile-apps/src/express
 @description
 This module is the entry point for adding an Azure Mobile App to an instance of
 an express web server. It is returned from the root azure-mobile-apps module
@@ -18,9 +18,9 @@ var express = require('express'),
 /**
  * An {@link http://expressjs.com/4x/api.html#router express router} extended with the following properties
  * @typedef mobileAppRouter
- * @property {module:azure-mobile-apps/express/api} api - Contains functions to register api definitions with azure-mobile-apps
- * @property {module:azure-mobile-apps/express/tables} tables - Contains functions to register table definitions with azure-mobile-apps
- * @property {module:azure-mobile-apps/express/tables/table} table - Factory function for creating table definition objects
+ * @property {module:azure-mobile-apps/src/express/api} api - Contains functions to register api definitions with azure-mobile-apps
+ * @property {module:azure-mobile-apps/src/express/tables} tables - Contains functions to register table definitions with azure-mobile-apps
+ * @property {module:azure-mobile-apps/src/express/tables/table} table - Factory function for creating table definition objects
  * @property {configuration} configuration - Top level configuration that azure-mobile-apps was configured with
  */
 
@@ -86,7 +86,7 @@ module.exports = function (configuration) {
 /**
 Static factory function for creating table definition objects. Intended to be used from imported table configuration files.
 @function
-@returns {module:azure-mobile-apps/express/tables/table}
+@returns {module:azure-mobile-apps/src/express/tables/table}
 @example require('azure-mobile-apps/express').table();
 */
 module.exports.table = table;
