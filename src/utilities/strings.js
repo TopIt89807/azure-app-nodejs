@@ -1,6 +1,10 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/utilities/strings
+@description Provides utility functions for manipulating strings
+*/
 
 // Regex to validate string ids to ensure that it does not include any characters which can be used within a URI
 var stringIdValidatorRegex = /([\u0000-\u001F]|[\u007F-\u009F]|["\+\?\\\/\`]|^\.{1,2}$)/;

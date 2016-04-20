@@ -1,7 +1,10 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-/** Provides utility functions for determining aspects of the environment. */
+/**
+@module azure-mobile-apps/utilities/environment
+@description Provides utility functions for determining aspects of the environment.
+*/
 module.exports = {
     /** A property indicating if Node.js was started in debug mode */
     debug: process.execArgv.some(function (arg) {

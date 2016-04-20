@@ -2,9 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-Recursively assigns properties from provided objects. Arguments are processed
-right to left.
-@param {object} Any number of objects to assign
+@module azure-mobile-apps/utilities/assign
+*/
+/**
+Recursively assign properties from provided objects. Arguments are processed right to left.
+@param {object} source Any number of objects to assign
 */
 module.exports = function assign() {
     var result = {},

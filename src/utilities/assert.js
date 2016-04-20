@@ -1,7 +1,10 @@
 ﻿// ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-/** Provides utility functions for asserting specific conditions */
+/**
+Provides utility functions for asserting specific conditions
+@module azure-mobile-apps/utilities/assert
+*/
 module.exports = {
     /**
     Validates that the provided value is not null or undefined and throws

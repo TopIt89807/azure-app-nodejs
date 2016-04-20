@@ -1,8 +1,16 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
+/**
+@module azure-mobile-apps/utilities/merge
+@description Provides utility functions for merging objects together into a single object
+*/
 
 module.exports = {
+    /** Merges objects into the target
+    @param target {object} The object to merge source objects into
+    @param source {object} Any number of source objects to merge
+    */
     mergeObjects: function (target, source) {
         toObject(target);
 
@@ -17,6 +25,10 @@ module.exports = {
         return merged.wrap;
     },
 
+    /** Determines the properties that would conflict as part of a merge operation
+    @param target {object} The object to merge source objects into
+    @param source {object} Any number of source objects to merge
+    */
     getConflictingProperties: function (target, source) {
         toObject(target);
 
