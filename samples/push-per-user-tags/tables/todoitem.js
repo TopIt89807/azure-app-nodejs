@@ -25,14 +25,11 @@ table.insert(function (context) {
         });
 
     function sendPush() {
-        // This push uses a template mechanism, so we need a template
         var payload = '<toast><visual><binding template="Toast01"><text id="1">' + context.item.text + '</text></binding></visual></toast>';
 
-        // if(context.push) {
         if(context.push && context.item.tags) {
             var tags = context.item.tags.split(',').map(tag => tag.trim());
             context.push.wns.send(tags, payload, 'wns/toast', function (error) {
-            // context.push.wns.send(null, payload, 'wns/toast', function (error) {
                 if (error)
                     logger.error('Error while sending push notification: ', error);
                 else
