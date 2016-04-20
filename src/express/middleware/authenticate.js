@@ -13,6 +13,21 @@ var auth = require('../../auth');
 /**
 Create a new instance of the authenticate middleware
 @param {configuration} configuration The mobile app configuration
+@example
+<caption>Using the authenticate middleware in a custom express route</caption>
+// you must pass in the mobile app configuration so the auth middleware can access auth configuration (secret, issuer, etc)
+module.exports = function (configuration) {}
+    var router = require('express').Router(),
+        authenticate = require('azure-mobile-apps/src/express/middleware/authenticate')(configuration);
+
+    router.get('/', function (req, res, next) {
+        res.status(200).send("GET executed");
+    });
+
+    router.post('/add', authenticate, function (req, res, next) {
+        res.status(200).send("POST executed - you are logged in as " + req.azureMobile.user.id);
+    });
+};
 */
 module.exports = function (configuration) {
     if(configuration && configuration.auth && Object.keys(configuration.auth).length > 0) {
