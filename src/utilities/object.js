@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/object
+@module azure-mobile-apps/src/utilities/object
 @description Provides utilities for manipulating Javascript objects
 */
 var types = require('./types');

@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 /**
 The azure-mobile-apps logging framework, configured using {@link loggingConfiguration}
-@module azure-mobile-apps/logger
+@module azure-mobile-apps/src/logger
 */
 var winston = require('winston'),
     logger = new (winston.Logger)();

@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/types
+@module azure-mobile-apps/src/utilities/types
 @description Provides utility functions for working with Javascript types
 */
 

@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/strings
+@module azure-mobile-apps/src/utilities/strings
 @description Provides utility functions for manipulating strings
 */
 

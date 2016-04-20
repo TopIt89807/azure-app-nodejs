@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/createContext
+@module azure-mobile-apps/src/express/middleware/createContext
 @description Creates middleware that initializes the request.azureMobile
 property.
 */

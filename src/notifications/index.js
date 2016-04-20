@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
- * @module azure-mobile-apps/notifications
+ * @module azure-mobile-apps/src/notifications
  * @description Functions for managing notification installations and the NH client
  */
 var util = require('util'),

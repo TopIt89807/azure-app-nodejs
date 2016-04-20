@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/handleError
+@module azure-mobile-apps/src/express/middleware/handleError
 @description Creates middleware for handling and logging errors that occur
 within the SDK and user application.
 */

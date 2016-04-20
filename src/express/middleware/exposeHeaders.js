@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/exposeHeaders
+@module azure-mobile-apps/src/express/middleware/exposeHeaders
 @description Creates middleware that adds an HTTP response header to allow
 access to specific HTTP response headers when resources are loaded from a
 different origin.

@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/errors
+@module azure-mobile-apps/src/utilities/errors
 @description Provides utility functions for generating errors with extra properties set
 */
 var util = require('util');

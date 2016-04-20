@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/executeOperation
+@module azure-mobile-apps/src/express/middleware/executeOperation
 @description Creates middleware that executes data operations against tables
 and handles the result if it is asynchronous (i.e. returns a promise)
 */

@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/assign
+@module azure-mobile-apps/src/utilities/assign
 */
 /**
 Recursively assign properties from provided objects. Arguments are processed right to left.

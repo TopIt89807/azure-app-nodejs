@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/notAllowed
+@module azure-mobile-apps/src/express/middleware/notAllowed
 @description Disables access to a particular route and HTTP verb
 */
 /**

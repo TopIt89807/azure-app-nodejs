@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/authorize
+@module azure-mobile-apps/src/express/middleware/authorize
 @description Returns a HTTP status of 401 to the client if a user has not been authenticated.
 */
 /** The module directly exports an instance of the middleware */

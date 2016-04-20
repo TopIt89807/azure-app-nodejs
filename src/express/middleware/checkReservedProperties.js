@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/checkReservedProperties
+@module azure-mobile-apps/src/express/middleware/checkReservedProperties
 @description The checkReservedProperties middleware ensures that objects
 with reserved properties are not presented to the REST API. These properties
 are stripped out by the client SDK before transmitting to the server.

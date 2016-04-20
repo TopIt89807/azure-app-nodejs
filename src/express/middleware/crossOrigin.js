@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/crossOrigin
+@module azure-mobile-apps/src/express/middleware/crossOrigin
 @description Creates middleware that adds appropriate HTTP response headers to
 responses when resources are requested from a different origin (i.e. Cross
 Origin Resource Sharing (CORS) requests). Origins are checked against a

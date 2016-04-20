@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/apiVersionCheck
+@module azure-mobile-apps/src/express/middleware/apiVersionCheck
 @description Ensures that the API version that the client understands is compatible
 with the API version that the server understands.
 */

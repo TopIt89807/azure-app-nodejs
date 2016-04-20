@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/merge
+@module azure-mobile-apps/src/utilities/merge
 @description Provides utility functions for merging objects together into a single object
 */
 

@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/nextLink
+@module azure-mobile-apps/src/express/middleware/nextLink
 @description Creates middleware that adds a HTTP response header called "Link"
 that contains a URL to retrieve the next page of data.
 */

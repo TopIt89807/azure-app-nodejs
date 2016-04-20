@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/data
+@module azure-mobile-apps/src/data
 @description Exposes data access operations for tables
 */
 
@@ -12,9 +12,9 @@ var types = require('../utilities/types');
 Create an instance of the data provider specified in the configuration.
 @param {dataConfiguration} configuration - The data provider configuration
 @returns A function that accepts either a {@link tableDefinition} or
-{@link module:azure-mobile-apps/express/tables/table table object} and returns an
+{@link module:azure-mobile-apps/src/express/tables/table table object} and returns an
 object with the members described below. The function also has an
-{@link module:azure-mobile-apps/data/execute execute} function attached that can
+{@link module:azure-mobile-apps/src/data/execute execute} function attached that can
 be used to execute raw SQL queries.
 */
 module.exports = function (configuration) {

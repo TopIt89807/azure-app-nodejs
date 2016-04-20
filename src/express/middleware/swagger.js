@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/swagger
+@module azure-mobile-apps/src/express/middleware/swagger
 @description Creates an express router that exposes swagger metadata and the
 swagger UI (if the module is installed). The swagger ui middleware is mounted
 on the '/ui' route.

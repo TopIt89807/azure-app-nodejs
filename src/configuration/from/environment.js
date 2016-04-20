@@ -6,7 +6,7 @@
  * variables. These variables are described below and accessed from the `process.env`
  * property. Variable names are not case sensitive.
  * For configuration using Javascript, see {@link configuration global configuration}.
- * @module azure-mobile-apps/configuration/Environment
+ * @module azure-mobile-apps/src/configuration/Environment
  * @param {string} MS_MobileAppName Name of the mobile app
  * @param {string} MS_MobileLogLevel Minimum log level of messages to log (error, warn, info, verbose, debug, silly)
  * @param {boolean} MS_DebugMode Enables or disables debug mode

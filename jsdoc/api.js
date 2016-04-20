@@ -4,7 +4,7 @@
 /**
  * @typedef apiDefinition
  * @description Specifies an api
- * @property {boolean} authorize=false - Execute the {@link module:azure-mobile-apps/express/middleware/authorize authorize middleware} for each api operation.
+ * @property {boolean} authorize=false - Execute the {@link module:azure-mobile-apps/src/express/middleware/authorize authorize middleware} for each api operation.
  * @property {(function|function[])} get - Middleware to execute on get requests to this api.  You can also set the authorize/disable properties on this member.
  * @property {(function|function[])} post - Same as get, but for post requests.
  * @property {(function|function[])} put - Same as get, but for put requests.

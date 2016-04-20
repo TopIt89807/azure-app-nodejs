@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/eTag
+@module azure-mobile-apps/src/express/middleware/eTag
 @description Creates middleware that extracts the current item's version and
 adds an HTTP response header called 'ETag' containing the version value.
 */

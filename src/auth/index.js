@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/auth
+@module azure-mobile-apps/src/auth
 @description Helper functions for working with JWT tokens
 */
 var user = require('./user'),
@@ -22,7 +22,13 @@ module.exports = function (configuration) {
         /**
         Validate a JWT token
         @param {string|Buffer} token The JWT token to validate
-        @returns A promise that yields a {@link module:azure-mobile-apps/auth/user user} object on success.
+        @returns A promise that yields a {@link module:azure-mobile-apps/src/auth/user user} object on success.
+        @example
+var auth = require('azure-mobile-apps/src/auth')(mobileApp.configuration.auth);
+if(auth.validate(req.get('x-zumo-auth')))
+    res.status(200).send("Successfully authenticated");
+else
+    res.status(401).send("You must be logged in");
         */
         validate: function (token) {
             return promises.create(function (resolve, reject) {
@@ -39,6 +45,11 @@ module.exports = function (configuration) {
                 });
             });
         },
+        /**
+        Decode a JWT token without validating
+        @param {string} token The payload to sign
+        @returns {module:azure-mobile-apps/src/auth/user} A user object for the token
+        */
         decode: function (token) {
             return user(configuration, token, jwt.decode(token));
         },
@@ -46,6 +57,9 @@ module.exports = function (configuration) {
         Create a token from the specified payload
         @param {object} payload The payload to sign
         @returns {string} The signed token.
+        @example
+var auth = require('azure-mobile-apps/src/auth')(mobileApp.configuration.auth);
+res.status(200).send(auth.sign({ sub: "myUserId" }));
         */
         sign: function (payload) {
             var options = {

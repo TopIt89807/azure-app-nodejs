@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/tables/table
+@module azure-mobile-apps/src/express/tables/table
 @description
 This module provides functionality for configuring features of individual tables with an Azure Mobile App.
 The returned table object exposes functions for attaching middleware and operation functions, i.e. use, read, read.use, insert, insert.use, etc.
@@ -41,7 +41,7 @@ module.exports = function (definition) {
       -if the read is a query, an array of objects
       -if the read requests totalCount, an object with a 'results' array and a 'count' property
     @function read
-    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/src/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     @example
 var table = require('azure-mobile-apps').table();
 table.read.authorize = true;
@@ -69,7 +69,7 @@ table.read(function (context) {
     Similar syntax and semantics to the read function, but for update operations.
     In an update logic handler, the result of the context.execute() promise will be the updated object
     @function update
-    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
+    @param {module:azure-mobile-apps/src/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table read is performed.
     */
     table.update = attachOperation('update');
 
@@ -77,7 +77,7 @@ table.read(function (context) {
     Similar syntax and semantics to the read function, but for insert operations.
     In an insert logic handler, the result of the context.execute() promise will be the inserted object
     @function insert
-    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table insert is performed.
+    @param {module:azure-mobile-apps/src/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table insert is performed.
     */
     table.insert = attachOperation('insert');
 
@@ -85,7 +85,7 @@ table.read(function (context) {
     Similar syntax and semantics to the read function, but for delete operations.
     In a delete logic handler, the result of the context.execute() promise will be the deleted object
     @function delete
-    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table delete is performed.
+    @param {module:azure-mobile-apps/src/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table delete is performed.
     */
     table.delete = attachOperation('delete');
 
@@ -93,7 +93,7 @@ table.read(function (context) {
     Similar syntax and semantics to the read function, but for undelete operations.
     In an undelete logic handler, the result of the context.execute() promise will be the undeleted object
     @function undelete
-    @param {module:azure-mobile-apps/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
+    @param {module:azure-mobile-apps/src/express/tables/table~tableOperationHandler} handler - A function containing logic to execute each time a table undelete is performed.
     */
     table.undelete = attachOperation('undelete');
     return table;

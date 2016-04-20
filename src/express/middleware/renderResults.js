@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/renderResults
+@module azure-mobile-apps/src/express/middleware/renderResults
 @description Creates middleware that renders the results of table operations
 to the response in a format that the Azure Mobile Apps client expects.
 */

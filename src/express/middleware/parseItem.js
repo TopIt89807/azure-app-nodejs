@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/parseItem
+@module azure-mobile-apps/src/express/middleware/parseItem
 @description Parses an incoming item from the request body and attaches it to the
 request object. Content type is set to application/json by default.
 */

@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 /**
 Provides utility functions for asserting specific conditions
-@module azure-mobile-apps/utilities/assert
+@module azure-mobile-apps/src/utilities/assert
 */
 module.exports = {
     /**

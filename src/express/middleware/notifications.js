@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/notifications
+@module azure-mobile-apps/src/express/middleware/notifications
 @description Creates middleware that exposes routes for registering devices
 for push notifications.
 */

@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/query
+@module azure-mobile-apps/src/query
 @description Functionality for creating {@link https://github.com/Azure/azure-query-js azure-query-js} objects
 */
 var Query = require('azure-query-js').Query,

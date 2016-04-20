@@ -2,9 +2,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/authenticate
+@module azure-mobile-apps/src/express/middleware/authenticate
 @description Validates JWT tokens provided in an HTTP request header called
-x-zumo-auth. If tokens are valid, a {@link module:azure-mobile-apps/auth/user user object}
+x-zumo-auth. If tokens are valid, a {@link module:azure-mobile-apps/src/auth/user user object}
 is attached to the request.azureMobile property. If tokens are invalid, a HTTP
 status of 401 is returned to the client.
 */

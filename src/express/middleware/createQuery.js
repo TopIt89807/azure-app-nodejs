@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/createQuery
+@module azure-mobile-apps/src/express/middleware/createQuery
 @description Creates an instance of a {@link module:queryjs/Query queryjs Query object}
 and attaches it to the request object.
 */

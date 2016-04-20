@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/utilities/environment
+@module azure-mobile-apps/src/utilities/environment
 @description Provides utility functions for determining aspects of the environment.
 */
 module.exports = {

@@ -26,7 +26,7 @@
     "private": true,
     "recurse": true,
     "sortByName": true,
-    "stripModuleName": "azure-mobile-apps"
+    "stripModuleName": "azure-mobile-apps/src"
   },
   "markdown": {
     "parser": "gfm",

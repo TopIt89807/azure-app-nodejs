@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/express/middleware/version
+@module azure-mobile-apps/src/express/middleware/version
 @description Adds the current Zumo server version to responses as an HTTP header.
 */
 
