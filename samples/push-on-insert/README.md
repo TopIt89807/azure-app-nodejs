@@ -1,4 +1,4 @@
-# Azure App Service Mobile Apps backend with a Personal Table
+# Azure App Service Mobile Apps backend with Basic Push Notifications
 
 This sample provides a template basic application for use with Azure App Service.  It defines
 a single table and demonstrates how to use Azure Notification Hubs to send a push notification
