@@ -287,6 +287,22 @@ if(config.provider === 'mssql') {
             return expect(dynamicSchema(table).execute(config, statements.insert(table, item), item))
                 .to.be.rejectedWith('Index configuration of table \'' + table.name + '\' should be an array containing either strings or arrays of strings.');
         });
+
+        it("creates tables with specified database table name", function () {
+            var item = { id: '1' },
+                table = {
+                    name: 'dynamicSchemaTable',
+                    databaseTableName: 'dynamicSchema'
+                };
+
+            return dynamicSchema(table).execute(config, statements.insert(table, item), item)
+                .then(function () {
+                    return execute(config, statements.read(queries.create('dynamicSchema'), table));
+                })
+                .then(function (rows) {
+                    expect(rows.length).to.equal(1);
+                });
+        });
     });
 
     function transformIndexInfo(indexInfo) {

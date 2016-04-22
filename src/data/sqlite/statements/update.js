@@ -9,7 +9,7 @@ var helpers = require('../helpers'),
     util = require('util');
 
 module.exports = function (table, item, query) {
-    var tableName = helpers.formatTableName(table.name),
+    var tableName = helpers.formatTableName(table),
         setStatements = [],
         versionValue,
         filter = filterClause(),

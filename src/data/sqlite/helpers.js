@@ -44,7 +44,8 @@ module.exports = {
         }
     },
 
-    formatTableName: function (tableName) {
+    formatTableName: function (table) {
+        var tableName = table.containerName || table.databaseTableName || table.name;
         this.validateIdentifier(tableName);
         return '[' + tableName + ']';
     },
@@ -99,11 +100,11 @@ module.exports = {
             deleted: "deleted INTEGER NOT NULL DEFAULT 0"
         }
     },
-    
+
     toBase64: function(value) {
         return (new Buffer(value)).toString("base64");
     },
-    
+
     fromBase64: function(value) {
         return (new Buffer(value, "base64")).toString("ascii");
     }

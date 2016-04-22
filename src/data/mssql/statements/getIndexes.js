@@ -4,7 +4,7 @@
 var helpers = require('../helpers');
 
 module.exports = function (tableConfig) {
-		var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name);
+		var tableName = helpers.formatTableName(tableConfig);
     return {
         sql: 'EXEC sp_helpindex N\'' + tableName + '\''
     };

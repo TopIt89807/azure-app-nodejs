@@ -86,6 +86,6 @@ describe('azure-mobile-apps.data.integration.initialize', function () {
     });
 
     function definition(columns, seed, dynamicSchema) {
-        return data({ name: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
+        return data({ name: 'initialize', containerName: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
     }
 });

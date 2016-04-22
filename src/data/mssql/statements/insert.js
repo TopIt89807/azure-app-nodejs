@@ -5,7 +5,7 @@ var helpers = require('../helpers'),
     util = require('util');
 
 module.exports = function (table, item) {
-    var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
+    var tableName = helpers.formatTableName(table),
         columnNames = [],
         valueParams = [],
         parameters = [];

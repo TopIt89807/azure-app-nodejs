@@ -6,7 +6,7 @@ var helpers = require('../helpers'),
     queries = require('../../../query');
 
 module.exports = function (table, query, version) {
-    var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
+    var tableName = helpers.formatTableName(table),
         filterClause = format.filter(queries.toOData(query)),
         sql = "UPDATE " + tableName + " SET deleted = 0 WHERE " + filterClause.sql,
         parameters = Array.prototype.slice.apply(filterClause.parameters);

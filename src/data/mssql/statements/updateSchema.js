@@ -5,7 +5,7 @@ var helpers = require('../helpers'),
     assign = require('../../../utilities/assign');
 
 module.exports = function (tableConfig, existingColumns, item) {
-    var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),
+    var tableName = helpers.formatTableName(tableConfig),
         columns = assign(itemColumnsSql(), predefinedColumnsSql(), systemPropertiesSql()),
         newColumns = newColumnSql();
 

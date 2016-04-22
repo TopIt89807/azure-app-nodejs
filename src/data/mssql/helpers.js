@@ -41,8 +41,10 @@ var helpers = module.exports = {
         }
     },
 
-    formatTableName: function (schemaName, tableName) {
-
+    formatTableName: function (table) {
+        var schemaName = table.schema || 'dbo',
+            tableName = table.containerName || table.databaseTableName || table.name;
+            
         this.validateIdentifier(tableName);
 
         if (schemaName !== undefined) {

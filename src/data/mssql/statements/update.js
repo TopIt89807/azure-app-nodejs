@@ -8,7 +8,7 @@ var helpers = require('../helpers'),
     util = require('util');
 
 module.exports = function (table, item, query) {
-    var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
+    var tableName = helpers.formatTableName(table),
         setStatements = [],
         versionValue,
         parameters = [],

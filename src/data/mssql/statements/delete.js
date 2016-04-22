@@ -7,7 +7,7 @@ var helpers = require('../helpers'),
     mssql = require('mssql');
 
 module.exports = function (table, query, version) {
-    var tableName = helpers.formatTableName(table.schema || 'dbo', table.name),
+    var tableName = helpers.formatTableName(table),
         filterClause = format.filter(queries.toOData(query)),
         deleteStmt = "DELETE FROM " + tableName + " WHERE " + filterClause.sql,
         selectStmt = "SELECT * FROM " + tableName + " WHERE " + filterClause.sql + ";",

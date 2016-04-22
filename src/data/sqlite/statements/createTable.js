@@ -4,7 +4,7 @@
 var helpers = require('../helpers');
 
 module.exports = function (tableConfig, columns) {
-    var tableName = helpers.formatTableName(tableConfig.name),
+    var tableName = helpers.formatTableName(tableConfig),
         systemProperties = helpers.getSystemPropertiesDDL();
 
     return {
