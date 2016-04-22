@@ -25,7 +25,8 @@ describe('azure-mobile-apps.express.tables', function() {
         expect(config.configuration).to.have.property('jsontable');
         var tableConfig = config.configuration.jsontable;
 
-        expect(tableConfig).to.have.property('name', 'databasejsontable');
+        expect(tableConfig).to.have.property('name', 'jsontable');
+        expect(tableConfig).to.have.property('containerName', 'databasejsontable');
         expect(tableConfig).to.have.property('softDelete', true);
         expect(tableConfig).to.have.property('schema', 'dbo');
         expect(tableConfig).to.have.property('dynamicSchema', false);

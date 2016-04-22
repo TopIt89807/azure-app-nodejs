@@ -15,7 +15,7 @@ Create a new instance of the createQuery middleware
 */
 module.exports = function (table) {
     return function (req, res, next) {
-        req.azureMobile.query = queries.create(table.name);
+        req.azureMobile.query = queries.create(table.containerName);
         next();
     };
 };

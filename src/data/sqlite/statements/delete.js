@@ -8,7 +8,7 @@ var helpers = require('../helpers'),
     errors = require('../../../utilities/errors');
 
 module.exports = function (table, query, version) {
-    var tableName = helpers.formatTableName(table.name),
+    var tableName = helpers.formatTableName(table),
         filterClause = format.filter(queries.toOData(query)),
         result,
         deleteStmt = {

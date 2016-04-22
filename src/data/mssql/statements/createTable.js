@@ -5,7 +5,7 @@ var helpers = require('../helpers'),
     utilities = require('../../../utilities');
 
 module.exports = function (tableConfig, item) {
-    var tableName = helpers.formatTableName(tableConfig.schema || 'dbo', tableConfig.name),
+    var tableName = helpers.formatTableName(tableConfig),
 
         pkType = tableConfig.autoIncrement ? 'INT' : helpers.getSqlType((!item || item.id === undefined || item.id === null) ? '' : item.id, true),
         pkColumnSql = '[id] ' + pkType + ' NOT NULL' + (tableConfig.autoIncrement ? ' IDENTITY (1, 1)' : '') + ' PRIMARY KEY',

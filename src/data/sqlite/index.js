@@ -15,15 +15,15 @@ var statements = require('./statements'),
 
 module.exports = function (configuration) {
     configuration = configuration || {};
-    
+
     var connection = connections(configuration),
         serialize = serializeModule(connection),
         schema = schemaModule(connection),
         columns = columnsModule(connection);
-        
+
     var tableAccess = function (table) {
         assert(table, 'A table was not specified');
-        
+
         var dynamicSchema = dynamicSchemaModule(connection, table);
 
         // set execute functions based on dynamic schema and operation
@@ -38,7 +38,7 @@ module.exports = function (configuration) {
         return {
             read: function (query) {
                 return loadColumns().then(function () {
-                    query = query || queries.create(table.name);
+                    query = query || queries.create(table.containerName);
                     return read(statements.read(query, table));
                 });
             },

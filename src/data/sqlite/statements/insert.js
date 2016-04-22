@@ -6,7 +6,7 @@ var helpers = require('../helpers'),
     util = require('util');
 
 module.exports = function (table, item) {
-    var tableName = helpers.formatTableName(table.name),
+    var tableName = helpers.formatTableName(table),
         columnNames = [],
         valueParams = [],
         parameters = {};

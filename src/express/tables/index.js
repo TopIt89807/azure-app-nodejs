@@ -37,8 +37,8 @@ module.exports = function (configuration, data) {
         assert(name, 'A table name was not specified');
         logger.verbose("Adding table definition for " + name);
         definition = buildTableDefinition(name, definition);
-        configuration.tables[name] = definition;
-        router.use('/' + name, tableRouter(definition));
+        configuration.tables[definition.name] = definition;
+        router.use('/' + definition.name, tableRouter(definition));
     };
 
     /**
@@ -67,7 +67,8 @@ module.exports = function (configuration, data) {
         if(!definition || typeof definition.execute !== 'function')
             definition = table(definition);
 
-        definition.name = definition.databaseTableName || definition.name || name;
+        definition.name = definition.name || name;
+        definition.containerName = definition.containerName || definition.databaseTableName || definition.name || name;
         if (configuration.data && !definition.hasOwnProperty('dynamicSchema'))
             definition.dynamicSchema = configuration.data.dynamicSchema;
         if (configuration.data && !definition.hasOwnProperty('schema'))

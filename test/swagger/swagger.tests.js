@@ -6,7 +6,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
     paths = require('../../src/swagger/tablePaths'),
     definition = require('../../src/swagger/tableDefinition'),
 
-    table = { name: 'todoitem' },
+    table = { name: 'todoitem', databaseTableName: 'todoitemTable' },
     schema = {
         name: 'todoitem',
         properties: [

@@ -11,6 +11,7 @@ describe('azure-mobile-apps.data.integration', function () {
         cleanUp = require('../' + config.provider + '/integration.cleanUp'),
         table = {
             name: 'integration',
+            containerName: 'integration',
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         },
         operations;
@@ -72,6 +73,7 @@ describe('azure-mobile-apps.data.integration', function () {
     it("returns softDeleted record", function () {
         operations = data({
             name: 'integration',
+            containerName: 'integration',
             softDelete: true,
             columns: { string: 'string', number: 'number', bool: 'boolean' }
         });

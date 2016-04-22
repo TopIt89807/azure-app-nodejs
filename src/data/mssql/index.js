@@ -32,7 +32,7 @@ module.exports = function (configuration) {
 
         return {
             read: function (query) {
-                query = query || queries.create(table.name);
+                query = query || queries.create(table.containerName);
                 return read(configuration, statements.read(query, table));
             },
             update: function (item, query) {
