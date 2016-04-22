@@ -1,6 +1,6 @@
 {
   "name": "azure-mobile-apps",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Build mobile apps with data storage, push notifications and offline sync in minutes.",
   "main": "src/index.js",
   "typings": "typings/main.d.ts",
@@ -16,7 +16,7 @@
     "travis": "npm run lint & npm run testCI"
   },
   "dependencies": {
-    "azure-odata-sql": "^0.0.2",
+    "azure-odata-sql": "^0.0.3",
     "azure-query-js": "^0.0.3",
     "azure-sb": "^0.10.2",
     "body-parser": "^1.13.1",
