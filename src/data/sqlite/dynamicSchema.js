@@ -6,10 +6,9 @@ var serializeModule = require('./serialize'),
     schemaModule = require('./schema'),
     errorTypes = require('./errorTypes');
 
-module.exports = function (connection, table) {
-    var serialize = serializeModule(connection),
-        schema = schemaModule(connection);
-    
+module.exports = function (connection, table, serialize) {
+    var schema = schemaModule(connection, serialize);
+
     var api = {
         execute: function (statements, item, attempt) {
             attempt = attempt || 1;

@@ -2,14 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var combine = require('./combine'),
-    serializeModule = require('../serialize'),
     statements = require('../statements'),
     convert = require('../convert'),
     promises = require('../../../utilities/promises');
 
-module.exports = function (connection) {
-    var serialize = serializeModule(connection);
-
+module.exports = function (connection, serialize) {
     var api = {
         for: get,
         set: set,
