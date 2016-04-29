@@ -3,11 +3,12 @@
 // ----------------------------------------------------------------------------
 var config = require('../../appFactory').configuration().data,
     queries = require('../../../src/query'),
+    promises = require('../../../src/utilities/promises'),
     expect = require('chai').expect;
 
 describe('azure-mobile-apps.data.integration.concurrency', function () {
     var index = require('../../../src/data/' + config.provider),
-        data = index(config), 
+        data = index(config),
         cleanUp = require('../' + config.provider + '/integration.cleanUp'),
         table = { name: 'concurrency' },
         operations;
@@ -100,6 +101,17 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
             });
     });
 
+    it('executes multiple statements concurrently', function () {
+        var dynamic = data({ name: 'concurrency', dynamicSchema: true }),
+            static = data({ name: 'concurrency', dynamicSchema: false }),
+            dynamicComplete, staticComplete;
+
+        return promises.all([
+            dynamic.insert({ id: '1' }),
+            static.insert({ id: '2' })
+        ]);
+    })
+
     function read() {
         return operations.read(queries.create('integration'));
     }
@@ -116,7 +128,7 @@ describe('azure-mobile-apps.data.integration.concurrency', function () {
         var query = queries.create('integration').where({ id: id });
         return operations.delete(query, version);
     }
-    
+
     function decodeBase64(value) {
         return new Buffer(value, 'base64').toString("ascii");
     }

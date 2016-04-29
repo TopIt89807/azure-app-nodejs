@@ -18,13 +18,13 @@ module.exports = function (configuration) {
 
     var connection = connections(configuration),
         serialize = serializeModule(connection),
-        schema = schemaModule(connection),
-        columns = columnsModule(connection);
+        schema = schemaModule(connection, serialize),
+        columns = columnsModule(connection, serialize);
 
     var tableAccess = function (table) {
         assert(table, 'A table was not specified');
 
-        var dynamicSchema = dynamicSchemaModule(connection, table);
+        var dynamicSchema = dynamicSchemaModule(connection, table, serialize);
 
         // set execute functions based on dynamic schema and operation
         var read, update, insert, del;

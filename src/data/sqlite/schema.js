@@ -1,12 +1,11 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-module.exports = function (connection) {
+module.exports = function (connection, serialize) {
     // these require statements must appear within this function to avoid circular reference issues between dynamicSchema and schema
     var statements = require('./statements'),
-        serialize = require('./serialize')(connection),
         dynamicSchema = require('./dynamicSchema'),
-        columns = require('./columns')(connection),
+        columns = require('./columns')(connection, serialize),
         promises = require('../../utilities/promises'),
         log = require('../../logger');
 
@@ -83,7 +82,7 @@ module.exports = function (connection) {
             return promises.series(table.seed, insert);
 
             function insert(item) {
-                return dynamicSchema(connection, table).execute(statements.insert(table, item), item);
+                return dynamicSchema(connection, table, serialize).execute(statements.insert(table, item), item);
             }
         },
 
