@@ -64,9 +64,12 @@ res.status(200).send(auth.sign({ sub: "myUserId" }));
         sign: function (payload) {
             var options = {
                 audience: configuration.audience || 'urn:microsoft:windows-azure:zumo',
-                issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo',
-                expiresIn: (configuration.expires || 1440) * 60
+                issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo'
             };
+
+            if(!payload.exp)
+                options.expiresIn = (configuration.expires || 1440) * 60;
+
             return jwt.sign(payload, key, options);
         }
     };
