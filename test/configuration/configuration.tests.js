@@ -73,4 +73,13 @@ describe('azure-mobile-apps.configuration', function () {
         expect(promises.create()).to.deep.equal({ test: 'constr' });
         promises.setConstructor(oldConstructor);
     });
+
+    it("sets validateTokens based on website_auth_enabled", function () {
+        var environment = {
+                WEBSITE_AUTH_ENABLED: false
+            },
+            mobileApp = mobileApps(undefined, environment);
+
+        expect(mobileApp.configuration.auth.validateTokens).to.be.true;
+    });
 });

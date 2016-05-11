@@ -96,6 +96,9 @@ module.exports = function (configuration, environment) {
                 configuration.auth.audience = 'https://' + environment[key] + '/';
                 configuration.auth.issuer = 'https://' + environment[key] + '/';
                 break;
+
+            case 'website_auth_enabled':
+                configuration.auth.validateTokens = !environment[key];
         }
     });
 
