@@ -102,7 +102,8 @@ module.exports = function (configuration, environment) {
                 break;
 
             case 'website_auth_enabled':
-                configuration.auth.validateTokens = !environment[key];
+                configuration.auth.validateTokens = !parseBoolean(environment[key]);
+                break;
         }
     });
 

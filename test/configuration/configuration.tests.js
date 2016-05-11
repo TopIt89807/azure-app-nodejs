@@ -76,7 +76,7 @@ describe('azure-mobile-apps.configuration', function () {
 
     it("sets validateTokens based on website_auth_enabled", function () {
         var environment = {
-                WEBSITE_AUTH_ENABLED: false
+                WEBSITE_AUTH_ENABLED: "False"
             },
             mobileApp = mobileApps(undefined, environment);
 
