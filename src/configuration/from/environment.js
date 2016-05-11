@@ -53,6 +53,7 @@ module.exports = function (configuration, environment) {
 
             case 'ms_sqlitefilename':
                 configuration.data.filename = environment[key];
+                break;
 
             case 'website_auth_signing_key':
                 configuration.auth.secret = environment[key];
