@@ -38,7 +38,7 @@ module.exports = function (configuration) {
     var data = dataProvider(configuration),
         tableMiddleware = tables(configuration, data),
         apiMiddleware = customApi(configuration),
-        plugins = knownPlugins(configuration),
+        plugins = knownPlugins(configuration, log),
         customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();
 
