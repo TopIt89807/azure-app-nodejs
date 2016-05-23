@@ -3,9 +3,16 @@ module.exports = function (configuration, logger) {
 
     function detectPlugin(plugins, name) {
         try {
-            plugins.push(require(name)(configuration, logger));
-            logger.info('Loaded plugin ' + name);
-        } catch(ex) { }
+            var pluginModule = require(name);
+            try {
+                plugins.push(pluginModule(configuration, logger));
+                logger.info('Loaded plugin ' + name);
+            } catch (ex) {
+                logger.error('Found plugin ' + name + ' but failed to load: ', ex);
+            }
+        } catch(ex) {
+            // ignore module loading errors, probably means the module has not been installed
+        }
         return plugins;
     }
 }
