@@ -12,6 +12,7 @@ var express = require('express'),
     customApi = require('./api'),
     tables = require('./tables'),
     dataProvider = require('../data'),
+    knownPlugins = require('./knownPlugins'),
     table = require('./tables/table'),
     log = require('../logger');
 
@@ -37,6 +38,7 @@ module.exports = function (configuration) {
     var data = dataProvider(configuration),
         tableMiddleware = tables(configuration, data),
         apiMiddleware = customApi(configuration),
+        plugins = knownPlugins(configuration, log),
         customMiddlewareRouter = express.Router(),
         mobileApp = express.Router();
 
@@ -62,6 +64,9 @@ module.exports = function (configuration) {
 
     mobileApp.use(configuration.swaggerPath, middleware('swagger'));
     mobileApp.use(middleware('handleError'));
+
+    if(plugins.length)
+        customMiddlewareRouter.use(plugins);
 
     var api = function (req, res, next) {
         mobileApp(req, res, next);
