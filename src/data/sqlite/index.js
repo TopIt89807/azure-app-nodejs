@@ -37,33 +37,33 @@ module.exports = function (configuration) {
 
         return {
             read: function (query) {
-                return loadColumns().then(function () {
+                return columns.for(table).then(function () {
                     query = query || queries.create(table.containerName);
                     return read(statements.read(query, table));
                 });
             },
             update: function (item, query) {
                 assert(item, 'An item to update was not provided');
-                return loadColumns().then(function () {
+                return columns.for(table).then(function () {
                     return update(statements.update(table, item, query), item);
                 });
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');
-                return loadColumns().then(function () {
+                return columns.for(table).then(function () {
                     item.id = item.id || uuid.v4();
                     return insert(statements.insert(table, item), item);
                 });
             },
             delete: function (query, version) {
                 assert(query, 'The delete query was not provided');
-                return loadColumns().then(function () {
+                return columns.for(table).then(function () {
                     return del(statements.delete(table, query, version));
                 });
             },
             undelete: function (query, version) {
                 assert(query, 'The undelete query was not provided');
-                return loadColumns().then(function () {
+                return columns.for(table).then(function () {
                     return del(statements.undelete(table, query, version));
                 });
             },
@@ -80,12 +80,6 @@ module.exports = function (configuration) {
                 return schema.get(table);
             }
         };
-
-        function loadColumns() {
-            if(!table.sqliteColumns)
-                return columns.for(table);
-            return promises.resolved();
-        }
     };
 
     // expose a method to allow direct execution of SQL queries
