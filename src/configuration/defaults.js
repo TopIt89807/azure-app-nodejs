@@ -48,7 +48,8 @@ module.exports = function () {
             secret: '0000',
             validateTokens: false
         },
-        notifications: { }
+        notifications: { },
+        storage: { }
     };
 };
 

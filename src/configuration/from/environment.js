@@ -13,14 +13,17 @@
  * @param {string} MS_TableConnectionString Connection string to use to connect to SQL Server
  * @param {string} MS_TableSchema Default schema name for sql tables. Can override in table config
  * @param {boolean} MS_DynamicSchema Disables dynamic schema for tables when set to false
- * @param {string} EMA_RuntimeUrl Authentication gateway URL
- * @param {string} Website_Auth_Signing_Key JWT token signing / validation key
  * @param {string} MS_CrossDomainWhitelist Comma delimited list of domains to allow cross domain requests from
  * @param {string} MS_NotificationHubName Name of the notification hub for the app
  * @param {string} MS_NotificationHubConnectionString Connection string to notification hub for the app
  * @param {string} MS_DisableVersionHeader If specified, disables x-zumo-server-version header
  * @param {string} MS_SkipVersionCheck If specified, does not validate client api version before serving requests
- * @param {string} Website_Hostname Hostname of the mobile app, used as issuer & audience for auth
+ * @param {string} MS_AzureStorageAccountConnectionString Connection string to an Azure storage account
+ * @param {string} WEBSITE_HOSTNAME Hostname of the mobile app, used as issuer & audience for auth
+ * @param {string} WEBSITE_AUTH_SIGNING_KEY JWT token signing / validation key
+ * @param {string} AZURE_STORAGE_CONNECTION_STRING Connection string to an Azure storage account
+ * @param {string} AZURE_STORAGE_ACCOUNT Name of an an Azure storage account
+ * @param {string} AZURE_STORAGE_ACCESS_KEY Access key for the specified Azure storage account
  */
 var connectionString = require('../connectionString'),
     merge = require('../../utilities/assign');
@@ -103,6 +106,19 @@ module.exports = function (configuration, environment) {
 
             case 'website_auth_enabled':
                 configuration.auth.validateTokens = !parseBoolean(environment[key]);
+                break;
+
+            case 'ms_azurestorageaccountconnectionstring':
+            case 'azure_storage_connection_string':
+                configuration.storage.connectionString = environment[key];
+                break;
+
+            case 'azure_storage_account':
+                configuration.storage.account = environment[key];
+                break;
+
+            case 'azure_storage_access_key':
+                configuration.storage.key = environment[key];
                 break;
         }
     });
