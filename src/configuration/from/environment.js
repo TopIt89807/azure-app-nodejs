@@ -108,6 +108,7 @@ module.exports = function (configuration, environment) {
                 configuration.auth.validateTokens = !parseBoolean(environment[key]);
                 break;
 
+            case 'customconnstr_ms_azurestorageaccountconnectionstring':
             case 'ms_azurestorageaccountconnectionstring':
             case 'azure_storage_connection_string':
                 configuration.storage.connectionString = environment[key];
