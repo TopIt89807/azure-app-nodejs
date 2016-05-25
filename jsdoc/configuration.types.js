@@ -25,6 +25,7 @@ The top level configuration object.
 @property {authConfiguration} auth - Authentication configuration
 @property {corsConfiguration} cors - Cross-origin resource sharing configuration
 @property {notificationsConfiguration} notifications - Notifications configuration
+@property {storageConfiguration} storage - Storage account configuration
 */
 
 /**
@@ -93,3 +94,10 @@ Notifications configuration. hubName must be specified. Either a connection stri
 @property {string} sharedAccessKeyValue - Shared access key value
 @see {@link https://github.com/Azure/azure-sdk-for-node/blob/master/lib/services/serviceBus/lib/notificationhubservice.js}
 */
+
+/**
+Storage configuration. Either a connection string or an account and key must be provided.
+@typedef storageConfiguration
+@property {string} connectionString - The connection string for an Azure storage account
+@property {string} account - The name of an Azure storage account
+@property {string} key - The access key for the named Azure storage account
