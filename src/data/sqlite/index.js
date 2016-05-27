@@ -9,7 +9,6 @@ var statements = require('./statements'),
     connections = require('./connections'),
     log = require('../../logger'),
     assert = require('../../utilities/assert').argument,
-    promises = require('../../utilities/promises'),
     queries = require('../../query'),
     uuid = require('node-uuid');
 
