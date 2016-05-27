@@ -39,14 +39,18 @@ describe('azure-mobile-apps.auth', function () {
     it('handles hex encoded secrets', function () {
         var auth = authModule({ secret: 'abc' }),
             token = auth.sign({ sub: 'testUser' });
-        auth = authModule({ secret: '616263' });
-        var decoded = auth.decode(token);
-        expect(decoded.id).to.equal('testUser');
+        auth = authModule({ secret: '616263', easyauth: true });
+        return auth.validate(token)
+            .then(function (validated) {
+                expect(validated.id).to.equal('testUser');
 
-        auth = authModule({ secret: '616263' });
-        token = auth.sign({ sub: 'testUser' });
-        auth = authModule({ secret: 'abc' });
-        var decoded = auth.decode(token);
-        expect(decoded.id).to.equal('testUser');
+                auth = authModule({ secret: '616263', easyauth: true });
+                token = auth.sign({ sub: 'testUser' });
+                auth = authModule({ secret: 'abc' });
+                return auth.validate(token);
+            })
+            .then(function (validated) {
+                expect(validated.id).to.equal('testUser');
+            });
     });
 });

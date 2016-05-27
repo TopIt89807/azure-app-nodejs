@@ -15,7 +15,7 @@ Create an instance of a helper based on the supplied configuration.
 @returns An object with members described below.
 */
 module.exports = function (configuration) {
-    var key = isHexString(configuration.secret) ? hexStringToBuffer(configuration.secret) : configuration.secret;
+    var key = configuration.easyauth ? hexStringToBuffer(configuration.secret) : configuration.secret;
 
     return {
         /**
@@ -82,8 +82,4 @@ function hexStringToBuffer(hexString) {
     for (var i = 0; i < hexString.length; i += 2)
         bytes.push(parseInt(hexString.substr(i, 2), 16));
     return new Buffer(bytes);
-}
-
-function isHexString(source) {
-    return source.match(/[^0-9a-fA-F]/g) !== null;
 }
