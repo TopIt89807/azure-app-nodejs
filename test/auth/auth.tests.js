@@ -26,10 +26,13 @@ describe('azure-mobile-apps.auth', function () {
             });
     });
 
-    it('payload expiry takes precedence over options', function () {
-        var auth = authModule({ secret: 'secret', expires: 1440 }),
-            token = auth.sign({ claim: 'claim', sub: 'id', exp: 9999999 });
+    it('payload expiry, issuer and audience takes precedence over options', function () {
+        var auth = authModule({ secret: 'secret', expires: 1440, audience: 'configAudience', issuer: 'configIssuer' }),
+            token = auth.sign({ claim: 'claim', sub: 'id', exp: 9999999, aud: 'payloadAudience', iss: 'payloadIssuer' }),
+            decodedClaims = auth.decode(token).claims;
 
-        expect(auth.decode(token).claims.exp).to.equal(9999999);
+        expect(decodedClaims.exp).to.equal(9999999);
+        expect(decodedClaims.aud).to.equal('payloadAudience');
+        expect(decodedClaims.iss).to.equal('payloadIssuer');
     });
 });

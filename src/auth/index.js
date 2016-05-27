@@ -62,10 +62,13 @@ var auth = require('azure-mobile-apps/src/auth')(mobileApp.configuration.auth);
 res.status(200).send(auth.sign({ sub: "myUserId" }));
         */
         sign: function (payload) {
-            var options = {
-                audience: configuration.audience || 'urn:microsoft:windows-azure:zumo',
-                issuer: configuration.issuer || 'urn:microsoft:windows-azure:zumo'
-            };
+            var options = { };
+
+            if(!payload.aud)
+                options.audience = configuration.audience || 'urn:microsoft:windows-azure:zumo';
+
+            if(!payload.iss)
+                options.issuer = configuration.issuer || 'urn:microsoft:windows-azure:zumo';
 
             if(!payload.exp)
                 options.expiresIn = (configuration.expires || 1440) * 60;
