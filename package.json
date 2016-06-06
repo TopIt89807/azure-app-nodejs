@@ -1,6 +1,6 @@
 {
   "name": "azure-mobile-apps",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "Build mobile apps with data storage, push notifications and offline sync in minutes.",
   "main": "src/index.js",
   "typings": "typings/main.d.ts",
@@ -22,7 +22,7 @@
     "body-parser": "^1.13.1",
     "es6-promise": "^3.1.2",
     "express": "^4.12.4",
-    "jsonwebtoken": "^6.2.0",
+    "jsonwebtoken": "^7.0.0",
     "mssql": "^3.2.0",
     "node-uuid": "^1.4.7",
     "winston": "^2.1.0"
