@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var clone = require('../../utilities/assign'),
+    logger = require('../../logger'),
     path = require('path');
 
 module.exports = function (configuration) {
