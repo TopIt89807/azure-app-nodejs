@@ -15,7 +15,7 @@ Create an instance of a helper based on the supplied configuration.
 @returns An object with members described below.
 */
 module.exports = function (configuration) {
-    var key = configuration.easyauth ? hexStringToBuffer(configuration.secret) : configuration.secret;
+    var key = configuration.azureSigningKey ? hexStringToBuffer(configuration.azureSigningKey) : configuration.secret;
 
     return {
         /**

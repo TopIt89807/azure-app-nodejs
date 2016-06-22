@@ -45,8 +45,7 @@ module.exports = function () {
             dynamicSchema: true
         },
         auth: {
-            secret: '0000',
-            validateTokens: false
+            secret: '0000'
         },
         notifications: { },
         storage: { }
