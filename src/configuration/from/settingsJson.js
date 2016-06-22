@@ -25,7 +25,10 @@ module.exports = function (configuration) {
             configuration.logging = configuration.logging || {};
             configuration.logging.level = levelMappings[settings.AzureDriveTraceLevel] || 'warn';
         }
-    } catch(e) { }
+    } catch(ex) {
+        if(ex.message.indexOf("Cannot find module") === -1)
+            logger.error("Error loading website configuration file " + settingsPath, ex);
+    }
 
     return configuration;
 }
