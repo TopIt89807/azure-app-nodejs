@@ -3,7 +3,7 @@
 // Definitions by: Microsoft Azure <https://github.com/Azure/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-// Express dependency must include express.d.ts manually - 
+// Express dependency must include express.d.ts manually -
 //      tsd install express -so
 // Rremoving <reference path="../../../express/express.d.ts" />
 /// <reference path="../azure-sb/azure-sb.d.ts" />
@@ -154,8 +154,11 @@ declare module Azure.MobileApps {
         }
 
         interface Auth {
-            secret: string;
+            secret?: string;
+            azureSigningKey?: string;
             validateTokens?: boolean;
+            audience?: string;
+            issuer?: string;
         }
 
         interface Logging {
