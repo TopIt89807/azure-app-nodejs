@@ -3,9 +3,6 @@
 // Definitions by: Microsoft Azure <https://github.com/Azure/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-// Express dependency must include express.d.ts manually - 
-//      tsd install express -so
-// Rremoving <reference path="../../../express/express.d.ts" />
 /// <reference path="../azure-sb/azure-sb.d.ts" />
 
 declare module "azure-mobile-apps" {
@@ -34,7 +31,7 @@ declare module Azure.MobileApps {
     // the additional Platforms namespace is required to avoid collisions with the main Express namespace
     export module Platforms {
         export module Express {
-            interface MobileApp {
+            interface MobileApp extends Middleware {
                 configuration: Configuration;
                 tables: Tables;
                 table(): Table;
@@ -151,6 +148,7 @@ declare module Azure.MobileApps {
             options?: { encrypt: boolean };
             schema?: string;
             dynamicSchema?: boolean;
+            filename?: string;
         }
 
         interface Auth {
@@ -229,11 +227,15 @@ declare module Azure.MobileApps {
 
     interface TableDefinition {
         authorize?: boolean;
+        access?: string;
         autoIncrement?: boolean;
         dynamicSchema?: boolean;
         name?: string;
         columns?: any;
         schema?: string;
+        databaseTableName?: string;
+        maxTop?: number;
+        softDelete?: boolean;
     }
 
     interface ApiDefinition {
