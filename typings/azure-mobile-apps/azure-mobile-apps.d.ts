@@ -1,4 +1,4 @@
-// Type definitions for azure-mobile-apps v2.0.0-rc4
+// Type definitions for azure-mobile-apps v2.1.7
 // Project: https://github.com/Azure/azure-mobile-apps-node/
 // Definitions by: Microsoft Azure <https://github.com/Azure/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
