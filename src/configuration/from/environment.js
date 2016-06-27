@@ -58,10 +58,6 @@ module.exports = function (configuration, environment) {
                 configuration.data.filename = environment[key];
                 break;
 
-            case 'website_auth_signing_key':
-                configuration.auth.secret = environment[key];
-                break;
-
             case 'ms_mobileappname':
             case 'ms_mobileservicename':
             case 'website_site_name':
@@ -105,8 +101,12 @@ module.exports = function (configuration, environment) {
                 break;
 
             case 'website_auth_enabled':
-                configuration.auth.easyauth = parseBoolean(environment[key]);
+                // if EasyAuth is enabled, it will be validating tokens for us
                 configuration.auth.validateTokens = !parseBoolean(environment[key]);
+                break;
+
+            case 'website_auth_signing_key':
+                configuration.auth.azureSigningKey = environment[key];
                 break;
 
             case 'customconnstr_ms_azurestorageaccountconnectionstring':

@@ -40,7 +40,7 @@ module.exports = function (configuration) {
                 req.azureMobile = req.azureMobile || {};
                 req.azureMobile.auth = authUtils;
 
-                if(configuration.auth.validateTokens === true || !configuration.hosted) {
+                if(configuration.auth.validateTokens !== false) {
                     authUtils.validate(token)
                         .then(function (user) {
                             req.azureMobile.user = user;
