@@ -85,6 +85,18 @@ describe('azure-mobile-apps.data.integration.initialize', function () {
             });
     });
 
+    it('populates id for seeded data', function () {
+        var table = definition({ string: 'string' }, [{ string: 'test' }]);
+        return table.initialize()
+            .then(function () {
+                return table.read();
+            })
+            .then(function (results) {
+                expect(results.length).to.equal(1);
+                expect(results[0].id).to.not.be.null;
+            });
+    });
+
     function definition(columns, seed, dynamicSchema) {
         return data({ name: 'initialize', containerName: 'initialize', dynamicSchema: dynamicSchema || false, columns: columns, seed: seed });
     }

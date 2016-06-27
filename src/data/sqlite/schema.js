@@ -7,7 +7,8 @@ module.exports = function (connection, serialize) {
         dynamicSchema = require('./dynamicSchema'),
         columns = require('./columns')(connection, serialize),
         promises = require('../../utilities/promises'),
-        log = require('../../logger');
+        log = require('../../logger'),
+        uuid = require('node-uuid');
 
     var api = {
         initialize: function (table) {
@@ -82,6 +83,7 @@ module.exports = function (connection, serialize) {
             return promises.series(table.seed, insert);
 
             function insert(item) {
+                item.id = item.id || uuid.v4();
                 return dynamicSchema(connection, table, serialize).execute(statements.insert(table, item), item);
             }
         },

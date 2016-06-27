@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var clone = require('../../utilities/assign'),
+    logger = require('../../logger'),
     path = require('path');
 
 module.exports = function (configuration) {
@@ -25,7 +26,10 @@ module.exports = function (configuration) {
             configuration.logging = configuration.logging || {};
             configuration.logging.level = levelMappings[settings.AzureDriveTraceLevel] || 'warn';
         }
-    } catch(e) { }
+    } catch(ex) {
+        if(ex.message.indexOf("Cannot find module") === -1)
+            logger.error("Error loading website configuration file " + settingsPath, ex);
+    }
 
     return configuration;
 }
