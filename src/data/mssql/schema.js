@@ -8,7 +8,8 @@ module.exports = function (configuration) {
         dynamicSchema = require('./dynamicSchema'),
         promises = require('../../utilities/promises'),
         log = require('../../logger'),
-        helpers = require('./helpers');
+        helpers = require('./helpers'),
+        uuid = require('node-uuid');
 
     var api = {
         initialize: function (table) {
@@ -71,6 +72,7 @@ module.exports = function (configuration) {
             return promises.series(table.seed, insert);
 
             function insert(item) {
+                item.id = item.id || uuid.v4();
                 return dynamicSchema(table).execute(configuration, statements.insert(table, item), item);
             }
         },
