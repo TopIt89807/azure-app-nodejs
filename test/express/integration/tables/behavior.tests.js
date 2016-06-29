@@ -42,7 +42,10 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
 
         return supertest(app)
             .get('/tables/todoitem2')
-            .expect(404);
+            .expect(404)
+            .then(function (res) {
+                expect(res.body.error).to.be.undefined;
+            });
     });
 
     it('returns 500 with error details when exception is thrown', function (done) {
@@ -182,7 +185,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                 req.azureMobile.item = req.body;
                 next(error);
             });
-        }, table.operation);
+        }, table.execute);
 
         table.insert(function (context) {
             return { id: 1, text: context.item }

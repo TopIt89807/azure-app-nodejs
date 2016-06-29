@@ -14,8 +14,14 @@ Create a new instance of the renderResults middleware
 */
 module.exports = function (configuration) {
     return function (req, res, next) {
-        var single = req.method === 'GET' && req.azureMobile.query && req.azureMobile.query.single,
+        var context = req.azureMobile,
+            single = req.method === 'GET' && context.query && context.query.single,
             successStatus = req.method === 'POST' ? 201 : 200;
+
+        if(!context.table) {
+            next();
+            return;
+        }
 
         preventCaching();
 
