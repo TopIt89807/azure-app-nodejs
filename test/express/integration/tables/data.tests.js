@@ -259,6 +259,35 @@ describe('azure-mobile-apps.express.integration.tables.data', function () {
             });
     });
 
+    it("total count excludes deleted records", function () {
+        mobileApp.tables.add('integration', { softDelete: true });
+        app.use(mobileApp);
+
+        return supertest(app)
+            .post('/tables/integration')
+            .send({ id: '1' })
+            .expect(201)
+            .then(function () {
+                return supertest(app)
+                    .post('/tables/integration')
+                    .send({ id: '2' })
+                    .expect(201)
+            })
+            .then(function () {
+                return supertest(app)
+                    .delete('/tables/integration/1')
+                    .expect(200)
+            })
+            .then(function () {
+                return supertest(app)
+                    .get('/tables/integration?$inlinecount=allpages')
+                    .expect(200)
+                    .then(function (results) {
+                        expect(results.body.count).to.equal(1);
+                    });
+            });
+    });
+
     it("returns 500 for get when table is defined but not yet created", function () {
         mobileApp.tables.add('notCreated', { dynamicSchema: false });
         app.use(mobileApp);

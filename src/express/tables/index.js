@@ -69,6 +69,8 @@ module.exports = function (configuration, data) {
 
         definition.name = definition.name || name;
         definition.containerName = definition.containerName || definition.databaseTableName || definition.name || name;
+        definition.supportsSoftDelete = definition.softDelete;
+
         if (configuration.data && !definition.hasOwnProperty('dynamicSchema'))
             definition.dynamicSchema = configuration.data.dynamicSchema;
         if (configuration.data && !definition.hasOwnProperty('schema'))
