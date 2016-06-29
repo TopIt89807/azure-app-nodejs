@@ -12,15 +12,21 @@ var errors = require('../../utilities/errors'),
 
 /** The module directly exports an instance of the middleware */
 module.exports = function (req, res, next) {
-    var properties = Object.keys(req.azureMobile.item),
-        propertyName;
+    var item = req.azureMobile.item;
 
-    for(var i = 0, l = properties.length; i < l && !propertyName; i++)
-        if(reservedProperties.indexOf(properties[i].toLowerCase()) > -1)
-            propertyName = properties[i]
+    if(typeof item === "object") {
+        var properties = Object.keys(item),
+            propertyName;
 
-    if(propertyName)
-        next(errors.badRequest("Cannot update item with property '" + propertyName + "' as it is reserved"));
-    else
+        for(var i = 0, l = properties.length; i < l && !propertyName; i++)
+            if(reservedProperties.indexOf(properties[i].toLowerCase()) > -1)
+                propertyName = properties[i]
+
+        if(propertyName)
+            next(errors.badRequest("Cannot update item with property '" + propertyName + "' as it is reserved"));
+        else
+            next();
+    } else {
         next();
+    }
 };
