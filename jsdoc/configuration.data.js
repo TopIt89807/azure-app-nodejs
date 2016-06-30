@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 /**
-@module azure-mobile-apps/configuration/Data Providers
+@module azure-mobile-apps/src/configuration/DataProviders
 @description Azure Mobile Apps ships with two built-in data providers -
 Microsoft SQL Server and SQLite3.
 
@@ -78,6 +78,7 @@ module.exports = {
 ```Javascript
 module.exports = {
     data: {
+        provider: 'mssql',
         connectionString: "Data Source=localhost;Initial Catalog=myMobileAppDatabase;User ID=foo;Password=bar"
     }
 };

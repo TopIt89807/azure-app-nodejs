@@ -36,11 +36,13 @@ Logging configuration. See {@link https://github.com/winstonjs/winston#instantia
 */
 
 /**
-Data configuration. See {@link sqlServerDataConfiguration} for details on configuring SQL Server
+Data configuration.
 @typedef dataConfiguration
-@property {string} provider=memory - Data provider to use. Supported providers are mssql and memory
+@property {string} provider=sqlite - Data provider to use. Supported providers are mssql and sqlite
 @property {bool} dynamicSchema=false - Global default for table dynamic schema, can override at table config level
-@property {string} schema=dbo - Global default for SQL Server schema name, can override at table config level
+@see {@link module:configuration/DataProviders} for more details and examples
+@see {@link sqlServerDataConfiguration} for SQL Server specific configuration options
+@see {@link sqliteDataConfiguration} for SQLite specific configuration options
 */
 
 /**
@@ -53,6 +55,7 @@ SQL Server data configuration.  Can specify a connection with user, password, se
 @property {string} database - Name of the database to connect to
 @property {integer} connectionTimeout=15000 - Connection timeout in milliseconds
 @property {string} connectionString - SQL Server connection string
+@property {string} schema=dbo - Global default for SQL Server schema name, can override at table config level
 @property {Object} options - Additional options
 @property {bool} options.encrypt - Encrypt the connection. Required and turned on automatically for SQL Azure
 @see {@link https://www.npmjs.com/package/mssql}
@@ -102,3 +105,4 @@ Storage configuration. Either a connection string or an account and key must be 
 @property {string} connectionString - The connection string for an Azure storage account
 @property {string} account - The name of an Azure storage account
 @property {string} key - The access key for the named Azure storage account
+*/
