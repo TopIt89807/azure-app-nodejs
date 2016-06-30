@@ -3,6 +3,9 @@
 // Definitions by: Microsoft Azure <https://github.com/Azure/>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
+/// <reference path="../express/express.d.ts" />
+/// <reference path="../azure-sb/azure-sb.d.ts" />
+
 declare module "azure-mobile-apps" {
     interface AzureMobileApps {
         (configuration?: Azure.MobileApps.Configuration): Azure.MobileApps.Platforms.Express.MobileApp;
@@ -25,10 +28,10 @@ declare module "azure-mobile-apps/src/query" {
     export = query;
 }
 
-declare module Azure.MobileApps {
+declare namespace Azure.MobileApps {
     // the additional Platforms namespace is required to avoid collisions with the main Express namespace
-    export module Platforms {
-        export module Express {
+    export namespace Platforms {
+        export namespace Express {
             interface MobileApp extends Middleware {
                 configuration: Configuration;
                 tables: Tables;
@@ -75,7 +78,7 @@ declare module Azure.MobileApps {
         }
     }
 
-    export module Data {
+    export namespace Data {
         interface Table {
             read(query: QueryJs): Thenable<any[]>;
             update(item: any, query: QueryJs): Thenable<any>;
@@ -132,7 +135,7 @@ declare module Azure.MobileApps {
         notifications?: Configuration.Notifications;
     }
 
-    export module Configuration {
+    export namespace Configuration {
         // it would be nice to have the config for various providers in separate interfaces,
         // but this is the simplest solution to support variations of the current setup
         interface Data {
@@ -209,6 +212,7 @@ declare module Azure.MobileApps {
 
     // general
     var nh: Azure.ServiceBus.NotificationHubService;
+
     interface Context {
         query: QueryJs;
         id: string | number;
@@ -272,7 +276,7 @@ declare module Azure.MobileApps {
 }
 
 // additions to the Express modules
-declare module Express {
+declare namespace Express {
     interface Request {
         azureMobile: Azure.MobileApps.Context
     }

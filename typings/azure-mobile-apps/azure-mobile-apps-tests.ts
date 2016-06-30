@@ -43,6 +43,9 @@ mobileApp.tables.import('tables');
 mobileApp.api.add('api', { authorize: true, get: function () {}, delete: function () {} });
 mobileApp.api.import('api');
 
+// ensure the mobile app instance can be correctly mounted as an express router
+app.use(mobileApp);
+
 // Express.Table, instantiated from the mobile app
 var table = mobileApp.table()
 table.use(function (req: Express.Request, res: Express.Response, next: any) {
