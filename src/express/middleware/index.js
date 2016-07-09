@@ -1,3 +1,6 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// ----------------------------------------------------------------------------
 module.exports = function (configuration) {
     return function (name) {
         return require('./' + name)(configuration);
