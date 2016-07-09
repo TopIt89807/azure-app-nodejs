@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var eTag = require('../../../src/express/middleware/eTag'),
+var eTag = require('../../../src/express/middleware/tables/eTag'),
     expect = require('chai').expect,
     req = {},
     res;

@@ -11,6 +11,7 @@ when the configuration passed specifies the express platform.
 var express = require('express'),
     customApi = require('./api'),
     tables = require('./tables'),
+    middlewareFactory = require('./middleware'),
     dataProvider = require('../data'),
     knownPlugins = require('./knownPlugins'),
     table = require('./tables/table'),
@@ -32,6 +33,8 @@ var express = require('express'),
  */
 module.exports = function (configuration) {
     configuration = configuration || {};
+
+    var middleware = middlewareFactory(configuration);
 
     log.silly("Configured with the following values:\n" + JSON.stringify(configuration, null, 2));
 
@@ -82,10 +85,6 @@ module.exports = function (configuration) {
     }
 
     return api;
-
-    function middleware(name) {
-        return require('./middleware/' + name)(configuration);
-    }
 };
 
 /**

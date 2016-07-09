@@ -1,15 +1,15 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var nextLink = require('../../../src/express/middleware/nextLink'),
+var nextLink = require('../../../src/express/middleware/tables/nextLink'),
     queries = require('../../../src/query'),
     expect = require('chai').expect,
     req, res;
 
 describe('azure-mobile-apps.express.middleware.nextLink', function () {
     beforeEach(function () {
-        req = { 
-            protocol: 'http', hostname: 'host.com', path: 'tables/table', 
+        req = {
+            protocol: 'http', hostname: 'host.com', path: 'tables/table',
             query: { $top: 3 },
             azureMobile: { query: queries.create('table').take(2) }
         };

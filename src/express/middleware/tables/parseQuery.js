@@ -6,8 +6,8 @@
 @description Creates middleware that parses an OData query from the querystring
 into a queryjs query object and attach to request object.
 */
-var queries = require('../../query'),
-    errors = require('../../utilities/errors');
+var queries = require('../../../query'),
+    errors = require('../../../utilities/errors');
 
 /**
 Create a new instance of the parseQuery middleware

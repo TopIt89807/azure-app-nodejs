@@ -8,9 +8,9 @@ request object. Content type is set to application/json by default.
 */
 
 var bodyParser = require('body-parser'),
-    errors = require('../../utilities/errors'),
-    strings = require('../../utilities/strings'),
-    types = require('../../utilities/types');
+    errors = require('../../../utilities/errors'),
+    strings = require('../../../utilities/strings'),
+    types = require('../../../utilities/types');
 
 /**
 Create a new instance of the parseItem middleware
