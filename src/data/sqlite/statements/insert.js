@@ -16,7 +16,7 @@ module.exports = function (table, item) {
         if ((property !== 'id' || !table.autoIncrement) && item[property] !== undefined) {
             columnNames.push(helpers.formatMember(property));
             valueParams.push('@' + property);
-            parameters[property] = item[property];
+            parameters[property] = helpers.mapParameterValue(item[property]);
         }
     });
 

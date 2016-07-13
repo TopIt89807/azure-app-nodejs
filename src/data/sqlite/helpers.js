@@ -6,9 +6,12 @@ var types = require('../../utilities/types'),
     strings = require('../../utilities/strings');
 
 module.exports = {
+    mapParameterValue: function (value) {
+        return types.isDate(value) ? value.toISOString() : value;
+    },
     mapParameters: function (parameters) {
         return parameters.reduce(function (result, parameter) {
-            result[parameter.name] = parameter.value;
+            result[parameter.name] = module.exports.mapParameterValue(parameter.value);
             return result;
         }, {});
     },
