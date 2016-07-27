@@ -8,7 +8,6 @@ var statements = require('./statements'),
     columnsModule = require('./columns'),
     connections = require('./connections'),
     log = require('../../logger'),
-    assert = require('../../utilities/assert').argument,
     queries = require('../../query'),
     uuid = require('node-uuid');
 
@@ -77,7 +76,6 @@ module.exports = function (configuration) {
 
     // expose a method to allow direct execution of SQL queries
     tableAccess.execute = function (statement) {
-        assert(statement, 'A SQL statement was not provided');
         return serialize(statement);
     };
 

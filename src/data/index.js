@@ -19,53 +19,59 @@ object with the members described below. The function also has an
 be used to execute raw SQL queries.
 */
 module.exports = function (configuration) {
-    var provider = createProvider(configuration);
+    var provider = createProvider();
 
-    var tableFactory = function (table) {
+    var api = function (table) {
         assert(table, 'A table was not specified');
-
-        var tableAccess = provider(table);
-
-        return {
-                read: function (query) {
-                    return tableAccess.read(query);
-                },
-                update: function (item, query) {
-                    assert(item, 'An item to update was not provided');
-                    return tableAccess.update(item, query);
-                },
-                insert: function (item) {
-                    assert(item, 'An item to insert was not provided');
-                    return tableAccess.insert(item);
-                },
-                delete: function (query, version) {
-                    assert(query, 'The delete query was not provided');
-                    return tableAccess.delete(query, version);
-                },
-                undelete: function (query, version) {
-                    assert(query, 'The undelete query was not provided');
-                    return tableAccess.undelete(query, version);
-                },
-                truncate: function () {
-                    return tableAccess.truncate();
-                },
-                initialize: function () {
-                    return tableAccess.initialize();
-                },
-                schema: function () {
-                    return tableAccess.schema();
-                }
-        };
+        return wrapTableAccess(provider, table);
     };
 
-    tableFactory.execute = provider.execute;
-    return tableFactory;
-};
+    api.execute = function (statement) {
+        assert(statement, 'A SQL statement was not provided');
+        return provider.execute(statement);
+    };
 
-function createProvider(configuration) {
-    var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
-    return (types.isFunction(provider) ? provider : require('./' + provider))(configuration.data);
-}
+    return api;
+
+    function createProvider() {
+        var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
+        return (types.isFunction(provider) ? provider : require('./' + provider))(configuration.data);
+    }
+
+    function wrapTableAccess(provider, table) {
+        var tableAccess = provider(table);
+        return {
+            read: function (query) {
+                return tableAccess.read(query);
+            },
+            update: function (item, query) {
+                assert(item, 'An item to update was not provided');
+                return tableAccess.update(item, query);
+            },
+            insert: function (item) {
+                assert(item, 'An item to insert was not provided');
+                return tableAccess.insert(item);
+            },
+            delete: function (query, version) {
+                assert(query, 'The delete query was not provided');
+                return tableAccess.delete(query, version);
+            },
+            undelete: function (query, version) {
+                assert(query, 'The undelete query was not provided');
+                return tableAccess.undelete(query, version);
+            },
+            truncate: function () {
+                return tableAccess.truncate();
+            },
+            initialize: function () {
+                return tableAccess.initialize();
+            },
+            schema: function () {
+                return tableAccess.schema();
+            }
+        };
+    }
+};
 
 /**
 @function read

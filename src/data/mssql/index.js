@@ -63,7 +63,6 @@ module.exports = function (configuration) {
 
     // expose a method to allow direct execution if SQL queries
     tableAccess.execute = function (statement) {
-        assert(statement, 'A SQL statement was not provided');
         return execute(configuration, statement);
     };
 
