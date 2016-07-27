@@ -6,7 +6,8 @@
 @description Exposes data access operations for tables
 */
 
-var types = require('../utilities/types');
+var types = require('../utilities/types'),
+    assert = require('../utilities/assert').argument;
 
 /**
 Create an instance of the data provider specified in the configuration.
@@ -18,6 +19,50 @@ object with the members described below. The function also has an
 be used to execute raw SQL queries.
 */
 module.exports = function (configuration) {
+    var provider = createProvider(configuration);
+
+    var tableFactory = function (table) {
+        assert(table, 'A table was not specified');
+
+        var tableAccess = provider(table);
+
+        return {
+                read: function (query) {
+                    return tableAccess.read(query);
+                },
+                update: function (item, query) {
+                    assert(item, 'An item to update was not provided');
+                    return tableAccess.update(item, query);
+                },
+                insert: function (item) {
+                    assert(item, 'An item to insert was not provided');
+                    return tableAccess.insert(item);
+                },
+                delete: function (query, version) {
+                    assert(query, 'The delete query was not provided');
+                    return tableAccess.delete(query, version);
+                },
+                undelete: function (query, version) {
+                    assert(query, 'The undelete query was not provided');
+                    return tableAccess.undelete(query, version);
+                },
+                truncate: function () {
+                    return tableAccess.truncate();
+                },
+                initialize: function () {
+                    return tableAccess.initialize();
+                },
+                schema: function () {
+                    return tableAccess.schema();
+                }
+        };
+    };
+
+    tableFactory.execute = provider.execute;
+    return tableFactory;
+};
+
+function createProvider(configuration) {
     var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
     return (types.isFunction(provider) ? provider : require('./' + provider))(configuration.data);
 }
@@ -29,7 +74,8 @@ module.exports = function (configuration) {
 @returns A promise that yields the results of the query, as expected by the Mobile Apps client.
 If the query has a single property specified, the result should be a single object.
 If the query has a includeTotalCount property specified, the result should be an object
-containing a results property and a count property. */
+containing a results property and a count property. 
+*/
 /**
 @function update
 @description Update a row in the table.
