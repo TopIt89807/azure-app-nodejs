@@ -42,23 +42,23 @@ module.exports = function (configuration) {
         var tableAccess = provider(table);
         return {
             read: function (query) {
-                return tableAccess.read(query);
+                return tableAccess.read(applyFilters(query));
             },
             update: function (item, query) {
                 assert(item, 'An item to update was not provided');
-                return tableAccess.update(item, query);
+                return tableAccess.update(applyTransformations(item), applyFilters(query));
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');
-                return tableAccess.insert(item);
+                return tableAccess.insert(applyTransformations(item));
             },
             delete: function (query, version) {
                 assert(query, 'The delete query was not provided');
-                return tableAccess.delete(query, version);
+                return tableAccess.delete(applyFilters(query), version);
             },
             undelete: function (query, version) {
                 assert(query, 'The undelete query was not provided');
-                return tableAccess.undelete(query, version);
+                return tableAccess.undelete(applyFilters(query), version);
             },
             truncate: function () {
                 return tableAccess.truncate();
@@ -70,6 +70,24 @@ module.exports = function (configuration) {
                 return tableAccess.schema();
             }
         };
+
+        function applyFilters(query) {
+            if(!table.filters)
+                return query;
+
+            return table.filters.reduce(function (query, filter) {
+                return filter(query);
+            }, query);
+        }
+
+        function applyTransformations(item) {
+            if(!table.transformations)
+                return item;
+
+            return table.transformations && table.transformations.reduce(function (item, transform) {
+                return transform(item);
+            }, item);
+        }
     }
 };
 
