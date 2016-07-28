@@ -30,15 +30,9 @@ module.exports = {
                 assert(query, 'The undelete query was not provided');
                 return tableAccess.undelete(applyFilters(query), version);
             },
-            truncate: function () {
-                return tableAccess.truncate();
-            },
-            initialize: function () {
-                return tableAccess.initialize();
-            },
-            schema: function () {
-                return tableAccess.schema();
-            }
+            truncate: tableAccess.truncate,
+            initialize: tableAccess.initialize,
+            schema: tableAccess.schema
         };
 
         function applyFilters(query) {
