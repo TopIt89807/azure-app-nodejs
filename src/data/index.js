@@ -8,7 +8,7 @@
 
 var types = require('../utilities/types'),
     assert = require('../utilities/assert').argument,
-    filters = require('./filters');
+    wrap = require('./wrapProvider');
 
 /**
 Create an instance of the data provider specified in the configuration.
@@ -24,7 +24,7 @@ module.exports = function (configuration) {
 
     var api = function (table, context) {
         assert(table, 'A table was not specified');
-        return filters.apply(provider, table, context);
+        return wrap(provider, table, context);
     };
 
     api.execute = function (statement) {
