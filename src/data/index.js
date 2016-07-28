@@ -80,7 +80,9 @@ module.exports = function (configuration) {
                 return query;
 
             return table.filters.reduce(function (query, filter) {
-                return filter(query, context);
+                // this is a bit of trickery to allow filters to either 
+                // modify the existing query or return a different query
+                return filter(query, context) || query;
             }, query || queries.create(table.name));
         }
 
@@ -89,11 +91,10 @@ module.exports = function (configuration) {
                 return item;
 
             return table.transforms.reduce(function (item, transform) {
-                // this is a bit of trickery to allow transforms to either 
-                // modify the existing item or return a different object
-                // see the test in data/integration/filters for an example
-                return item = transform(item, context) || item;
-            }, item) || item;
+                // same trick as in filters
+                // see the test in data/integration/filters for an example                
+                return transform(item, context) || item;
+            }, item);
         }
     }
 };
