@@ -7,7 +7,8 @@
 */
 
 var types = require('../utilities/types'),
-    assert = require('../utilities/assert').argument;
+    assert = require('../utilities/assert').argument,
+    queries = require('../query');
 
 /**
 Create an instance of the data provider specified in the configuration.
@@ -46,11 +47,11 @@ module.exports = function (configuration) {
             },
             update: function (item, query) {
                 assert(item, 'An item to update was not provided');
-                return tableAccess.update(applyTransformations(item), applyFilters(query));
+                return tableAccess.update(applyTransforms(item), applyFilters(query));
             },
             insert: function (item) {
                 assert(item, 'An item to insert was not provided');
-                return tableAccess.insert(applyTransformations(item));
+                return tableAccess.insert(applyTransforms(item));
             },
             delete: function (query, version) {
                 assert(query, 'The delete query was not provided');
@@ -77,16 +78,19 @@ module.exports = function (configuration) {
 
             return table.filters.reduce(function (query, filter) {
                 return filter(query);
-            }, query);
+            }, query || queries.create(table.name));
         }
 
-        function applyTransformations(item) {
-            if(!table.transformations)
+        function applyTransforms(item) {
+            if(!table.transforms)
                 return item;
 
-            return table.transformations && table.transformations.reduce(function (item, transform) {
-                return transform(item);
-            }, item);
+            return table.transforms.reduce(function (item, transform) {
+                // this is a bit of trickery to allow transforms to either 
+                // modify the existing item or return a different object
+                // see the test in data/integration/filters for an example
+                return item = transform(item) || item;
+            }, item) || item;
         }
     }
 };
