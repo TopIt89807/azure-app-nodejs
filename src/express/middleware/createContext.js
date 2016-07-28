@@ -20,7 +20,7 @@ module.exports = function (configuration) {
         notificationsClient = notifications(configuration.notifications).getClient();
 
     return function (req, res, next) {
-        req.azureMobile = {
+        var context = req.azureMobile = {
             req: req,
             res: res,
             data: dataProvider,
@@ -30,7 +30,7 @@ module.exports = function (configuration) {
             tables: function (name) {
                 if(!configuration.tables[name])
                     throw new Error("The table '" + name + "' does not exist.")
-                return attachOperators(name, dataProvider(configuration.tables[name]));
+                return attachOperators(name, dataProvider(configuration.tables[name], context));
             }
         };
         next();

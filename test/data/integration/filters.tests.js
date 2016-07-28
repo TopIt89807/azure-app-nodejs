@@ -9,23 +9,24 @@ describe('azure-mobile-apps.data.integration.filters', function () {
     var index = require('../../../src/data'),
         data = index(config),
         cleanUp = require('../' + config.data.provider + '/integration.cleanUp'),
+        context = { filterValue: '3', propertyValue: '1' },
         table = {
             name: 'filters',
             softDelete: true,
             seed: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
-            filters: [function (query) {
-                return query.where(function () { return this.id >= '3'; });
+            filters: [function (query, context) {
+                return query.where(function (value) { return this.id >= value; }, context.filterValue);
             }],
             transforms: [function (item) {
                 return { id: item.id };
-            }, function (item) {
-                item.property = '1';
+            }, function (item, context) {
+                item.property = context.propertyValue;
             }]
         },
         operations;
 
     beforeEach(function (done) {
-        operations = data(table);
+        operations = data(table, context);
         operations.initialize().then(function (inserted) { }).then(done, done);
     });
 

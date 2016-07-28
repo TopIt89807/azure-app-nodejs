@@ -22,9 +22,9 @@ be used to execute raw SQL queries.
 module.exports = function (configuration) {
     var provider = createProvider();
 
-    var api = function (table) {
+    var api = function (table, context) {
         assert(table, 'A table was not specified');
-        return wrapTableAccess(provider, table);
+        return wrapTableAccess(provider, table, context);
     };
 
     api.execute = function (statement) {
@@ -39,8 +39,11 @@ module.exports = function (configuration) {
         return (types.isFunction(provider) ? provider : require('./' + provider))(configuration.data);
     }
 
-    function wrapTableAccess(provider, table) {
+    function wrapTableAccess(provider, table, context) {
         var tableAccess = provider(table);
+
+        context = context || {};
+
         return {
             read: function (query) {
                 return tableAccess.read(applyFilters(query));
@@ -77,7 +80,7 @@ module.exports = function (configuration) {
                 return query;
 
             return table.filters.reduce(function (query, filter) {
-                return filter(query);
+                return filter(query, context);
             }, query || queries.create(table.name));
         }
 
@@ -89,7 +92,7 @@ module.exports = function (configuration) {
                 // this is a bit of trickery to allow transforms to either 
                 // modify the existing item or return a different object
                 // see the test in data/integration/filters for an example
-                return item = transform(item) || item;
+                return item = transform(item, context) || item;
             }, item) || item;
         }
     }
