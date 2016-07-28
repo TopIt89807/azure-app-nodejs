@@ -70,6 +70,7 @@ module.exports = function (configuration, data) {
         definition.name = definition.name || name;
         definition.containerName = definition.containerName || definition.databaseTableName || definition.name || name;
         definition.supportsSoftDelete = definition.softDelete;
+        definition.userIdColumn = definition.userIdColumn || configuration.userIdColumn;
 
         if (configuration.data && !definition.hasOwnProperty('dynamicSchema'))
             definition.dynamicSchema = configuration.data.dynamicSchema;
@@ -80,6 +81,12 @@ module.exports = function (configuration, data) {
         if (!definition.hasOwnProperty('pageSize'))
             definition.pageSize = configuration.pageSize;
 
+        if(definition.perUser) {
+            // this ensures the required user id column is created when initialize is called
+            definition.columns = definition.columns || {};
+            definition.columns[definition.userIdColumn] = 'string';
+        }
+        
         return definition;
     }
 }

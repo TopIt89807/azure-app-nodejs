@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var assert = require('../utilities/assert').argument,
+var filters = require('./filters'),
+    assert = require('../utilities/assert').argument,
     queries = require('../query');
 
 module.exports = function (provider, table, context) {
@@ -35,23 +36,28 @@ module.exports = function (provider, table, context) {
     };
 
     function applyFilters(query) {
+        if(table.perUser)
+            query = filters.apply('perUser', query, context);
+
         if(!table.filters)
             return query;
 
         return table.filters.reduce(function (query, filter) {
             // this is a bit of trickery to allow filters to either 
             // modify the existing query or return a different query
+            // see the test in data/integration/filters for an example                
             return filter(query, context) || query;
         }, query || queries.create(table.name));
     }
 
     function applyTransforms(item) {
+        if(table.perUser)
+            item = filters.applyTransform('perUser', item, context);
+
         if(!table.transforms)
             return item;
 
         return table.transforms.reduce(function (item, transform) {
-            // same trick as in filters
-            // see the test in data/integration/filters for an example                
             return transform(item, context) || item;
         }, item);
     }
