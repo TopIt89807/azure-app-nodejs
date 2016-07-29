@@ -1,6 +1,6 @@
 {
   "name": "azure-mobile-apps",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Build mobile apps with data storage, push notifications and offline sync in minutes.",
   "main": "src/index.js",
   "typings": "typings/main.d.ts",
@@ -42,7 +42,7 @@
     "sqlite3": "^3.1.2",
     "supertest": "^1.1.0",
     "supertest-as-promised": "^3.1.0",
-    "swagger-ui": "^2.1.4",
+    "swagger-ui": "^2.1.5",
     "typedoc": "^0.3.12"
   }
 }
