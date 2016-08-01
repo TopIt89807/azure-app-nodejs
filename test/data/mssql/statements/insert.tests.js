@@ -24,10 +24,10 @@ describe('azure-mobile-apps.data.mssql.statements', function () {
             expect(statement.parameters).to.deep.equal([{ name: 'p1', type: mssql.NVarChar(), value: 'value' }]);
         });
 
-        it('inserts null values correctly', function () {
+        it('ignores null values', function () {
             var statement = insert({ name: 'table', autoIncrement: true }, { id: 'id', p1: null });
-            expect(statement.sql).to.equal('INSERT INTO [dbo].[table] ([p1]) VALUES (@p1); SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
-            expect(statement.parameters).to.deep.equal([{ name: 'p1', type: undefined, value: null }]);
+            expect(statement.sql).to.equal('INSERT INTO [dbo].[table] DEFAULT VALUES; SELECT * FROM [dbo].[table] WHERE [id] = SCOPE_IDENTITY()');
+            expect(statement.parameters).to.deep.equal([]);
         });
 
         it('inserts zero values correctly', function () {

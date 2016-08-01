@@ -13,9 +13,11 @@ module.exports = function (existingColumns, table, item) {
     existingColumns = existingColumns || [];
 
     // map out columns from item
-    var itemColumns = Object.keys(item).map(function (column) {
-        return { name: column, type: helpers.getColumnTypeFromValue(item[column]) };
-    });
+    var itemColumns = Object.keys(item).reduce(function (columns, column) {
+        if(item[column] !== undefined && item[column] !== null)
+            columns.push({ name: column, type: helpers.getColumnTypeFromValue(item[column]) });
+        return columns;
+    }, []);
 
     // these are in order of precedence
     addAutoIncrementId();
