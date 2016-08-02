@@ -4,7 +4,8 @@
 /**
 @module azure-mobile-apps/src/configuration/DataProviders
 @description Azure Mobile Apps ships with two built-in data providers -
-Microsoft SQL Server and SQLite3.
+Microsoft SQL Server and SQLite3. You can also implement custom data providers
+and configure azure-mobile-apps to use them.
 
 ## Microsoft SQL Server
 
@@ -123,5 +124,30 @@ module.exports = {
         filename: 'mobile.sqlite'
     }
 };
+```
+
+## Custom Providers
+
+You can implement custom data providers with full or partial functionality
+and configure azure-mobile-apps to consume the provider by assigning the
+factory function to the provider property of the data configuration object.
+
+For more information on implementing custom data providers, check out the
+[contributor guidelines](https://github.com/Azure/azure-mobile-apps-node/blob/master/src/data/contributor.md).
+
+### Example
+
+```Javascript
+var app = require('express')(),
+    customDataProvider = require('./dataProvider'),
+    mobileApp = require('azure-mobile-apps')({
+        data: {
+            provider: customDataProvider
+        }
+    });
+
+mobileApp.tables.add('todoitem');
+app.use(mobileApp);
+app.listen(process.env.PORT || 3000);
 ```
 */
