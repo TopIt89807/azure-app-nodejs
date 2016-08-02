@@ -51,7 +51,7 @@ module.exports = function (configuration) {
             }),
             patch: createOperation({
                 summary: 'Update a record in the ' + schema.name + ' table',
-                parameters: ['optionalId', 'body'],
+                parameters: ['id', 'body'],
                 operation: 'Update',
                 responses: {
                     '200': createOperation.response('The updated item', 'item'),
