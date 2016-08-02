@@ -38,7 +38,9 @@ Logging configuration. See {@link https://github.com/winstonjs/winston#instantia
 /**
 Data configuration.
 @typedef dataConfiguration
-@property {string} provider=sqlite - Data provider to use. Supported providers are mssql and sqlite
+@property {string|function} provider=sqlite - Data provider to use. Supported providers are mssql and sqlite. 
+You can also pass a custom data provider factory function here. See 
+[the contributor guidelines](https://github.com/Azure/azure-mobile-apps-node/blob/master/src/data/contributor.md) for more information.
 @property {bool} dynamicSchema=false - Global default for table dynamic schema, can override at table config level
 @see {@link module:configuration/DataProviders} for more details and examples
 @see {@link sqlServerDataConfiguration} for SQL Server specific configuration options
