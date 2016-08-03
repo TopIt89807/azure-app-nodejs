@@ -12,7 +12,7 @@ module.exports = function (table, item) {
 
     Object.keys(item).forEach(function (prop) {
         // ignore the property if it is an autoIncrement id
-        if ((prop !== 'id' || !table.autoIncrement) && item[prop] !== undefined) {
+        if ((prop !== 'id' || !table.autoIncrement) && item[prop] !== undefined && item[prop] !== null) {
             columnNames.push(helpers.formatMember(prop));
             valueParams.push('@' + prop);
             parameters.push({ name: prop, value: item[prop], type: helpers.getMssqlType(item[prop], prop === 'id') });
