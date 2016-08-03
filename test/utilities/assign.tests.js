@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-﻿var expect = require('chai').expect,
+var expect = require('chai').expect,
     assign = require('../../src/utilities/assign');
 
 // We've had a few issues with various implementations of a deep assign algorithm. These are the behaviors we need.

@@ -39,6 +39,9 @@ module.exports = function (provider, table, context) {
         if(table.perUser)
             query = filters.apply('perUser', query, context);
 
+        if(table.recordsExpire)
+            query = filters.apply('recordsExpire', query, context);
+
         if(!table.filters)
             return query;
 
