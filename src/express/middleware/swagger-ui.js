@@ -7,6 +7,7 @@
 by the {@link module:azure-mobile-apps/src/express/middleware/swagger swagger middleware}.
 */
 var express = require('express'),
+    ua = require('ua-parser'),
     path = require('path');
 
 /**
@@ -19,8 +20,12 @@ module.exports = function(configuration) {
 
     return function (req, res, next) {
         if(swaggerPath && configuration.swagger) {
-            if(req.query.url !== swaggerUrl()) {
+            if(ua.parse(req.get('user-agent')).family === 'IE')
+                res.send('Due to security concerns, Internet Explorer is currently not supported for viewing swagger-ui');
+
+            else if(req.query.url !== swaggerUrl()) {
                 res.redirect('?url=' + swaggerUrl());
+
             } else {
                 res.set('Content-Security-Policy', "connect-src 'self' online.swagger.io");
                 middleware(req, res, next);
