@@ -21,7 +21,7 @@ module.exports = function(configuration) {
     return function (req, res, next) {
         if(swaggerPath && configuration.swagger) {
             if(ua.parse(req.get('user-agent')).family === 'IE')
-                res.send('Due to security concerns, Internet Explorer is currently not supported for viewing swagger-ui');
+                res.send('Internet Explorer is not supported for viewing swagger-ui.');
 
             else if(req.query.url !== swaggerUrl()) {
                 res.redirect('?url=' + swaggerUrl());
