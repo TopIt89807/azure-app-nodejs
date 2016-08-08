@@ -8,12 +8,12 @@
   "repository": "Azure/azure-mobile-apps-node",
   "license": "MIT",
   "scripts": {
-    "test": "npm run lint & mocha",
+    "test": "npm run lint && mocha",
     "lint": "jshint src",
     "jsdoc": "jsdoc -c jsdoc/config.json",
     "typedoc": "typedoc --out typings/doc typings --module commonjs --theme typings/theme --includeDeclarations",
     "testCI": "mocha --timeout 10000",
-    "travis": "npm run lint & npm run testCI"
+    "travis": "npm run lint && npm run testCI"
   },
   "dependencies": {
     "azure-odata-sql": "^0.0.3",
