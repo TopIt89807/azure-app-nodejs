@@ -15,8 +15,9 @@ module.exports = function (claims) {
     function mapClaims(target, claim) {
         setDefaults(target, claim.typ, claim.val);
         setClaim(target, claim.typ, claim.val);
-        if (claim.typ.indexOf('http://schemas.xmlsoap.org/ws') !== -1)
-            setClaim(target, claim.typ.slice(claim.typ.lastIndexOf('/') + 1), claim.val);
+        denormalizeClaim(target, claim, 'http://schemas.xmlsoap.org/ws', '/');
+        denormalizeClaim(target, claim, 'http://schemas.microsoft.com', '/');
+        denormalizeClaim(target, claim, 'urn:', ':');
         return target;
     }
 
@@ -37,4 +38,8 @@ module.exports = function (claims) {
             target[type] = [existingValue, value];
     }
 
+    function denormalizeClaim(target, claim, schema, separator) {
+        if (claim.typ.indexOf(schema) === 0)
+            setClaim(target, claim.typ.slice(claim.typ.lastIndexOf(separator) + 1), claim.val);
+    }
 };

@@ -20,7 +20,6 @@ describe('azure-mobile-apps.auth.normalizeClaims', function () {
 			'access_token': 'p2-access-token',
 			'user_id': 'p2-name',
 			'user_claims': [
-				{ 'typ': 'urn:p2:name', val: 'My P2 Name' },
 				{ 'typ': 'urn:p2:id', val: 'My P2 ID' },
 				{ 'typ': 'http://schemas.xmlsoap.org/ws/name', val: 'Name Field' }
 			]
@@ -49,12 +48,15 @@ describe('azure-mobile-apps.auth.normalizeClaims', function () {
 		expect(n.p1).to.have.property('claims');
 		expect(n.p1.claims).to.be.an('object');
 		expect(n.p1.claims).to.have.property('urn:p1:name', 'My Name');
+		expect(n.p1.claims).to.have.property('name', 'My Name');
 		expect(n.p1.claims).to.have.property('urn:p1:id', 'My ID');
+		expect(n.p1.claims).to.have.property('id', 'My ID');
 
 		expect(n.p2).to.have.property('claims');
 		expect(n.p2.claims).to.be.an('object');
-		expect(n.p2.claims).to.have.property('urn:p2:name', 'My P2 Name');
 		expect(n.p2.claims).to.have.property('urn:p2:id', 'My P2 ID');
+		expect(n.p2.claims).to.have.property('id', 'My P2 ID');
+		expect(n.p2.claims).to.have.property('http://schemas.xmlsoap.org/ws/name', 'Name Field');
 		expect(n.p2.claims).to.have.property('name', 'Name Field');
 	});
 
