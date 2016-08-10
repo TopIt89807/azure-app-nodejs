@@ -26,10 +26,10 @@ describe('azure-mobile-apps.data.sqlite.statements', function () {
             expect(statement[0].parameters).to.deep.equal({ p1: 'value' });
         });
 
-        it('inserts null values correctly', function () {
+        it('ignores null values', function () {
             var statement = insert({ name: 'table', autoIncrement: true }, { id: 'id', p1: null });
-            expect(statement[0].sql).to.equal('INSERT INTO [table] ([p1]) VALUES (@p1);');
-            expect(statement[0].parameters).to.deep.equal({ p1: null });
+            expect(statement[0].sql).to.equal('INSERT INTO [table] DEFAULT VALUES;');
+            expect(statement[0].parameters).to.deep.equal({ });
         });
 
         it('inserts zero values correctly', function () {

@@ -188,6 +188,29 @@ describe('azure-mobile-apps.data.integration', function () {
             });
     });
 
+    it("ignores null columns on table creation", function () {
+        return insert({ id: '1', p1: null, p2: '1' })
+            .then(read)
+            .then(function (results) {
+                expect(results.length).to.equal(1);
+                expect(results[0].p1).to.not.be.ok;
+                expect(results[0].p2).to.equal('1');
+            });
+    });
+
+    it("ignores null columns on schema update", function () {
+        return insert({ id: '1' })
+            .then(function () {
+                return insert({ id: '2', p1: null, p2: '1' });                
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results.length).to.equal(2);
+                expect(results[1].p1).to.not.be.ok;
+                expect(results[1].p2).to.equal('1');
+            });
+    });
+
     function read() {
         return operations.read(queries.create('integration'));
     }

@@ -7,6 +7,7 @@
 by the {@link module:azure-mobile-apps/src/express/middleware/swagger swagger middleware}.
 */
 var express = require('express'),
+    ua = require('ua-parser'),
     path = require('path');
 
 /**
@@ -19,17 +20,23 @@ module.exports = function(configuration) {
 
     return function (req, res, next) {
         if(swaggerPath && configuration.swagger) {
-            if(!req.query.url)
+            if(ua.parse(req.get('user-agent')).family === 'IE')
+                res.send('Internet Explorer is not supported for viewing swagger-ui.');
+
+            else if(req.query.url !== swaggerUrl()) {
                 res.redirect('?url=' + swaggerUrl());
-            else
+
+            } else {
+                res.set('Content-Security-Policy', "connect-src 'self' online.swagger.io");
                 middleware(req, res, next);
+            }
         } else {
             res.status(404).send("To access the swagger UI, you must enable swagger support by adding swagger: true to your configuration and installing the swagger-ui npm module")
         }
 
         function swaggerUrl() {
             // this is a bit of a hack and assumes swagger metadata is exposed in the parent directory
-            var swaggerPath = path.join(req.originalUrl, '..').replace(/\\/g, '/'),
+            var swaggerPath = path.join(req.baseUrl, '..').replace(/\\/g, '/'),
                 // requests are always http from the Azure Web Apps front end to the worker - detect using headers that ARR attaches
                 protocol = (req.headers['x-forwarded-proto'] === 'https' || req.headers['x-arr-ssl']) ? 'https' : 'http';
             return protocol + '://' + req.get('host') + swaggerPath;

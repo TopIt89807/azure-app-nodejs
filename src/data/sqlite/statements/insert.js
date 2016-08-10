@@ -13,7 +13,7 @@ module.exports = function (table, item) {
 
     Object.keys(item).forEach(function (property) {
         // ignore the property if it is an autoIncrement id
-        if ((property !== 'id' || !table.autoIncrement) && item[property] !== undefined) {
+        if ((property !== 'id' || !table.autoIncrement) && item[property] !== undefined && item[property] !== null) {
             columnNames.push(helpers.formatMember(property));
             valueParams.push('@' + property);
             parameters[property] = helpers.mapParameterValue(item[property]);
