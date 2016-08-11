@@ -64,4 +64,8 @@ module.exports = function (provider, table, context) {
             return transform(item, context) || item;
         }, item);
     }
+
+    function createContext(operation) {
+
+    }
 };
