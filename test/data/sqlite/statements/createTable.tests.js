@@ -14,12 +14,12 @@ describe("azure-mobile-apps.data.sqlite.statements", function () {
 
         it("generates create statement with string id", function () {
             var statement = createTable({ name: "table" }, columns('string'));
-            expect(statement.sql).to.equal("CREATE TABLE [table] ([id] TEXT PRIMARY KEY, createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')), updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')), version TEXT NOT NULL DEFAULT 1, deleted INTEGER NOT NULL DEFAULT 0, [text] TEXT NULL)")
+            expect(statement.sql).to.equal("CREATE TABLE [table] ([id] TEXT PRIMARY KEY, createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now')), updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now')), version TEXT NOT NULL DEFAULT 1, deleted INTEGER NOT NULL DEFAULT 0, [text] TEXT NULL)")
         });
 
         it("generates create statement with numeric id", function () {
             var statement = createTable({ name: "table" }, columns('number'));
-            expect(statement.sql).to.equal("CREATE TABLE [table] ([id] INTEGER PRIMARY KEY, createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')), updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')), version TEXT NOT NULL DEFAULT 1, deleted INTEGER NOT NULL DEFAULT 0, [text] TEXT NULL)")
+            expect(statement.sql).to.equal("CREATE TABLE [table] ([id] INTEGER PRIMARY KEY, createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now')), updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now')), version TEXT NOT NULL DEFAULT 1, deleted INTEGER NOT NULL DEFAULT 0, [text] TEXT NULL)")
         });
 
         function columns(idType) {
