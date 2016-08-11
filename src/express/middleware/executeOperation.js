@@ -21,6 +21,7 @@ module.exports = function (operations) {
             operation = determineOperation();
 
         context.execute = execute;
+        context.operation = operation;
 
         // if a custom operation has been defined, execute it
         if (operations && operations[operation]) {

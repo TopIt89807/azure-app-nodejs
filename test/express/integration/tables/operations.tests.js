@@ -87,19 +87,22 @@ describe('azure-mobile-apps.express.integration.tables.operations', function () 
             });
     });
 
-    function filter(context) {
-        context.query.where({ userId: '1' });
-        return context.execute();
+    function createFilter(operation) {
+        return function (context) {
+            expect(context.operation).to.equal(operation);
+            context.query.where({ userId: '1' });
+            return context.execute();
+        }
     }
 
     function createMobileApp(operation) {
         mobileApp = mobileApps();
 
         var table = mobileApp.table();
-        table.read(filter);
-        table.update(filter);
-        table.delete(filter);
-        table.undelete(filter);
+        table.read(createFilter('read'));
+        table.update(createFilter('update'));
+        table.delete(createFilter('delete'));
+        table.undelete(createFilter('undelete'));
         table.seed = [
             { id: '1', userId: '1' },
             { id: '2', userId: '1' },
