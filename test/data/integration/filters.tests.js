@@ -15,15 +15,17 @@ describe('azure-mobile-apps.data.integration.filters', function () {
             softDelete: true,
             seed: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
             filters: [function (query, context) {
+                lastOperation = context.operation;
                 return query.where(function (value) { return this.id >= value; }, context.filterValue);
             }],
-            transforms: [function (item) {
+            transforms: [function (item, context) {
+                lastOperation = context.operation;
                 return { id: item.id };
             }, function (item, context) {
                 item.property = context.propertyValue;
             }]
         },
-        operations;
+        operations, lastOperation;
 
     beforeEach(function (done) {
         operations = data(table, context);
@@ -39,12 +41,14 @@ describe('azure-mobile-apps.data.integration.filters', function () {
             expect(results.length).to.equal(2);
             expect(results[0].id).to.equal('3');
             expect(results[1].id).to.equal('4');
+            expect(lastOperation).to.equal('read');
         });
     });
 
     it('attaches filter to update queries', function () {
         return expect(update({ id: '1', value: '1' })).to.be.rejectedWith('Error: No records were updated')
             .then(function () {
+                expect(lastOperation).to.equal('update');
                 return expect(update({ id: '3', value: '1' })).to.be.fulfilled;
             });
     });
@@ -52,18 +56,21 @@ describe('azure-mobile-apps.data.integration.filters', function () {
     it('attaches filter to delete queries', function () {
         return expect(del('1')).to.be.rejectedWith('Error: No records were updated')
             .then(function () {
+                expect(lastOperation).to.equal('delete');
                 return expect(del('3')).to.be.fulfilled;
             });
     });
 
     it('applies transforms to inserted items', function () {
         return insert({ id: '5' }).then(function (inserted) {
+            expect(lastOperation).to.equal('create');
             expect(inserted.property).to.equal('1');
         });
     });
 
     it('applies transforms to updated items', function () {
         return update({ id: '3' }).then(function (updated) {
+            expect(lastOperation).to.equal('update');
             expect(updated.property).to.equal('1');
         });
     });

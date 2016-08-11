@@ -12,30 +12,32 @@ module.exports = function (provider, table, context) {
 
     return {
         read: function (query) {
-            return tableAccess.read(applyFilters(query));
+            return tableAccess.read(applyFilters(query, 'read'));
         },
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
-            return tableAccess.update(applyTransforms(item), applyFilters(query));
+            return tableAccess.update(applyTransforms(item, 'update'), applyFilters(query, 'update'));
         },
         insert: function (item) {
             assert(item, 'An item to insert was not provided');
-            return tableAccess.insert(applyTransforms(item));
+            return tableAccess.insert(applyTransforms(item, 'create'));
         },
         delete: function (query, version) {
             assert(query, 'The delete query was not provided');
-            return tableAccess.delete(applyFilters(query), version);
+            return tableAccess.delete(applyFilters(query, 'delete'), version);
         },
         undelete: function (query, version) {
             assert(query, 'The undelete query was not provided');
-            return tableAccess.undelete(applyFilters(query), version);
+            return tableAccess.undelete(applyFilters(query, 'undelete'), version);
         },
         truncate: tableAccess.truncate,
         initialize: tableAccess.initialize,
         schema: tableAccess.schema
     };
 
-    function applyFilters(query) {
+    function applyFilters(query, operation) {
+        var context = createContext(operation);
+
         if(table.perUser)
             query = filters.apply('perUser', query, context);
 
@@ -53,7 +55,9 @@ module.exports = function (provider, table, context) {
         }, query || queries.create(table.name));
     }
 
-    function applyTransforms(item) {
+    function applyTransforms(item, operation) {
+        var context = createContext(operation);
+
         if(table.perUser)
             item = filters.applyTransform('perUser', item, context);
 
@@ -66,6 +70,12 @@ module.exports = function (provider, table, context) {
     }
 
     function createContext(operation) {
-
+        // shallow clone the context operation and assign the correct operation
+        var result = Object.keys(context).reduce(function (target, key) {
+            target[key] = context[key];
+            return target;
+        }, {});
+        result.operation = operation;
+        return result;
     }
 };
