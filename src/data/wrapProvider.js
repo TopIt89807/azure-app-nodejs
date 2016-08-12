@@ -38,11 +38,9 @@ module.exports = function (provider, table, context) {
     function applyFilters(query, operation) {
         var context = createContext(operation);
 
-        if(table.perUser)
-            query = filters.apply('perUser', query, context);
-
-        if(table.recordsExpire)
-            query = filters.apply('recordsExpire', query, context);
+        if(table.perUser) query = filters.apply('perUser', query, context);
+        if(table.recordsExpire) query = filters.apply('recordsExpire', query, context);
+        if(table.webhook) query = filters.apply('webhook', query, context);
 
         if(!table.filters)
             return query;
@@ -58,8 +56,8 @@ module.exports = function (provider, table, context) {
     function applyTransforms(item, operation) {
         var context = createContext(operation);
 
-        if(table.perUser)
-            item = filters.applyTransform('perUser', item, context);
+        if(table.perUser) item = filters.applyTransform('perUser', item, context);
+        if(table.webhook) query = filters.apply('webhook', item, context);
 
         if(!table.transforms)
             return item;
