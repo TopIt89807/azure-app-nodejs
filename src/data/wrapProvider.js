@@ -35,6 +35,7 @@ module.exports = function (provider, table, context) {
         schema: tableAccess.schema
     };
 
+    // below should be refactored out into filters/index.js
     function applyFilters(query, operation) {
         var context = createContext(operation);
 
