@@ -57,7 +57,7 @@ module.exports = function (provider, table, context) {
         var context = createContext(operation);
 
         if(table.perUser) item = filters.applyTransform('perUser', item, context);
-        if(table.webhook) query = filters.apply('webhook', item, context);
+        if(table.webhook) query = filters.applyTransform('webhook', item, context);
 
         if(!table.transforms)
             return item;
