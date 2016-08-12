@@ -38,12 +38,11 @@ module.exports = function (provider, table, context) {
     function applyFilters(query, operation) {
         var context = createContext(operation);
 
-        if(table.perUser) query = filters.apply('perUser', query, context);
-        if(table.recordsExpire) query = filters.apply('recordsExpire', query, context);
-        if(table.webhook) query = filters.apply('webhook', query, context);
+        if(table.perUser) query = filters.apply.filter('perUser', query, context);
+        if(table.recordsExpire) query = filters.apply.filter('recordsExpire', query, context);
+        if(table.webhook) query = filters.apply.filter('webhook', query, context);
 
-        if(!table.filters)
-            return query;
+        if(!table.filters) return query;
 
         return table.filters.reduce(function (query, filter) {
             // this is a bit of trickery to allow filters to either 
@@ -56,11 +55,10 @@ module.exports = function (provider, table, context) {
     function applyTransforms(item, operation) {
         var context = createContext(operation);
 
-        if(table.perUser) item = filters.applyTransform('perUser', item, context);
-        if(table.webhook) query = filters.applyTransform('webhook', item, context);
+        if(table.perUser) item = filters.apply.transform('perUser', item, context);
+        if(table.webhook) item = filters.apply.transform('webhook', item, context);
 
-        if(!table.transforms)
-            return item;
+        if(!table.transforms) return item;
 
         return table.transforms.reduce(function (item, transform) {
             return transform(item, context) || item;
