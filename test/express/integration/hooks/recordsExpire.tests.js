@@ -9,7 +9,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.integration.filters.recordsExpire', function () {
+describe('azure-mobile-apps.express.integration.hooks.recordsExpire', function () {
     afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'recordsExpire' }));
 
     it("returns records where expiry has not passed", function () {

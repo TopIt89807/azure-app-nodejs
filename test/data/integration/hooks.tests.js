@@ -5,7 +5,7 @@ var queries = require('../../../src/query'),
     config = require('../../appFactory').configuration(),
     expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect;
 
-describe('azure-mobile-apps.data.integration.filters', function () {
+describe('azure-mobile-apps.data.integration.hooks', function () {
     var index = require('../../../src/data'),
         data = index(config),
         cleanUp = require('../' + config.data.provider + '/integration.cleanUp'),

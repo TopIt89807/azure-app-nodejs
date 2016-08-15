@@ -9,7 +9,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
 
     app, mobileApp;
 
-describe('azure-mobile-apps.express.integration.filters.perUser', function () {
+describe('azure-mobile-apps.express.integration.hooks.perUser', function () {
     beforeEach(function () { setup(); });
     afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'perUser' }));
 
