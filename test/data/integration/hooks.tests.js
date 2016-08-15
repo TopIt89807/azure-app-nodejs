@@ -23,13 +23,19 @@ describe('azure-mobile-apps.data.integration.hooks', function () {
                 return { id: item.id };
             }, function (item, context) {
                 item.property = context.propertyValue;
-            }]
+            }],
+            hooks: [
+                function (results, context) {
+                    hookExecuted = true;
+                }
+            ]
         },
-        operations, lastOperation;
+        operations, lastOperation, hookExecuted;
 
     beforeEach(function (done) {
         operations = data(table, context);
         operations.initialize().then(function (inserted) { }).then(done, done);
+        hookExecuted = false;
     });
 
     afterEach(function (done) {
@@ -42,36 +48,45 @@ describe('azure-mobile-apps.data.integration.hooks', function () {
             expect(results[0].id).to.equal('3');
             expect(results[1].id).to.equal('4');
             expect(lastOperation).to.equal('read');
+            expect(hookExecuted).to.be.true;
         });
     });
 
     it('attaches filter to update queries', function () {
+        expect(hookExecuted).to.be.false;
         return expect(update({ id: '1', value: '1' })).to.be.rejectedWith('Error: No records were updated')
             .then(function () {
                 expect(lastOperation).to.equal('update');
+                expect(hookExecuted).to.be.true;
                 return expect(update({ id: '3', value: '1' })).to.be.fulfilled;
             });
     });
 
     it('attaches filter to delete queries', function () {
+        expect(hookExecuted).to.be.false;
         return expect(del('1')).to.be.rejectedWith('Error: No records were updated')
             .then(function () {
                 expect(lastOperation).to.equal('delete');
+                expect(hookExecuted).to.be.true;
                 return expect(del('3')).to.be.fulfilled;
             });
     });
 
     it('applies transforms to inserted items', function () {
+        expect(hookExecuted).to.be.false;
         return insert({ id: '5' }).then(function (inserted) {
             expect(lastOperation).to.equal('create');
             expect(inserted.property).to.equal('1');
+            expect(hookExecuted).to.be.true;
         });
     });
 
     it('applies transforms to updated items', function () {
+        expect(hookExecuted).to.be.false;
         return update({ id: '3' }).then(function (updated) {
             expect(lastOperation).to.equal('update');
             expect(updated.property).to.equal('1');
+            expect(hookExecuted).to.be.true;
         });
     });
 

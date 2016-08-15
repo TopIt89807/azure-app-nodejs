@@ -11,24 +11,29 @@ module.exports = function (provider, table, context) {
 
     return {
         read: function (query) {
-            return tableAccess.read(hooks.apply.table.filters(table, query, createContext('read', query)));
+            return tableAccess.read(hooks.apply.table.filters(table, query, createContext('read', query)))
+                .then(hooks.apply.table.hooks(context));
         },
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
             var context = createContext('update', query, item);
-            return tableAccess.update(hooks.apply.table.transforms(table, item, context), hooks.apply.table.filters(table, query, context));
+            return tableAccess.update(hooks.apply.table.transforms(table, item, context), hooks.apply.table.filters(table, query, context))
+                .then(hooks.apply.table.hooks(context));
         },
         insert: function (item) {
             assert(item, 'An item to insert was not provided');
-            return tableAccess.insert(hooks.apply.table.transforms(table, item, createContext('create', null, item)));
+            return tableAccess.insert(hooks.apply.table.transforms(table, item, createContext('create', null, item)))
+                .then(hooks.apply.table.hooks(context));
         },
         delete: function (query, version) {
             assert(query, 'The delete query was not provided');
-            return tableAccess.delete(hooks.apply.table.filters(table, query, createContext('delete', query)), version);
+            return tableAccess.delete(hooks.apply.table.filters(table, query, createContext('delete', query)), version)
+                .then(hooks.apply.table.hooks(context));
         },
         undelete: function (query, version) {
             assert(query, 'The undelete query was not provided');
-            return tableAccess.undelete(hooks.apply.table.filters(table, query, createContext('undelete', query)), version);
+            return tableAccess.undelete(hooks.apply.table.filters(table, query, createContext('undelete', query)), version)
+                .then(hooks.apply.table.hooks(context));
         },
         truncate: tableAccess.truncate,
         initialize: tableAccess.initialize,
@@ -46,6 +51,7 @@ module.exports = function (provider, table, context) {
         result.operation = operation;
         result.query = query || result.query;
         result.item = item || result.item;
+        result.table = table;
         return result;
     }
 };
