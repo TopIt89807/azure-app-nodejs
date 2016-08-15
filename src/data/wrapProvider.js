@@ -2,8 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var filters = require('./filters'),
-    assert = require('../utilities/assert').argument,
-    queries = require('../query');
+    assert = require('../utilities/assert').argument;
 
 module.exports = function (provider, table, context) {
     var tableAccess = provider(table);
@@ -12,67 +11,41 @@ module.exports = function (provider, table, context) {
 
     return {
         read: function (query) {
-            return tableAccess.read(applyFilters(query, 'read'));
+            return tableAccess.read(filters.apply.table.filters(table, query, createContext('read', query)));
         },
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
-            return tableAccess.update(applyTransforms(item, 'update'), applyFilters(query, 'update'));
+            var context = createContext('update', query, item);
+            return tableAccess.update(filters.apply.table.transforms(table, item, context), filters.apply.table.filters(table, query, context));
         },
         insert: function (item) {
             assert(item, 'An item to insert was not provided');
-            return tableAccess.insert(applyTransforms(item, 'create'));
+            return tableAccess.insert(filters.apply.table.transforms(table, item, createContext('create', null, item)));
         },
         delete: function (query, version) {
             assert(query, 'The delete query was not provided');
-            return tableAccess.delete(applyFilters(query, 'delete'), version);
+            return tableAccess.delete(filters.apply.table.filters(table, query, createContext('delete', query)), version);
         },
         undelete: function (query, version) {
             assert(query, 'The undelete query was not provided');
-            return tableAccess.undelete(applyFilters(query, 'undelete'), version);
+            return tableAccess.undelete(filters.apply.table.filters(table, query, createContext('undelete', query)), version);
         },
         truncate: tableAccess.truncate,
         initialize: tableAccess.initialize,
         schema: tableAccess.schema
     };
 
-    // below should be refactored out into filters/index.js
-    function applyFilters(query, operation) {
-        var context = createContext(operation);
-
-        if(table.perUser) query = filters.apply.filter('perUser', query, context);
-        if(table.recordsExpire) query = filters.apply.filter('recordsExpire', query, context);
-        if(table.webhook) query = filters.apply.filter('webhook', query, context);
-
-        if(!table.filters) return query;
-
-        return table.filters.reduce(function (query, filter) {
-            // this is a bit of trickery to allow filters to either 
-            // modify the existing query or return a different query
-            // see the test in data/integration/filters for an example                
-            return filter(query, context) || query;
-        }, query || queries.create(table.name));
-    }
-
-    function applyTransforms(item, operation) {
-        var context = createContext(operation);
-
-        if(table.perUser) item = filters.apply.transform('perUser', item, context);
-        if(table.webhook) item = filters.apply.transform('webhook', item, context);
-
-        if(!table.transforms) return item;
-
-        return table.transforms.reduce(function (item, transform) {
-            return transform(item, context) || item;
-        }, item);
-    }
-
-    function createContext(operation) {
-        // shallow clone the context operation and assign the correct operation
+    function createContext(operation, query, item) {
+        // context will contain properties set by middleware - we may have been called from a server side script
+        // which could make these properties incorrect. shallow clone the context operation and assign the 
+        // correct properties for this specific operation
         var result = Object.keys(context).reduce(function (target, key) {
             target[key] = context[key];
             return target;
         }, {});
         result.operation = operation;
+        result.query = query || result.query;
+        result.item = item || result.item;
         return result;
     }
 };

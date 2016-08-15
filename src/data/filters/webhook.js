@@ -24,6 +24,8 @@ function executeWebhook(context) {
     request(url, {
         operation: context.operation,
         item: context.item,
+        table: context.table && context.table.name,
+        userId: context.user && context.user.id,
         id: context.id
     });
 }
