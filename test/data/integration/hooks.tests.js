@@ -9,7 +9,6 @@ describe('azure-mobile-apps.data.integration.hooks', function () {
     var index = require('../../../src/data'),
         data = index(config),
         cleanUp = require('../' + config.data.provider + '/integration.cleanUp'),
-        context = { filterValue: '3', propertyValue: '1' },
         table = {
             name: 'filters',
             softDelete: true,
@@ -29,6 +28,11 @@ describe('azure-mobile-apps.data.integration.hooks', function () {
                     hookExecuted = true;
                 }
             ]
+        },
+        context = { 
+            filterValue: '3', 
+            propertyValue: '1',
+            // table: table 
         },
         operations, lastOperation, hookExecuted;
 
@@ -53,27 +57,28 @@ describe('azure-mobile-apps.data.integration.hooks', function () {
     });
 
     it('attaches filter to update queries', function () {
-        expect(hookExecuted).to.be.false;
         return expect(update({ id: '1', value: '1' })).to.be.rejectedWith('Error: No records were updated')
+            .then(function () {
+                return expect(update({ id: '3', value: '1' })).to.be.fulfilled;
+            })
             .then(function () {
                 expect(lastOperation).to.equal('update');
                 expect(hookExecuted).to.be.true;
-                return expect(update({ id: '3', value: '1' })).to.be.fulfilled;
             });
     });
 
     it('attaches filter to delete queries', function () {
-        expect(hookExecuted).to.be.false;
         return expect(del('1')).to.be.rejectedWith('Error: No records were updated')
+            .then(function () {
+                return expect(del('3')).to.be.fulfilled;
+            })
             .then(function () {
                 expect(lastOperation).to.equal('delete');
                 expect(hookExecuted).to.be.true;
-                return expect(del('3')).to.be.fulfilled;
             });
     });
 
     it('applies transforms to inserted items', function () {
-        expect(hookExecuted).to.be.false;
         return insert({ id: '5' }).then(function (inserted) {
             expect(lastOperation).to.equal('create');
             expect(inserted.property).to.equal('1');
@@ -82,7 +87,6 @@ describe('azure-mobile-apps.data.integration.hooks', function () {
     });
 
     it('applies transforms to updated items', function () {
-        expect(hookExecuted).to.be.false;
         return update({ id: '3' }).then(function (updated) {
             expect(lastOperation).to.equal('update');
             expect(updated.property).to.equal('1');

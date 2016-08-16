@@ -11,29 +11,33 @@ module.exports = function (provider, table, context) {
 
     return {
         read: function (query) {
-            return tableAccess.read(hooks.apply.table.filters(table, query, createContext('read', query)))
-                .then(hooks.apply.table.hooks(context));
+            var newContext = createContext('read', query);
+            return tableAccess.read(hooks.apply.table.filters(table, query, newContext))
+                .then(hooks.apply.table.hooks(newContext));
         },
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
-            var context = createContext('update', query, item);
-            return tableAccess.update(hooks.apply.table.transforms(table, item, context), hooks.apply.table.filters(table, query, context))
-                .then(hooks.apply.table.hooks(context));
+            var newContext = createContext('update', query, item);
+            return tableAccess.update(hooks.apply.table.transforms(table, item, newContext), hooks.apply.table.filters(table, query, newContext))
+                .then(hooks.apply.table.hooks(newContext));
         },
         insert: function (item) {
             assert(item, 'An item to insert was not provided');
-            return tableAccess.insert(hooks.apply.table.transforms(table, item, createContext('create', null, item)))
-                .then(hooks.apply.table.hooks(context));
+            var newContext = createContext('create', null, item);
+            return tableAccess.insert(hooks.apply.table.transforms(table, item, newContext))
+                .then(hooks.apply.table.hooks(newContext));
         },
         delete: function (query, version) {
             assert(query, 'The delete query was not provided');
-            return tableAccess.delete(hooks.apply.table.filters(table, query, createContext('delete', query)), version)
-                .then(hooks.apply.table.hooks(context));
+            var newContext = createContext('delete', query);
+            return tableAccess.delete(hooks.apply.table.filters(table, query, newContext), version)
+                .then(hooks.apply.table.hooks(newContext));
         },
         undelete: function (query, version) {
             assert(query, 'The undelete query was not provided');
-            return tableAccess.undelete(hooks.apply.table.filters(table, query, createContext('undelete', query)), version)
-                .then(hooks.apply.table.hooks(context));
+            var newContext = createContext('undelete', query);
+            return tableAccess.undelete(hooks.apply.table.filters(table, query, newContext), version)
+                .then(hooks.apply.table.hooks(newContext));
         },
         truncate: tableAccess.truncate,
         initialize: tableAccess.initialize,
