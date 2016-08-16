@@ -9,7 +9,6 @@ module.exports = function (provider, table, context) {
 
     context = context || {};
 
-    // could do with a refactor!
     return {
         read: function (query) {
             var newContext = createContext('read', query);
