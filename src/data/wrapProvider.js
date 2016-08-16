@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var hooks = require('./hooks'),
+var apply = require('./hooks'),
     assert = require('../utilities/assert').argument;
 
 module.exports = function (provider, table, context) {
@@ -9,35 +9,36 @@ module.exports = function (provider, table, context) {
 
     context = context || {};
 
+    // could do with a refactor!
     return {
         read: function (query) {
             var newContext = createContext('read', query);
-            return tableAccess.read(hooks.apply.table.filters(table, query, newContext))
-                .then(hooks.apply.table.hooks(newContext));
+            return tableAccess.read(apply.filters(table, query, newContext))
+                .then(apply.hooks(newContext));
         },
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
             var newContext = createContext('update', query, item);
-            return tableAccess.update(hooks.apply.table.transforms(table, item, newContext), hooks.apply.table.filters(table, query, newContext))
-                .then(hooks.apply.table.hooks(newContext));
+            return tableAccess.update(apply.transforms(table, item, newContext), apply.filters(table, query, newContext))
+                .then(apply.hooks(newContext));
         },
         insert: function (item) {
             assert(item, 'An item to insert was not provided');
             var newContext = createContext('create', null, item);
-            return tableAccess.insert(hooks.apply.table.transforms(table, item, newContext))
-                .then(hooks.apply.table.hooks(newContext));
+            return tableAccess.insert(apply.transforms(table, item, newContext))
+                .then(apply.hooks(newContext));
         },
         delete: function (query, version) {
             assert(query, 'The delete query was not provided');
             var newContext = createContext('delete', query);
-            return tableAccess.delete(hooks.apply.table.filters(table, query, newContext), version)
-                .then(hooks.apply.table.hooks(newContext));
+            return tableAccess.delete(apply.filters(table, query, newContext), version)
+                .then(apply.hooks(newContext));
         },
         undelete: function (query, version) {
             assert(query, 'The undelete query was not provided');
             var newContext = createContext('undelete', query);
-            return tableAccess.undelete(hooks.apply.table.filters(table, query, newContext), version)
-                .then(hooks.apply.table.hooks(newContext));
+            return tableAccess.undelete(apply.filters(table, query, newContext), version)
+                .then(apply.hooks(newContext));
         },
         truncate: tableAccess.truncate,
         initialize: tableAccess.initialize,

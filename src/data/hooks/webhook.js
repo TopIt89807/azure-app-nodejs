@@ -3,18 +3,9 @@
 // ----------------------------------------------------------------------------
 var log = require('../../logger');
 
-module.exports = {
-    filter: function (query, context) {
-        executeWebhook(context);
-    },
-    transform: function (item, context) {
-        // transforms are also executed for updates, but let the filter handle the webhook for updates
-        if(context.operation === 'create')
-            executeWebhook(context);
-    }
-};
+module.exports = { hook: executeWebhook };
 
-function executeWebhook(context) {
+function executeWebhook(results, context) {
     var url = (context.table.webhook && context.table.webhook.url)
         || (context.configuration.webhook && context.configuration.webhook.url);
     
@@ -23,7 +14,7 @@ function executeWebhook(context) {
 
     request(url, {
         operation: context.operation,
-        item: context.item,
+        item: context.operation === 'read' ? undefined : results,
         table: context.table && context.table.name,
         userId: context.user && context.user.id,
         id: context.id
