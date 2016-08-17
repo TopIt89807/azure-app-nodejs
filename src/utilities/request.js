@@ -31,12 +31,12 @@ module.exports = function (url, payload) {
 
         response.on('end', function () {
             if(response.statusCode !== 200)
-                log.error("Error returned from webhook: (" + response.statusCode + ") " + body);
+                log.error("Error returned from request: (" + response.statusCode + ") " + body);
         });
     });
 
     req.on('error', function (err) {
-        log.error("Unable to connect to webhook:", err);        
+        log.error("Unable to connect to server:", err);        
     });
 
     req.write(serialized);
