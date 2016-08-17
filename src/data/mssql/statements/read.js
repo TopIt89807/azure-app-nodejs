@@ -24,6 +24,12 @@ module.exports = function (source, tableConfig) {
         if(results.length > 1)
             finalResults.totalCount = results[1][0].count;
 
+        if(query.skip > 0 && query.take > 0) {
+            finalResults.forEach(function (result) {
+                delete result.ROW_NUMBER;
+            });
+        }
+
         return finalResults;
     }
 };
