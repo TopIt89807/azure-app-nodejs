@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
-var log = require('../../logger');
+var log = require('../../logger'),
+    request = require('../../utilities/request');
 
 module.exports = { hook: executeWebhook };
 
@@ -19,33 +20,4 @@ function executeWebhook(results, context) {
         userId: context.user && context.user.id,
         id: context.id
     });
-}
-
-var http = require('http'),
-    https = require('https'),
-    parseUrl = require('url').parse;
-
-function request(url, payload) {
-    var parsed = parseUrl(url),
-        client = parsed.protocol === 'https' ? https : http,
-        serialized = JSON.stringify(payload),
-        options = {
-            hostname: parsed.hostname,
-            port: parsed.port,
-            path: parsed.path,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': serialized.length
-            }
-        };
-    
-    var req = client.request(options);
-
-    req.on('error', function (err) {
-        log.error("Unable to connect to webhook:", err);        
-    });
-
-    req.write(serialized);
-    req.end();
 }
