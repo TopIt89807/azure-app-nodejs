@@ -92,4 +92,12 @@ describe('azure-mobile-apps.data.integration.query', function () {
                 ]);
             });
     });
+
+    it("does not attach ROW_NUMBER column to results when skip and take are specified", function () {
+        return operations.read(queries.create('query').skip(1).take(1))
+            .then(function (results) {
+                expect(results.length).to.equal(1);
+                expect(results[0]).to.not.have.property('ROW_NUMBER');
+            });
+    });
 });
