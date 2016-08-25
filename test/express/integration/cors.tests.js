@@ -60,7 +60,7 @@ describe('azure-mobile-apps.express.integration.cors', function () {
             .set('origin', 'http://test.blah.net')
             .expect(accessControlAllowOriginHeader, 'http://test.blah.net')
             .expect(accessControlAllowMethodsHeader, expectedAllowedMethods)
-            .expect(accessControlMaxAgeHeader, 6000)
+            .expect(accessControlMaxAgeHeader, "6000")
             .expect(200);
     });
 
