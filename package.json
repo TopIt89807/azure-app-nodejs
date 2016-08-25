@@ -11,12 +11,11 @@
     "test": "npm run lint && mocha",
     "lint": "jshint src",
     "jsdoc": "jsdoc -c jsdoc/config.json",
-    "typedoc": "typedoc --out typings/doc typings --module commonjs --theme typings/theme --includeDeclarations",
     "testCI": "mocha --timeout 10000",
     "travis": "npm run lint && npm run testCI"
   },
   "dependencies": {
-    "azure-odata-sql": "^0.0.3",
+    "azure-odata-sql": "^0.0.4",
     "azure-query-js": "^0.0.3",
     "azure-sb": "^0.10.3",
     "body-parser": "^1.13.1",
@@ -35,15 +34,14 @@
     "jsdoc": "^3.3.2",
     "jshint": "^2.9.1",
     "minami": "danderson00/minami",
-    "mocha": "^2.2.5",
+    "mocha": "^3.0.2",
     "q": "^1.4.1",
     "sinon": "^1.16.1",
-    "sinon-as-promised": "4.0.0",
+    "sinon-as-promised": "^4.0.2",
     "sinon-chai": "^2.8.0",
     "sqlite3": "^3.1.2",
-    "supertest": "^1.1.0",
-    "supertest-as-promised": "^3.1.0",
-    "swagger-ui": "^2.1.5",
-    "typedoc": "^0.3.12"
+    "supertest": "^2.0.0",
+    "supertest-as-promised": "^4.0.0",
+    "swagger-ui": "^2.2.0"
   }
 }
