@@ -10,8 +10,8 @@ module.exports = function (configuration) {
                     .catch(function() {});
             },
             testTable: function (table) {
-                return function(done) {
-                    return api.table(table).then(done);
+                return function() {
+                    return api.table(table);
                 };
             }
         };

@@ -4,17 +4,12 @@ var expect = require('chai').use(require('chai-subset')).expect,
     mobileApps = require('../../appFactory'),
     app, mobileApp;
 
-// added the .sql prefix to exclude from travis tests for now. remove when SQLite is done.
 describe('azure-mobile-apps.express.integration.swagger', function () {
     beforeEach(function () {
         app = express();
     });
 
     afterEach(mobileApps.cleanUp(mobileApps.configuration()).testTable({ name: 'swagger' }));
-
-    // afterEach(function (done) {
-    //     data(config().data).execute({ sql: 'drop table dbo.swagger' }).then(done, function () { done(); });
-    // });
 
     it("only exposes metadata if configured", function () {
         mobileApp = mobileApps();
