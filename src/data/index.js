@@ -45,9 +45,14 @@ module.exports = function (configuration) {
 @description Execute a query against the table.
 @param {module:queryjs/Query} query The query to execute
 @returns A promise that yields the results of the query, as expected by the Mobile Apps client.
-If the query has a single property specified, the result should be a single object.
 If the query has a includeTotalCount property specified, the result should be an object
 containing a results property and a count property. 
+*/
+/**
+@function find
+@description Find the single record with the specified ID.
+@param id ID of the record to find
+@returns A promise that yields the specified record. If the record is not found, undefined is returned.
 */
 /**
 @function update

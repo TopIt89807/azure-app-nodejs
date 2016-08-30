@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var apply = require('./hooks'),
+    queries = require('../query'),
     assert = require('../utilities/assert').argument;
 
 module.exports = function (provider, table, context) {
@@ -9,11 +10,17 @@ module.exports = function (provider, table, context) {
 
     context = context || {};
 
-    return {
+    var api = {
         read: function (query) {
             var newContext = createContext('read', query);
             return tableAccess.read(apply.filters(table, query, newContext))
                 .then(apply.hooks(newContext));
+        },
+        find: function (id) {
+            return api.read(queries.create(table.name).where({ id: id }))
+                .then(function (results) {
+                    return results[0];
+                });
         },
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
@@ -43,6 +50,8 @@ module.exports = function (provider, table, context) {
         initialize: tableAccess.initialize,
         schema: tableAccess.schema
     };
+
+    return api;
 
     function createContext(operation, query, item) {
         // context will contain properties set by middleware - we may have been called from a server side script
