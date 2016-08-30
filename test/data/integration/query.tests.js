@@ -2,13 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var queries = require('../../../src/query'),
-    config = require('../../appFactory').configuration().data,
-    expect = require('chai').use(require('chai-subset')).expect;
+    config = require('../../appFactory').configuration(),
+    expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect;
 
 describe('azure-mobile-apps.data.integration.query', function () {
-    var index = require('../../../src/data/' + config.provider),
+    var index = require('../../../src/data'),
         data = index(config),
-        cleanUp = require('../' + config.provider + '/integration.cleanUp'),
+        cleanUp = require('../' + config.data.provider + '/integration.cleanUp'),
         table = {
             name: 'query',
             columns: { string: 'string', number: 'number', bool: 'boolean', date: 'date' },
@@ -29,7 +29,7 @@ describe('azure-mobile-apps.data.integration.query', function () {
     });
 
     after(function (done) {
-        cleanUp(config, table).then(done, done);
+        cleanUp(config.data, table).then(done, done);
     });
 
     it("supports equality hashes", function () {
@@ -107,5 +107,15 @@ describe('azure-mobile-apps.data.integration.query', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0]).to.not.have.property('ROW_NUMBER');
             });
+    });
+
+    it("find returns item with corresponding id", function () {
+        return operations.find(2).then(function (result) {
+            expect(result).to.containSubset({ id: "2", string: 'two', number: 2, bool: false, date: new Date(2016, 0, 2) });
+        });
+    });
+
+    it("find returns undefined if item does not exist", function () {
+        return expect(operations.find(10)).to.eventually.equal(undefined);
     });
 });
