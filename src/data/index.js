@@ -6,7 +6,9 @@
 @description Exposes data access operations for tables
 */
 
-var types = require('../utilities/types');
+var types = require('../utilities/types'),
+    assert = require('../utilities/assert').argument,
+    wrap = require('./wrapProvider');
 
 /**
 Create an instance of the data provider specified in the configuration.
@@ -18,9 +20,25 @@ object with the members described below. The function also has an
 be used to execute raw SQL queries.
 */
 module.exports = function (configuration) {
-    var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
-    return (types.isFunction(provider) ? provider : require('./' + provider))(configuration.data);
-}
+    var provider = createProvider();
+
+    var api = function (table, context) {
+        assert(table, 'A table was not specified');
+        return wrap(provider, table, context);
+    };
+
+    api.execute = function (statement) {
+        assert(statement, 'A SQL statement was not provided');
+        return provider.execute(statement);
+    };
+
+    return api;
+
+    function createProvider() {
+        var provider = (configuration && configuration.data && configuration.data.provider) || 'memory';
+        return (types.isFunction(provider) ? provider : require('./' + provider))(configuration.data);
+    }
+};
 
 /**
 @function read
@@ -29,7 +47,8 @@ module.exports = function (configuration) {
 @returns A promise that yields the results of the query, as expected by the Mobile Apps client.
 If the query has a single property specified, the result should be a single object.
 If the query has a includeTotalCount property specified, the result should be an object
-containing a results property and a count property. */
+containing a results property and a count property. 
+*/
 /**
 @function update
 @description Update a row in the table.

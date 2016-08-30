@@ -24,6 +24,7 @@ module.exports = function () {
         swagger: false,
         maxTop: 1000,
         pageSize: 50,
+        userIdColumn: 'userId',
         logging: {
             level: environment.debug ? 'debug' : 'info',
             transports: [

@@ -250,7 +250,8 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                     'tables',
                     'table',
                     'query',
-                    'execute'
+                    'execute',
+                    'operation'
                 ]);
             });
     });

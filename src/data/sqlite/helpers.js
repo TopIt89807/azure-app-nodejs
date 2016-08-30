@@ -98,8 +98,8 @@ module.exports = {
     getSystemPropertiesDDL: function () {
         return {
             version: "version TEXT NOT NULL DEFAULT 1",
-            createdAt: "createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))",
-            updatedAt: "updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))",
+            createdAt: "createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now'))",
+            updatedAt: "updatedAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'now'))",
             deleted: "deleted INTEGER NOT NULL DEFAULT 0"
         }
     },
