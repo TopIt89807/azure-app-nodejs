@@ -2,13 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ----------------------------------------------------------------------------
 var queries = require('../../../src/query'),
-    config = require('../../appFactory').configuration().data,
+    config = require('../../appFactory').configuration(),
     expect = require('chai').use(require('chai-subset')).use(require('chai-as-promised')).expect;
 
 describe('azure-mobile-apps.data.integration', function () {
-    var index = require('../../../src/data/' + config.provider),
+    var index = require('../../../src/data'),
         data = index(config),
-        cleanUp = require('../' + config.provider + '/integration.cleanUp'),
+        cleanUp = require('../' + config.data.provider + '/integration.cleanUp'),
         table = {
             name: 'integration',
             containerName: 'integration',
@@ -22,7 +22,7 @@ describe('azure-mobile-apps.data.integration', function () {
     });
 
     afterEach(function (done) {
-        cleanUp(config, table).then(function (arg) { done() }, done);
+        cleanUp(config.data, table).then(function (arg) { done() }, done);
     });
 
     it("basic integration test", function () {
@@ -209,6 +209,52 @@ describe('azure-mobile-apps.data.integration', function () {
                 expect(results[1].p1).to.not.be.ok;
                 expect(results[1].p2).to.equal('1');
             });
+    });
+
+    it("handles object based queries", function () {
+        return insert({ id: '1', string: 'test', bool: false, number: 1.1 })
+            .then(function (results) {
+                expect(results).to.containSubset({ id: '1', string: 'test', bool: false, number: 1.1 });
+                return operations.read({ id: '1' });
+            })
+            .then(function (results) {
+                expect(results).to.containSubset([{ id: '1', string: 'test', bool: false, number: 1.1 }]);
+                return operations.update({ id: '1', string: 'test2', bool: true, number: 2.2  }, { id: '1' });
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results).to.containSubset([{ id: '1', string: 'test2', bool: true, number: 2.2 }]);
+                return operations.delete({ id: '1' });
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results.length).to.equal(0);
+            });
+    });
+
+    it("handles predicate functions", function () {
+        return insert({ id: '1', string: 'test', bool: false, number: 1.1 })
+            .then(function (results) {
+                expect(results).to.containSubset({ id: '1', string: 'test', bool: false, number: 1.1 });
+                return operations.read(predicate);
+            })
+            .then(function (results) {
+                expect(results).to.containSubset([{ id: '1', string: 'test', bool: false, number: 1.1 }]);
+                return operations.update({ id: '1', string: 'test2', bool: true, number: 2.2  }, predicate);
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results).to.containSubset([{ id: '1', string: 'test2', bool: true, number: 2.2 }]);
+                return operations.delete(predicate);
+            })
+            .then(read)
+            .then(function (results) {
+                expect(results.length).to.equal(0);
+            });
+        
+        function predicate() {
+            return this.id === '1';
+        }
     });
 
     function read() {

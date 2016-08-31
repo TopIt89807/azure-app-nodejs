@@ -38,5 +38,6 @@ module.exports = {
     */
     toOData: function (query) {
         return Query.Providers.OData.toOData(query)
-    }
+    },
+    Query: Query
 }
