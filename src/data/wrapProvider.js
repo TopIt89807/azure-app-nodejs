@@ -12,6 +12,7 @@ module.exports = function (provider, table, context) {
 
     var api = {
         read: function (query) {
+            query = createQuery(query);
             var newContext = createContext('read', query);
             return tableAccess.read(apply.filters(table, query, newContext))
                 .then(apply.hooks(newContext));
@@ -24,6 +25,7 @@ module.exports = function (provider, table, context) {
         },
         update: function (item, query) {
             assert(item, 'An item to update was not provided');
+            query = createQuery(query);
             var newContext = createContext('update', query, item);
             return tableAccess.update(apply.transforms(table, item, newContext), apply.filters(table, query, newContext))
                 .then(apply.hooks(newContext));
@@ -36,12 +38,14 @@ module.exports = function (provider, table, context) {
         },
         delete: function (query, version) {
             assert(query, 'The delete query was not provided');
+            query = createQuery(query);
             var newContext = createContext('delete', query);
             return tableAccess.delete(apply.filters(table, query, newContext), version)
                 .then(apply.hooks(newContext));
         },
         undelete: function (query, version) {
             assert(query, 'The undelete query was not provided');
+            query = createQuery(query);
             var newContext = createContext('undelete', query);
             return tableAccess.undelete(apply.filters(table, query, newContext), version)
                 .then(apply.hooks(newContext));
@@ -66,5 +70,11 @@ module.exports = function (provider, table, context) {
         result.item = item || result.item;
         result.table = table;
         return result;
+    }
+
+    function createQuery(query) {
+        if(query && query.constructor !== queries.Query)
+            query = queries.create(table.name).where(query);
+        return query;
     }
 };
