@@ -30,7 +30,8 @@ module.exports = {
             parseInt(req.query.$skip),
             parseInt(req.query.$top),
             req.query.$select,
-            req.query.$inlinecount === 'allpages')
+            req.query.$inlinecount === 'allpages',
+            !!req.query.__includeDeleted)
     },
     /**
     Converts a query to an object containing OData query information

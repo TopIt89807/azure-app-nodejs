@@ -29,9 +29,6 @@ module.exports = function (table) {
             context.query = queries.fromRequest(req);
         }
 
-        if(req.query.__includeDeleted)
-            context.query.includeDeleted = true;
-
         var etag = req.get('if-match');
         if(etag)
             context.version = etag;

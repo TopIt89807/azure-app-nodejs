@@ -67,7 +67,7 @@ describe('azure-mobile-apps.data.integration.softDelete', function () {
 
     function read(includeDeleted) {
         var query = queries.create('softDelete');
-        query.includeDeleted = includeDeleted;
+        if(includeDeleted) query.includeDeleted();
         return operations.read(query);
     }
 
