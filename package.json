@@ -15,7 +15,7 @@
     "travis": "npm run lint && npm run testCI"
   },
   "dependencies": {
-    "azure-odata-sql": "^0.0.4",
+    "azure-odata-sql": "^0.1.0",
     "azure-query-js": "^0.1.0",
     "azure-sb": "^0.10.3",
     "body-parser": "^1.13.1",
