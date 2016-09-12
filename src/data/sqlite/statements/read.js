@@ -16,9 +16,6 @@ module.exports = function (source, tableConfig) {
     // translate the queryjs Query object into the odata format that our formatter expects
     var query = queries.toOData(source);
 
-    // copy custom properties from the source query. this is NOT ideal!
-    query.includeDeleted = source.includeDeleted;
-
     var statements = format(query, tableConfig);
     statements[0].transform = transformResult;
     statements[0].parameters = helpers.mapParameters(statements[0].parameters);
