@@ -28,7 +28,7 @@ describe('azure-mobile-apps.express.integration.hooks.recordsExpire', function (
         return request('post', null, 201, { id: '1' })()
             .then(request('post', null, 201, { id: '2' }))
             .then(function () {
-                return promises.sleep(1000);
+                return promises.sleep(200);
             })
             .then(request('get', null, 200))
             .then(function (response) {
