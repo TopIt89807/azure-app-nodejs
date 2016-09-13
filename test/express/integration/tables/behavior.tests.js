@@ -91,6 +91,7 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
         table = mobileApp.table();
         table.read(function (context) {
             query = context.query.toOData();
+            context.next();
         });
         mobileApp.tables.add('todoitem', table);
         app.use(mobileApp);
@@ -251,7 +252,8 @@ describe('azure-mobile-apps.express.integration.tables.behavior', function () {
                     'table',
                     'query',
                     'execute',
-                    'operation'
+                    'operation',
+                    'next'
                 ]);
             });
     });
