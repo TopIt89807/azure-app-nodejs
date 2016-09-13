@@ -28,7 +28,9 @@ describe('azure-mobile-apps.express.integration.hooks.recordsExpire', function (
         return request('post', null, 201, { id: '1' })()
             .then(request('post', null, 201, { id: '2' }))
             .then(function () {
-                return promises.sleep(200);
+                // this test is flaky on the build server without fairly high values here
+                // I'm at a loss to explain why!
+                return promises.sleep(500);
             })
             .then(request('get', null, 200))
             .then(function (response) {
