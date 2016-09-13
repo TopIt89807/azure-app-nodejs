@@ -6,6 +6,7 @@ var expect = require('chai').use(require('chai-subset')).expect,
     express = require('express'),
     mobileApps = require('../../../appFactory'),
     auth = require('../../../../src/auth'),
+    promises = require('../../../../src/utilities/promises'),
 
     app, mobileApp;
 
@@ -26,6 +27,9 @@ describe('azure-mobile-apps.express.integration.hooks.recordsExpire', function (
         setup(1);
         return request('post', null, 201, { id: '1' })()
             .then(request('post', null, 201, { id: '2' }))
+            .then(function () {
+                return promises.sleep(10);
+            })
             .then(request('get', null, 200))
             .then(function (response) {
                 expect(response.body.length).to.equal(0);
