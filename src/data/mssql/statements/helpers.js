@@ -26,14 +26,15 @@ var helpers = module.exports = {
             return target;
         }, { sql: '', parameters: [], multiple: true, transform: transform });
     },
-    checkConcurrencyAndTranslate: function (results) {
+    checkConcurrencyAndTranslate: function (results, originalItem) {
         var recordsAffected = results[0][0].recordsAffected,
             records = results[1],
             item;
 
-        if (records.length === 0)
-            item = undefined;
-        else if (records.length === 1)
+        if (records.length === 0) {
+            if(recordsAffected === 1)
+                item = originalItem;
+        } else if (records.length === 1)
             item = records[0];
         else
             item = records;

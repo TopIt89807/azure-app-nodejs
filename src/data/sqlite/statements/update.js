@@ -64,7 +64,12 @@ module.exports = function (table, item, query) {
                 var error = errors.concurrency('No records were updated');
                 error.item = result;
                 throw error;
+            } else if (recordsAffected === 1 && result === undefined) {
+                // the record was updated to no longer be returned with the specified filters
+                // just return the original item
+                result = item;
             }
+
             return result;
         }
     };

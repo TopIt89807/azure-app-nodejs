@@ -31,11 +31,11 @@ var strings = module.exports = {
 
     // remove starting and finishing quotes and remove quote escaping from the middle of a string
     getVersionFromEtag: function (etag) {
-        return etag.replace(/^"|\\(?=")|"$/g, '');
+        return etag && etag.replace(/^"|\\(?=")|"$/g, '');
     },
 
     getEtagFromVersion: function (version) {
-        return '"' + version.replace(/\"/g, '\\"') + '"';
+        return version && '"' + version.replace(/\"/g, '\\"') + '"';
     },
 
     convertDate: function (value) {
