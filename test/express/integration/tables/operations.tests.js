@@ -65,7 +65,6 @@ describe('azure-mobile-apps.express.integration.tables.operations', function () 
                 return supertest(app)
                     .patch('/tables/operations/1')
                     .send({ userId: '2' })
-                    // this 404s because the updated record isn't selected back out after the userId is changed
                     .expect(200)
             })
             .then(function () {

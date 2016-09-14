@@ -32,6 +32,8 @@ var helpers = module.exports = {
             item;
 
         if (records.length === 0) {
+            // the record was updated to no longer be returned with the specified filters
+            // just return the original item
             if(recordsAffected === 1)
                 item = originalItem;
         } else if (records.length === 1)
