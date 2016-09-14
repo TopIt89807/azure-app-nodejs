@@ -104,6 +104,20 @@ describe('azure-mobile-apps.express.integration.tables.operations', function () 
             });
     });
 
+    it('context.next allows passing errors', function () {
+        table.read(function (context) {
+            setTimeout(function () {
+                context.execute().then(function () {
+                    context.next(new Error());
+                });
+            });
+        });
+
+        return supertest(app)
+            .get('/tables/operations')
+            .expect(500);
+    });
+
     function createFilter(operation) {
         return function (context) {
             expect(context.operation).to.equal(operation);
