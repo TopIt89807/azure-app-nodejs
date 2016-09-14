@@ -33,8 +33,8 @@ var helpers = module.exports = {
 
         if (records.length === 0) {
             // the record was updated to no longer be returned with the specified filters
-            // just return the original item
-            if(recordsAffected === 1)
+            // just return the original item - if there's more than one, this will result in weird behavior
+            if(recordsAffected > 0)
                 item = originalItem;
         } else if (records.length === 1)
             item = records[0];
@@ -43,6 +43,10 @@ var helpers = module.exports = {
             
         item = helpers.translateVersion(item);
 
+        // there is a big assumption here that if no records were affected, it is because of a concurrency violation
+        // it is possible to pass in a query to an update or delete operation that results in no affected records
+        // this would not strictly be a concurrency violation, but there is no simple way to determine if it was because
+        // the version column didn't match or the rest of the query filtered out all records
         if(recordsAffected === 0) {
             var error = errors.concurrency('No records were updated');
             error.item = item;
