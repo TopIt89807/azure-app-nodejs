@@ -225,6 +225,7 @@ declare namespace Azure.MobileApps {
         push: typeof nh;
         logger: Logger;
         execute(): Thenable<any>;
+        next(error: string|Error): any;
     }
 
     interface TableDefinition {
