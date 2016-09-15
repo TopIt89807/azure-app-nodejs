@@ -17,4 +17,5 @@
 @property {module:azure-mobile-apps/src/express/tables/table} table The table definition object for the current table
 @property {module:azure-mobile-apps/src/auth/user} user The authenticated user object if the authenticate middleware has been executed
 @property {function} execute A function that executes the operation (read, insert, etc) against the table. Returns a promise with the results of the operation
+@property {function} next Signal that execution of the request should continue. You can pass an error to this function. Only available in table operation functions.
 */

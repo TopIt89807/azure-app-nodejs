@@ -22,6 +22,7 @@ module.exports = function (operations) {
 
         context.execute = execute;
         context.operation = operation;
+        context.next = next;
 
         // if a custom operation has been defined, execute it
         if (operations && operations[operation]) {
@@ -41,7 +42,7 @@ module.exports = function (operations) {
 
         function setResults(results) {
             res.results = results;
-            if(!res.headersSent)
+            if(!res.headersSent && results !== undefined)
                 next();
         }
 

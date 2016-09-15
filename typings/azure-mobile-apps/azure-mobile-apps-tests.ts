@@ -69,6 +69,8 @@ table.insert(function (context: Azure.MobileApps.Context) {
     context.push.gcm.send('tag', {}, function (error, result) {});
     context.push.apns.send('tag', { payload: { } }, function (error, result) {});
     context.push.wns.sendToastText01('tag', '', { headers: { } }, function (error, result) {});
+    context.next(new Error());
+    context.next('An error occurred');
 });
 table.read.use(function () {});
 table.read.use([function () {}, function () {}]);

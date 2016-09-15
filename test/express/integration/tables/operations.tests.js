@@ -7,7 +7,7 @@
     express = require('express'),
     mobileApps = require('../../../appFactory'),
 
-    app, mobileApp;
+    app, mobileApp, table;
 
 describe('azure-mobile-apps.express.integration.tables.operations', function () {
     beforeEach(function (done) {
@@ -65,8 +65,7 @@ describe('azure-mobile-apps.express.integration.tables.operations', function () 
                 return supertest(app)
                     .patch('/tables/operations/1')
                     .send({ userId: '2' })
-                    // this 404s because the updated record isn't selected back out after the userId is changed
-                    .expect(404)
+                    .expect(200)
             })
             .then(function () {
                 // this succeeds in the test below, so we know the above update actually succeeded
@@ -87,6 +86,38 @@ describe('azure-mobile-apps.express.integration.tables.operations', function () 
             });
     });
 
+    it('allows continuation using context.next', function () {
+        table.read(function (context) {
+            setTimeout(function () {
+                context.execute().then(context.next);
+            });
+        });
+
+        return supertest(app)
+            .get('/tables/operations')
+            .expect(function (res) {
+                expect(res.body).to.containSubset([
+                    { id: '1', userId: '1' },
+                    { id: '2', userId: '1' },
+                    { id: '3', userId: '2' }
+                ]);
+            });
+    });
+
+    it('context.next allows passing errors', function () {
+        table.read(function (context) {
+            setTimeout(function () {
+                context.execute().then(function () {
+                    context.next(new Error());
+                });
+            });
+        });
+
+        return supertest(app)
+            .get('/tables/operations')
+            .expect(500);
+    });
+
     function createFilter(operation) {
         return function (context) {
             expect(context.operation).to.equal(operation);
@@ -98,7 +129,7 @@ describe('azure-mobile-apps.express.integration.tables.operations', function () 
     function createMobileApp(operation) {
         mobileApp = mobileApps();
 
-        var table = mobileApp.table();
+        table = mobileApp.table();
         table.read(createFilter('read'));
         table.update(createFilter('update'));
         table.delete(createFilter('delete'));
