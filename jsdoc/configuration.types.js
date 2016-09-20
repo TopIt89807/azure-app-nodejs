@@ -20,6 +20,7 @@ The top level configuration object.
 @property {string} version - Current version of the Azure Mobile Apps SDK
 @property {integer} maxTop=1000 - Limit the maximum number of rows a client can request
 @property {integer} pageSize=50 - Set the number of rows for server side paging
+@property {webhook} webhook - Webhook options for tables with webhooks enabled
 @property {loggingConfiguration} logging - Logging configuration
 @property {dataConfiguration} data - Data configuration
 @property {authConfiguration} auth - Authentication configuration

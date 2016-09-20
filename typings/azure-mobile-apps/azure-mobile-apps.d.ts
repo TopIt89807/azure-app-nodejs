@@ -30,8 +30,8 @@ declare module "azure-mobile-apps/src/query" {
 
 declare namespace Azure.MobileApps {
     // the additional Platforms namespace is required to avoid collisions with the main Express namespace
-    export namespace Platforms {
-        export namespace Express {
+    export module Platforms {
+        export module Express {
             interface MobileApp extends Middleware {
                 configuration: Configuration;
                 tables: Tables;
@@ -46,14 +46,7 @@ declare namespace Azure.MobileApps {
                 import(fileOrFolder: string): void;
             }
 
-            interface Table {
-                authorize?: boolean;
-                autoIncrement?: boolean;
-                dynamicSchema?: boolean;
-                name: string;
-                columns?: any;
-                schema: string;
-
+            interface Table extends TableDefinition {
                 use(...middleware: Middleware[]): Table;
                 use(middleware: Middleware[]): Table;
                 read: TableOperation;
@@ -67,6 +60,7 @@ declare namespace Azure.MobileApps {
                 (operationHandler: (context: Context) => void): Table;
                 use(...middleware: Middleware[]): Table;
                 use(middleware: Middleware[]): Table;
+                access?: AccessType;
             }
 
             interface Tables {
@@ -78,7 +72,7 @@ declare namespace Azure.MobileApps {
         }
     }
 
-    export namespace Data {
+    export module Data {
         interface Table {
             read(query: QueryJs): Thenable<any[]>;
             update(item: any, query: QueryJs): Thenable<any>;
@@ -133,9 +127,10 @@ declare namespace Azure.MobileApps {
         auth?: Configuration.Auth;
         cors?: Configuration.Cors;
         notifications?: Configuration.Notifications;
+        webhook?: Webhook;
     }
 
-    export namespace Configuration {
+    export module Configuration {
         // it would be nice to have the config for various providers in separate interfaces,
         // but this is the simplest solution to support variations of the current setup
         interface Data {
@@ -187,7 +182,8 @@ declare namespace Azure.MobileApps {
     }
 
     interface QueryJs {
-        includeTotalCount?: boolean;
+        includeTotalCount(): QueryJs;
+        includeDeleted(): QueryJs;
         orderBy(properties: string): QueryJs;
         orderByDescending(properties: string): QueryJs;
         select(properties: string): QueryJs;
@@ -219,7 +215,7 @@ declare namespace Azure.MobileApps {
         item: any;
         req: Express.Request;
         res: Express.Response;
-        data: (table: TableDefinition) => Data.Table;
+        data: ContextData;
         tables: (tableName: string) => Data.Table;
         user: User;
         push: typeof nh;
@@ -228,17 +224,59 @@ declare namespace Azure.MobileApps {
         next(error: string|Error): any;
     }
 
+    interface ContextData {
+        (table: TableDefinition): Data.Table;
+        execute(q: SqlQueryDefinition): Thenable<any>;
+    }
+
+    interface SqlQueryDefinition {
+        sql: string;
+        parameters?: SqlParameterDefinition[];
+    }
+
+    interface SqlParameterDefinition {
+        name: string;
+        value: any;
+     }		     
+
     interface TableDefinition {
+        access?: AccessType;
         authorize?: boolean;
-        access?: string;
         autoIncrement?: boolean;
-        dynamicSchema?: boolean;
-        name?: string;
         columns?: any;
-        schema?: string;
         databaseTableName?: string;
+        dynamicSchema?: boolean;
         maxTop?: number;
+        name?: string;
+        pageSize?: number;
+        schema?: string;
         softDelete?: boolean;
+        userIdColumn?: string;
+
+        filters?: [(query: QueryJs, context: Context) => void | QueryJs];
+        transforms?: [(item: any, context: Context) => void | any];
+        hooks?: [(results: any, context: Context) => void];
+
+        perUser?: boolean;
+        recordsExpire?: Duration;
+        webhook?: Webhook | boolean;
+    }
+
+    type AccessType = 'anonymous' | 'authenticated' | 'disabled';
+    
+    interface Duration {
+        milliseconds?: number;
+        seconds?: number;
+        minutes?: number;
+        hours?: number;
+        days?: number;
+        weeks?: number;
+        months?: number;
+        years?: number;
+    }
+
+    interface Webhook {
+        url: string;
     }
 
     interface ApiDefinition {
